@@ -658,7 +658,11 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
         if (nPedNroDocText.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "El campo N° Documento está vacío");
-        } else {
+        } else if (nPedTipoDocComboBox.getSelectedIndex() == 0 && nPedNroDocText.getText().length() != 8) {
+            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
+        } else if (nPedTipoDocComboBox.getSelectedIndex() == 1 && nPedNroDocText.getText().length() != 11) {
+            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
+        }else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ArrayList<Cliente> nc = ClienteControlador.BuscaClienteNroDoc(nPedNroDocText.getText());
             this.setCursor(Cursor.getDefaultCursor());
@@ -722,7 +726,11 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
     private void nPedGuardBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedGuardBotonActionPerformed
         if (nPedNroDocText.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "El campo N° Documento está vacío");
-        } else {
+        } else if (nPedTipoDocComboBox.getSelectedIndex() == 0 && nPedNroDocText.getText().length() != 8) {
+            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
+        } else if (nPedTipoDocComboBox.getSelectedIndex() == 1 && nPedNroDocText.getText().length() != 11) {
+            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
+        }else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ArrayList<Cliente> nc = ClienteControlador.BuscaClienteNroDoc(nPedNroDocText.getText());
             this.setCursor(Cursor.getDefaultCursor());
