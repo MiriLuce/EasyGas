@@ -9,14 +9,20 @@ import Controlador.CamionControlador;
 import Controlador.TipoCamionControlador;
 import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.TipoCamion;
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -30,127 +36,64 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     
     private TipoCamionControlador tpCamionControlador = new TipoCamionControlador();   
     private CamionControlador camionControlador = new CamionControlador();
-    private CamionModelo camionModelo = new CamionModelo();
-    private EventoTabla eventoTbl= new EventoTabla() ;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    //private List<TipoCamion> listaTipoCamion;
+    //private List<TipoCamion> listaTipoCamion = null;
     
     public Pantalla_Camion() {
         initComponents();
-        tblCamion.setModel(camionModelo);
-        panelCamion.addMouseListener(eventoTbl);
-        tblCamion.addMouseListener(eventoTbl);
-        RefrescarTablaCamion(); 
-        /*cmbCamionTipo.setEnabled(true);
-        //cmbCamionTipo.removeAllItems();
-        //cmbCamionBuscarTipo.removeAllItems();
-        //cmbCamionBuscarTipo.addItem("Todos");
-        List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
-        int cantLista = listaTipoCamion.size();
-        for(int i=0; i<cantLista; i++){
-            cmbCamionTipo.addItem(listaTipoCamion.get(i).getNombre());
-            cmbCamionBuscarTipo.addItem(listaTipoCamion.get(i).getNombre());
-        }*/
-        LimpiarDatos();
+        
+        RefrescarCmbCamion(); 
+        //LimpiarDatos();
     }
 
     private void RefrescarCmbCamion(){
-        cmbCamionTipo.setEnabled(true);
+        /*cmbCamionTipo.setEnabled(true);
         cmbCamionTipo.removeAllItems();
         cmbCamionBuscarTipo.removeAllItems();
-        cmbCamionBuscarTipo.addItem("Todos");
+        cmbCamionBuscarTipo.addItem("Todos");*/
         List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
-        int cantLista = listaTipoCamion.size();
-        for(int i=0; i<cantLista; i++){
-            cmbCamionTipo.addItem(listaTipoCamion.get(i).getNombre());
-            cmbCamionBuscarTipo.addItem(listaTipoCamion.get(i).getNombre());
+        if (listaTipoCamion!=null){
+            //List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
+            int cantLista = listaTipoCamion.size();
+            for(int i=0; i<cantLista; i++){
+                cmbCamionTipo.addItem(listaTipoCamion.get(i).getNombre());
+                cmbCamionBuscarTipo.addItem(listaTipoCamion.get(i).getNombre());
+            }
         }
     }
     
     private void RefrescarTablaCamion(){
-        camionModelo.listaCamion = camionControlador.ListarCamion();
-        camionModelo.fireTableChanged(null);
-    }
-    
-    /**
-    * Modelo de la tabla para poder manejarla facilmente
-    */
-    private class CamionModelo extends AbstractTableModel{
         
-	List<Camion> listaCamion = null;
-	String [] titles = {"Código", "Placa", "Tipo de Camión", "Estado", "Fecha Registro"};
-	
-        @Override
-	public int getColumnCount() {
-            // TODO Auto-generated method stub
-            return titles.length;
-	}
-	@Override
-	public int getRowCount() {
-            // TODO Auto-generated method stub
-            return listaCamion.size();
-	}
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-            // TODO Auto-generated method stub
-            Camion tc = listaCamion.get(rowIndex);
+        String placa = txtCamionBuscarPlaca.getText();
+        String estado = cmbCamionBuscarEstado.getSelectedItem().toString();
+        String strTipo = cmbCamionBuscarTipo.getSelectedItem().toString();
+        Date desde = datCamionBuscarDesde.getDate();
+        Date hasta = datCamionBuscarHasta.getDate();
+        
+        int codTipo = 0;       
+        if (estado.compareTo("Todos") == 0) estado = "";
+        if (strTipo.compareTo("Todos") != 0){
+            codTipo = tpCamionControlador.BuscarTipoCamionPorNombre(strTipo).getIdTipoCamion();
+        }
+        
+        List<Camion> listaCamion= camionControlador.BuscarCamion(placa, estado, codTipo, desde, hasta);
+        
+        if (listaCamion.size()!=0){
+            DefaultTableModel modelo = (DefaultTableModel) tblCamion.getModel();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            modelo.setRowCount(0);
             
-            String value = "";
-            switch(columnIndex){
-                case 0: value = tc.getIdCamion().toString(); break;
-                case 1: value = tc.getPlaca(); break;
-                case 2: value = ""+ tc.getTipoCamion().getNombre(); break; 
-                case 3: value = ""+ tc.getEstado(); break; 
-                case 4: value = ""+ sdf.format(tc.getFechaRegistro()); break; 
-            }
-            return value;
-        }
-	@Override	
-	public String getColumnName(int col){
-            return titles[col];
-	}
-    }
-
-    /**
-     * Manejedor de eventos
-     */
-    private class EventoTabla implements MouseListener {
-
-        @Override
-        public void mouseClicked(MouseEvent evt) {            
-            if (evt.getSource() == tblCamion){                
-                int fila = tblCamion.getSelectedRow();
-                VerDatos(tblCamion.getValueAt(fila, 0).toString());
-                txtCamionPlaca.setEnabled(false);
-                cmbCamionTipo.setEnabled(false);
-                BotonesEditables(false);
+            for (int i = 0; i < listaCamion.size(); i++) {
+                Object[] fila = new Object[6];
+                fila[0] = listaCamion.get(i).getIdCamion();
+                fila[1] = listaCamion.get(i).getPlaca();
+                fila[2] = listaCamion.get(i).getTipoCamion().getNombre();
+                fila[3] = listaCamion.get(i).getEstado();
+                fila[4] = sdf.format(listaCamion.get(i).getFechaRegistro());
+                modelo.addRow(fila);
             }
         }
-
-        @Override
-        public void mouseEntered(MouseEvent arg0) {
-            // TODO Auto-generated method stub
-            //label25.setText("Entered");
-        }
-
-        @Override
-        public void mouseExited(MouseEvent arg0) {
-            // TODO Auto-generated method stub
-            //label25.setText("Exited");
-        }
-
-        @Override
-        public void mousePressed(MouseEvent arg0) {
-            // TODO Auto-generated method stub
-            //label25.setText("Pressed");
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent arg0) {
-            // TODO Auto-generated method stub
-            //label25.setText("Released");
-        }
-    }
+    }  
     
     private void VerDatos(String strCodigo){    
         int idCamionSel = Integer.parseInt(strCodigo);
@@ -179,7 +122,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         txtCamionCodigo.setText("");
         txtCamionPlaca.setText("");
         datCamionFecha.setDate(new Date());
-        txtCamionEstado.setText("Disponible");
+        txtCamionEstado.setText("DISPONIBLE");
         //RefrescarCmbCamion();
     }
     
@@ -581,6 +524,11 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblCamion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCamionMouseClicked(evt);
+            }
+        });
         jScrollPane8.setViewportView(tblCamion);
         if (tblCamion.getColumnModel().getColumnCount() > 0) {
             tblCamion.getColumnModel().getColumn(0).setResizable(false);
@@ -595,33 +543,37 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         panelBuscarLayout.setHorizontalGroup(
             panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscarLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelBuscarLayout.createSequentialGroup()
-                        .addComponent(label15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCamionBuscar))
                     .addGroup(panelBuscarLayout.createSequentialGroup()
-                        .addComponent(panelDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 26, Short.MAX_VALUE)
-                        .addComponent(panelManten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane8))
+                        .addGap(20, 20, 20)
+                        .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelBuscarLayout.createSequentialGroup()
+                                .addComponent(label15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panelBuscarLayout.createSequentialGroup()
+                                .addComponent(panelDatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 26, Short.MAX_VALUE)
+                                .addComponent(panelManten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane8))))
                 .addGap(20, 20, 20))
         );
         panelBuscarLayout.setVerticalGroup(
             panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscarLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCamionBuscar))
-                .addGap(20, 20, 20)
+                .addComponent(label15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelDatos, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addComponent(panelManten, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCamionBuscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout panelCamionLayout = new javax.swing.GroupLayout(panelCamion);
@@ -741,8 +693,8 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCamionGuardarActionPerformed
 
     private void btnCamionBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCamionBuscarActionPerformed
-        
-        String placa = txtCamionBuscarPlaca.getText();
+        RefrescarTablaCamion();
+        /*String placa = txtCamionBuscarPlaca.getText();
         String estado = cmbCamionBuscarEstado.getSelectedItem().toString();
         String strTipo = cmbCamionBuscarTipo.getSelectedItem().toString();
         Date desde = datCamionBuscarDesde.getDate();
@@ -754,8 +706,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
             codTipo = tpCamionControlador.BuscarTipoCamionPorNombre(strTipo).getIdTipoCamion();
         }
         
-        camionModelo.listaCamion = camionControlador.BuscarCamion(placa, estado, codTipo, desde, hasta);
-        camionModelo.fireTableChanged(null);
+        List<Camion> listaCamion= camionControlador.BuscarCamion(placa, estado, codTipo, desde, hasta);     */  
     }//GEN-LAST:event_btnCamionBuscarActionPerformed
 
     private void cmbCamionTipoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCamionTipoItemStateChanged
@@ -779,6 +730,13 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
                 datCamionBuscarDesde.setMaxSelectableDate(datCamionBuscarHasta.getDate());
         }
     }//GEN-LAST:event_datCamionBuscarHastaPropertyChange
+
+    private void tblCamionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCamionMouseClicked
+        if (evt.getSource() == tblCamion){
+            int fila = tblCamion.getSelectedRow();
+            VerDatos(tblCamion.getValueAt(fila, 0).toString());
+        }
+    }//GEN-LAST:event_tblCamionMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCamionBuscar;
