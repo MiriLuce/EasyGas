@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Disponibilidad" table="DISPONIBILIDAD" catalog="inf226ga" optimistic-lock="version">
+        <id name="idDisponibilidad" type="java.lang.Integer">
+            <column name="idDisponibilidad" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="camion" class="Modelo.Hibernate.Camion" fetch="select">
+            <column name="idCamion" not-null="true" />
+        </many-to-one>
+        <property name="horaInicio" type="timestamp">
+            <column name="HoraInicio" length="19" not-null="true" />
+        </property>
+        <property name="horaFin" type="timestamp">
+            <column name="HoraFin" length="19" not-null="true" />
+        </property>
+        <property name="fecha" type="date">
+            <column name="Fecha" length="10" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

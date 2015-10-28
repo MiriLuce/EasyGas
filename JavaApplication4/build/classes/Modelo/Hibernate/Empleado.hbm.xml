@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Empleado" table="EMPLEADO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idEmpleado" type="java.lang.Integer">
+            <column name="idEmpleado" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="turno" class="Modelo.Hibernate.Turno" fetch="select">
+            <column name="idTurno" not-null="true" />
+        </many-to-one>
+        <property name="fechaRegistro" type="date">
+            <column name="FechaRegistro" length="10" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+        <property name="puesto" type="string">
+            <column name="Puesto" length="20" not-null="true" />
+        </property>
+        <property name="nombres" type="string">
+            <column name="Nombres" length="20" not-null="true" />
+        </property>
+        <property name="apellidoPat" type="string">
+            <column name="ApellidoPat" length="20" not-null="true" />
+        </property>
+        <property name="apellidoMat" type="string">
+            <column name="ApellidoMat" length="20" not-null="true" />
+        </property>
+        <property name="dni" type="string">
+            <column name="DNI" length="8" not-null="true" />
+        </property>
+        <set name="rutas" table="RUTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idConductor" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Ruta" />
+        </set>
+        <set name="usuarios" table="USUARIO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idEmpleado" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Usuario" />
+        </set>
+    </class>
+</hibernate-mapping>

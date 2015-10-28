@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Usuario" table="USUARIO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idUsuario" type="java.lang.Integer">
+            <column name="idUsuario" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="empleado" class="Modelo.Hibernate.Empleado" fetch="select">
+            <column name="idEmpleado" />
+        </many-to-one>
+        <many-to-one name="perfil" class="Modelo.Hibernate.Perfil" fetch="select">
+            <column name="idPerfil" />
+        </many-to-one>
+        <property name="nombreUsuario" type="string">
+            <column name="NombreUsuario" length="50" not-null="true" />
+        </property>
+        <property name="contrasenha" type="string">
+            <column name="Contrasenha" length="50" not-null="true" />
+        </property>
+        <property name="fechaRegistro" type="date">
+            <column name="FechaRegistro" length="10" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+        <property name="correo" type="string">
+            <column name="Correo" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

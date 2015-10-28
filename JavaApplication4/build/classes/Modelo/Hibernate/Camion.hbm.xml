@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Camion" table="CAMION" catalog="inf226ga" optimistic-lock="version">
+        <id name="idCamion" type="java.lang.Integer">
+            <column name="idCamion" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tipoCamion" class="Modelo.Hibernate.TipoCamion" fetch="select">
+            <column name="idTipoCamion" not-null="true" />
+        </many-to-one>
+        <property name="placa" type="string">
+            <column name="Placa" length="10" not-null="true" />
+        </property>
+        <property name="fechaRegistro" type="date">
+            <column name="FechaRegistro" length="10" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+        <set name="mantenimientos" table="MANTENIMIENTO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idCamion" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Mantenimiento" />
+        </set>
+        <set name="rutas" table="RUTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idCamion" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Ruta" />
+        </set>
+        <set name="disponibilidads" table="DISPONIBILIDAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idCamion" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Disponibilidad" />
+        </set>
+    </class>
+</hibernate-mapping>

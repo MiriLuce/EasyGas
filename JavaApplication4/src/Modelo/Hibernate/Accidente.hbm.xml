@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Accidente" table="ACCIDENTE" catalog="inf226ga" optimistic-lock="version">
+        <id name="idAccidente" type="java.lang.Integer">
+            <column name="idAccidente" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nodo" class="Modelo.Hibernate.Nodo" fetch="select">
+            <column name="idNodo" not-null="true" />
+        </many-to-one>
+        <property name="fecha" type="date">
+            <column name="Fecha" length="10" not-null="true" />
+        </property>
+        <property name="hora" type="timestamp">
+            <column name="Hora" length="19" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+        <property name="observacion" type="string">
+            <column name="Observacion" length="200" />
+        </property>
+        <property name="solucion" type="string">
+            <column name="Solucion" length="200" />
+        </property>
+        <set name="rutas" table="RUTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idAccidente" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Ruta" />
+        </set>
+    </class>
+</hibernate-mapping>

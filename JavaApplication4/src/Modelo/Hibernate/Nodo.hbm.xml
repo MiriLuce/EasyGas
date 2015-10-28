@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Nodo" table="NODO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idNodo" type="java.lang.Integer">
+            <column name="idNodo" />
+            <generator class="identity" />
+        </id>
+        <property name="coordX" type="int">
+            <column name="CoordX" not-null="true" />
+        </property>
+        <property name="coordY" type="int">
+            <column name="CoordY" not-null="true" />
+        </property>
+        <property name="habilitado" type="string">
+            <column name="Habilitado" length="20" />
+        </property>
+        <set name="clientes" table="CLIENTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idNodo" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Cliente" />
+        </set>
+        <set name="accidentes" table="ACCIDENTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idNodo" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Accidente" />
+        </set>
+        <set name="aristasForIdOrigen" table="ARISTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idOrigen" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Arista" />
+        </set>
+        <set name="aristasForIdDestino" table="ARISTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idDestino" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Arista" />
+        </set>
+    </class>
+</hibernate-mapping>

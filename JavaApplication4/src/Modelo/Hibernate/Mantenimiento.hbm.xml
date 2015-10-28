@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Mantenimiento" table="MANTENIMIENTO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idMantenimiento" type="java.lang.Integer">
+            <column name="idMantenimiento" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="camion" class="Modelo.Hibernate.Camion" fetch="select">
+            <column name="idCamion" not-null="true" />
+        </many-to-one>
+        <property name="fecha" type="date">
+            <column name="Fecha" length="10" not-null="true" />
+        </property>
+        <property name="hora" type="timestamp">
+            <column name="Hora" length="19" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+        <property name="idTipoMantenimiento" type="string">
+            <column name="idTipoMantenimiento" length="50" not-null="true" />
+        </property>
+        <property name="cantTurnos" type="int">
+            <column name="CantTurnos" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

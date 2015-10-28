@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Pedido" table="PEDIDO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idPedido" type="java.lang.Integer">
+            <column name="idPedido" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cliente" class="Modelo.Hibernate.Cliente" fetch="select">
+            <column name="idCliente" not-null="true" />
+        </many-to-one>
+        <property name="fechaRegistro" type="date">
+            <column name="FechaRegistro" length="10" not-null="true" />
+        </property>
+        <property name="fechaEntrega" type="date">
+            <column name="FechaEntrega" length="10" />
+        </property>
+        <property name="horaSolicitada" type="timestamp">
+            <column name="HoraSolicitada" length="19" not-null="true" />
+        </property>
+        <property name="cantGlp" type="double">
+            <column name="CantGLP" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="plazo" type="int">
+            <column name="Plazo" not-null="true" />
+        </property>
+        <property name="prioridad" type="string">
+            <column name="Prioridad" length="20" not-null="true" />
+        </property>
+        <property name="estado" type="string">
+            <column name="Estado" length="20" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

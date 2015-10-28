@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Modelo.Hibernate.Turno" table="TURNO" catalog="inf226ga" optimistic-lock="version">
+        <id name="idTurno" type="java.lang.Integer">
+            <column name="idTurno" />
+            <generator class="identity" />
+        </id>
+        <property name="horaInicio" type="timestamp">
+            <column name="HoraInicio" length="19" not-null="true" />
+        </property>
+        <property name="horaFin" type="timestamp">
+            <column name="HoraFin" length="19" not-null="true" />
+        </property>
+        <set name="empleados" table="EMPLEADO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idTurno" not-null="true" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Empleado" />
+        </set>
+    </class>
+</hibernate-mapping>
