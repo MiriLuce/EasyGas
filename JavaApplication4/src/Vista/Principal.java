@@ -5,6 +5,7 @@
  */
 package Vista;
 
+import java.awt.Cursor;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -288,7 +289,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void mantPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantPedidoActionPerformed
-        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         ActualizaVentanas();
         
         if (ventanaPedido == null) {
@@ -302,6 +303,7 @@ public class Principal extends javax.swing.JFrame {
             }
         }
         ventanaPedido.setVisible(true);
+        this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_mantPedidoActionPerformed
 
     private void mantAccidenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantAccidenteActionPerformed

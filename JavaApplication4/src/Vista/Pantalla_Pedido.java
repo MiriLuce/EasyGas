@@ -5,20 +5,14 @@
  */
 package Vista;
 
-import Controlador.ClienteControlador;
-import Controlador.GeneralControlador;
-import Controlador.PedidoControlador;
-import Modelo.Hibernate.Cliente;
-import Modelo.Hibernate.Nodo;
-import Modelo.Hibernate.Pedido;
+import Controlador.*;
+import Modelo.Hibernate.*;
 import java.awt.Cursor;
+import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -26,12 +20,13 @@ import javax.swing.SpinnerNumberModel;
  */
 public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form InternalFramePedido
-     */
+    ArrayList<Pedido> listaTotalPedidos;
+
     public Pantalla_Pedido() {
         initComponents();
-        PedidoControlador.ActualizaTablaPedidos(PedidoControlador.ListarPedidos(), bPedTabla);
+        listaTotalPedidos = PedidoControlador.ListarPedidos();
+        PedidoControlador.ActualizaTablaPedidos(listaTotalPedidos, bPedTabla);
+        bPedNroDocText.setEnabled(false);
     }
 
     /**
@@ -79,8 +74,8 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         jPanel42 = new javax.swing.JPanel();
         jLabel94 = new javax.swing.JLabel();
         jLabel95 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        bPedDesdeFecha = new com.toedter.calendar.JDateChooser();
+        bPedHastaFecha = new com.toedter.calendar.JDateChooser();
         bPedBuscBoton = new javax.swing.JButton();
         jScrollPane9 = new javax.swing.JScrollPane();
         bPedTabla = new javax.swing.JTable();
@@ -91,6 +86,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         bPedVolText = new javax.swing.JSpinner();
         jLabel100 = new javax.swing.JLabel();
         bPedEstadoComboBox = new javax.swing.JComboBox();
+        bPedLimpiarBoton = new javax.swing.JButton();
 
         panelPedidos.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -107,9 +103,9 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         jPanel38.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
         jPanel38.setPreferredSize(new java.awt.Dimension(360, 250));
 
-        nPedNroDocText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedNroDocTextActionPerformed(evt);
+        nPedNroDocText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nPedNroDocTextKeyTyped(evt);
             }
         });
 
@@ -119,25 +115,14 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
         jLabel86.setText("N° Documento:");
 
-        nPedDirComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedDirComboBoxActionPerformed(evt);
-            }
-        });
-
         nPedNombCompText.setEnabled(false);
-        nPedNombCompText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedNombCompTextActionPerformed(evt);
-            }
-        });
 
         jLabel87.setText("Dirección:");
 
         nPedTipoDocComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DNI", "RUC" }));
-        nPedTipoDocComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedTipoDocComboBoxActionPerformed(evt);
+        nPedTipoDocComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                nPedTipoDocComboBoxItemStateChanged(evt);
             }
         });
 
@@ -163,7 +148,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                             .addComponent(jLabel86)
                             .addComponent(jLabel87)
                             .addComponent(jLabel83))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                         .addGroup(jPanel38Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nPedTipoDocComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nPedNroDocText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -202,11 +187,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         jPanel39.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos"));
 
         nPedPlaMaxComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2 horas", "4 horas", "6 horas", "8 horas", "10 horas", "12 horas", "14 horas", "16 horas", "18 horas", "20 horas", "22 horas", "24 horas" }));
-        nPedPlaMaxComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedPlaMaxComboBoxActionPerformed(evt);
-            }
-        });
 
         jLabel88.setText("Plazo máximo:");
 
@@ -307,19 +287,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel37Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel38, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
-                    .addGroup(jPanel37Layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel37Layout.createSequentialGroup()
-                                .addComponent(nPedCancelBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nPedGuardBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel37Layout.createSequentialGroup()
-                                .addComponent(nPedElimBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nPedEditBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 106, Short.MAX_VALUE))
+                        .addComponent(jPanel38, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
                     .addGroup(jPanel37Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel39, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -331,6 +299,18 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(nPedNuevBoton)))
                 .addContainerGap())
+            .addGroup(jPanel37Layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel37Layout.createSequentialGroup()
+                        .addComponent(nPedCancelBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(nPedGuardBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel37Layout.createSequentialGroup()
+                        .addComponent(nPedElimBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(nPedEditBoton, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel37Layout.setVerticalGroup(
             jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -372,9 +352,9 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
         jLabel91.setText("Nombre:");
 
-        bPedNombText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bPedNombTextActionPerformed(evt);
+        bPedNombText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                bPedNombTextKeyTyped(evt);
             }
         });
 
@@ -382,16 +362,16 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
         jLabel93.setText("N° Documento:");
 
-        bPedNroDocText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bPedNroDocTextActionPerformed(evt);
+        bPedNroDocText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                bPedNroDocTextKeyTyped(evt);
             }
         });
 
         bPedTipoDocComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODOS", "DNI", "RUC" }));
-        bPedTipoDocComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bPedTipoDocComboBoxActionPerformed(evt);
+        bPedTipoDocComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                bPedTipoDocComboBoxItemStateChanged(evt);
             }
         });
 
@@ -405,7 +385,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                     .addComponent(jLabel92)
                     .addComponent(jLabel91)
                     .addComponent(jLabel93))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bPedNombText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bPedTipoDocComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -427,7 +407,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bPedNroDocText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel93))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jPanel42.setBackground(new java.awt.Color(240, 240, 225));
@@ -439,6 +419,12 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
         jLabel95.setText("Hasta:");
 
+        bPedDesdeFecha.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                bPedDesdeFechaPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel42Layout = new javax.swing.GroupLayout(jPanel42);
         jPanel42.setLayout(jPanel42Layout);
         jPanel42Layout.setHorizontalGroup(
@@ -447,11 +433,11 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGap(61, 61, 61)
                 .addComponent(jLabel94)
                 .addGap(32, 32, 32)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(bPedDesdeFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57)
                 .addComponent(jLabel95)
                 .addGap(32, 32, 32)
-                .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(bPedHastaFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(40, 40, 40))
         );
         jPanel42Layout.setVerticalGroup(
@@ -460,10 +446,10 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel42Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel95)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bPedHastaFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel94)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addComponent(bPedDesdeFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         bPedBuscBoton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -519,11 +505,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         jPanel44.setVerifyInputWhenFocusTarget(false);
 
         bPedPlazoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODOS", "2 horas", "4 horas", "6 horas", "8 horas", "10 horas", "12 horas", "14 horas", "16 horas", "18 horas", "20 horas", "22 horas", "24 horas" }));
-        bPedPlazoComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bPedPlazoComboBoxActionPerformed(evt);
-            }
-        });
 
         jLabel98.setText("Plazo máximo:");
 
@@ -534,11 +515,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         jLabel100.setText("Estado:");
 
         bPedEstadoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TODOS", "ACTIVO", "ANULADO", "ENTREGADO" }));
-        bPedEstadoComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bPedEstadoComboBoxActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
         jPanel44.setLayout(jPanel44Layout);
@@ -550,7 +526,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                     .addComponent(jLabel99)
                     .addComponent(jLabel98)
                     .addComponent(jLabel100))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bPedEstadoComboBox, 0, 180, Short.MAX_VALUE)
                     .addComponent(bPedPlazoComboBox, 0, 180, Short.MAX_VALUE)
@@ -575,47 +551,62 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        bPedLimpiarBoton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        bPedLimpiarBoton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_cancelar.png"))); // NOI18N
+        bPedLimpiarBoton.setText("Limpiar");
+        bPedLimpiarBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPedLimpiarBotonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel40Layout = new javax.swing.GroupLayout(jPanel40);
         jPanel40.setLayout(jPanel40Layout);
         jPanel40Layout.setHorizontalGroup(
             jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
-                .addGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel40Layout.createSequentialGroup()
+            .addGroup(jPanel40Layout.createSequentialGroup()
+                .addGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane9))
-                    .addGroup(jPanel40Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(label18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bPedBuscBoton))
-                    .addGroup(jPanel40Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel41, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                        .addComponent(jPanel41, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel44, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel40Layout.createSequentialGroup()
+                    .addGroup(jPanel40Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel42, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)))
+                        .addComponent(jPanel42, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(bPedLimpiarBoton)
+                        .addGap(18, 18, 18)
+                        .addComponent(bPedBuscBoton)))
                 .addContainerGap())
         );
         jPanel40Layout.setVerticalGroup(
             jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel40Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bPedBuscBoton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(label18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel41, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                     .addComponent(jPanel44, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel42, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel40Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bPedBuscBoton)
+                    .addComponent(bPedLimpiarBoton))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
@@ -663,32 +654,10 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void nPedNroDocTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedNroDocTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPedNroDocTextActionPerformed
-
-    private void nPedDirComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedDirComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPedDirComboBoxActionPerformed
-
-    private void nPedNombCompTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedNombCompTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPedNombCompTextActionPerformed
-
-    private void nPedTipoDocComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedTipoDocComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPedTipoDocComboBoxActionPerformed
-
     private void nPedBuscCliBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedBuscCliBotonActionPerformed
 
         if (nPedNroDocText.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "El campo N° Documento está vacío");
-        } else if (nPedTipoDocComboBox.getSelectedItem().toString().equalsIgnoreCase("DNI") && nPedNroDocText.getText().length() != 8) {
-            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
-        } else if (nPedTipoDocComboBox.getSelectedItem().toString().equalsIgnoreCase("RUC") && nPedNroDocText.getText().length() != 11) {
-            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
-        } else if (!GeneralControlador.VerificaNroDoc(nPedNroDocText.getText())) {
-            JOptionPane.showMessageDialog(null, "El número de documento solo debe contener dígitos");
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ArrayList<Cliente> nc = ClienteControlador.BuscaClienteNroDoc(nPedNroDocText.getText());
@@ -707,10 +676,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         }
 
     }//GEN-LAST:event_nPedBuscCliBotonActionPerformed
-
-    private void nPedPlaMaxComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedPlaMaxComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nPedPlaMaxComboBoxActionPerformed
 
     private void nPedNuevBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedNuevBotonActionPerformed
         DatosEditables(true);
@@ -739,7 +704,8 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             DatosEditables(true);
             BotonesEditables(true);
             LimpiaCamposNuevoPedido();
-            PedidoControlador.ActualizaTablaPedidos(PedidoControlador.ListarPedidos(), bPedTabla);
+            listaTotalPedidos = PedidoControlador.ListarPedidos();
+            PedidoControlador.ActualizaTablaPedidos(listaTotalPedidos, bPedTabla);
             this.setCursor(Cursor.getDefaultCursor());
         }
     }//GEN-LAST:event_nPedElimBotonActionPerformed
@@ -756,12 +722,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
     private void nPedGuardBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedGuardBotonActionPerformed
         if (nPedNroDocText.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "El campo N° Documento está vacío");
-        } else if (nPedTipoDocComboBox.getSelectedItem().toString().equalsIgnoreCase("DNI") && nPedNroDocText.getText().length() != 8) {
-            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
-        } else if (nPedTipoDocComboBox.getSelectedItem().toString().equalsIgnoreCase("RUC") && nPedNroDocText.getText().length() != 11) {
-            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
-        } else if (!GeneralControlador.VerificaNroDoc(nPedNroDocText.getText())) {
-            JOptionPane.showMessageDialog(null, "El número de documento solo debe contener números");
         } else {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             ArrayList<Cliente> nc = ClienteControlador.BuscaClienteNroDoc(nPedNroDocText.getText());
@@ -770,16 +730,15 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             if (nc.size() > 0) {
 
                 if (!nc.get(0).getNombres().equalsIgnoreCase(nPedNombCompText.getText())) {
-                    JOptionPane.showMessageDialog(null, "El número de documento del cliente, se han actualizado los datos.\nPor favor seleccione correctamente");
                     nPedNombCompText.setText(nc.get(0).getNombres());
-
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     ArrayList<String> ls = GeneralControlador.ObtenListaDirecciones(nPedNroDocText);
                     nPedDirComboBox.setModel(new DefaultComboBoxModel(ls.toArray()));
                     this.setCursor(Cursor.getDefaultCursor());
 
+                    JOptionPane.showMessageDialog(null, "El número de documento del cliente ha cambiado, se han actualizado los datos");
                 } else {
-                    if (nPedVolText.getValue().toString().equalsIgnoreCase("0")) {
+                    if ((Double) nPedVolText.getValue() == 0) {
                         JOptionPane.showMessageDialog(null, "No se puede registrar un pedido con 0 toneladas solicitadas");
                     } else {
                         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -829,7 +788,8 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                         DatosEditables(true);
                         BotonesEditables(true);
                         LimpiaCamposNuevoPedido();
-                        PedidoControlador.ActualizaTablaPedidos(PedidoControlador.ListarPedidos(), bPedTabla);
+                        listaTotalPedidos = PedidoControlador.ListarPedidos();
+                        PedidoControlador.ActualizaTablaPedidos(listaTotalPedidos, bPedTabla);
                         this.setCursor(Cursor.getDefaultCursor());
                     }
                 }
@@ -844,28 +804,18 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_nPedCancelBotonActionPerformed
 
-    private void bPedNombTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedNombTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bPedNombTextActionPerformed
-
-    private void bPedNroDocTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedNroDocTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bPedNroDocTextActionPerformed
-
-    private void bPedTipoDocComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedTipoDocComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bPedTipoDocComboBoxActionPerformed
-
     private void bPedBuscBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedBuscBotonActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        ArrayList<Pedido> lista = PedidoControlador.BuscaPedidosFiltro(bPedNombText, bPedTipoDocComboBox, bPedNroDocText, bPedVolText, bPedPlazoComboBox, bPedEstadoComboBox);
-        PedidoControlador.ActualizaTablaPedidos(lista, bPedTabla);
-        this.setCursor(Cursor.getDefaultCursor());
+        if (bPedTipoDocComboBox.getSelectedIndex() == 1 && bPedNroDocText.getText().length() > 0 && bPedNroDocText.getText().length() != 8) {
+            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
+        } else if (bPedTipoDocComboBox.getSelectedIndex() == 2 && bPedNroDocText.getText().length() > 0 && bPedNroDocText.getText().length() != 11) {
+            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
+        } else {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            ArrayList<Pedido> lista = PedidoControlador.BuscaPedidosFiltro(listaTotalPedidos, bPedNombText, bPedTipoDocComboBox, bPedNroDocText, bPedVolText, bPedPlazoComboBox, bPedEstadoComboBox);
+            PedidoControlador.ActualizaTablaPedidos(lista, bPedTabla);
+            this.setCursor(Cursor.getDefaultCursor());
+        }
     }//GEN-LAST:event_bPedBuscBotonActionPerformed
-
-    private void bPedPlazoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedPlazoComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bPedPlazoComboBoxActionPerformed
 
     private void bPedTablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bPedTablaMouseClicked
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -877,23 +827,117 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_bPedTablaMouseClicked
 
     private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed
-        
-        nPedCargaBoton.setEnabled(false);
         File archivo = GeneralControlador.obtenerArchivo();
-        if(archivo!=null){
+
+        if (archivo != null) {
+            nPedCargaBoton.setEnabled(false);
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             PedidoControlador.CargaPedidosArchivo(archivo.getAbsolutePath());
             this.setCursor(Cursor.getDefaultCursor());
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            listaTotalPedidos = PedidoControlador.ListarPedidos();
+            PedidoControlador.ActualizaTablaPedidos(listaTotalPedidos, bPedTabla);
+            this.setCursor(Cursor.getDefaultCursor());
         }
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        PedidoControlador.ActualizaTablaPedidos(PedidoControlador.ListarPedidos(), bPedTabla);
-        this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_nPedCargaBotonActionPerformed
 
-    private void bPedEstadoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedEstadoComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bPedEstadoComboBoxActionPerformed
+    private void nPedNroDocTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPedNroDocTextKeyTyped
+        char car = evt.getKeyChar();
+
+        if (nPedTipoDocComboBox.getSelectedIndex() == 0 && nPedNroDocText.getText().length() > 7) {
+            evt.consume();
+        }
+
+        if (nPedTipoDocComboBox.getSelectedIndex() == 1 && nPedNroDocText.getText().length() > 10) {
+            evt.consume();
+        }
+
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_nPedNroDocTextKeyTyped
+
+    private void nPedTipoDocComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_nPedTipoDocComboBoxItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            Object item = evt.getItem();
+            if (item.toString().equalsIgnoreCase("DNI") && nPedNroDocText.getText().length() > 7) {
+                String aux = nPedNroDocText.getText().substring(0, 8);
+                nPedNroDocText.setText(aux);
+            }
+        }
+    }//GEN-LAST:event_nPedTipoDocComboBoxItemStateChanged
+
+    private void bPedNombTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bPedNombTextKeyTyped
+        char car = evt.getKeyChar();
+
+        if (bPedNombText.getText().length() > 19) {
+            evt.consume();
+        }
+
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_bPedNombTextKeyTyped
+
+    private void bPedTipoDocComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_bPedTipoDocComboBoxItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            Object item = evt.getItem();
+            String cad = item.toString();
+
+            if (cad.equalsIgnoreCase("TODOS") && bPedNroDocText.isEnabled()) {
+                bPedNroDocText.setText("");
+                bPedNroDocText.setEnabled(false);
+            } else if (!cad.equalsIgnoreCase("TODOS") && !bPedNroDocText.isEnabled()) {
+                bPedNroDocText.setEnabled(true);
+            }
+
+            if (item.toString().equalsIgnoreCase("DNI") && bPedNroDocText.getText().length() > 7) {
+                String aux = bPedNroDocText.getText().substring(0, 8);
+                bPedNroDocText.setText(aux);
+            }
+        }
+    }//GEN-LAST:event_bPedTipoDocComboBoxItemStateChanged
+
+    private void bPedNroDocTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bPedNroDocTextKeyTyped
+        char car = evt.getKeyChar();
+
+        if (bPedTipoDocComboBox.getSelectedIndex() == 1 && bPedNroDocText.getText().length() > 7) {
+            evt.consume();
+        }
+
+        if (bPedTipoDocComboBox.getSelectedIndex() == 2 && bPedNroDocText.getText().length() > 10) {
+            evt.consume();
+        }
+
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_bPedNroDocTextKeyTyped
+
+    private void bPedLimpiarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPedLimpiarBotonActionPerformed
+        bPedNombText.setText("");
+        bPedTipoDocComboBox.setSelectedIndex(0);
+        bPedNroDocText.setText("");
+        bPedNroDocText.setEnabled(false);
+        Double vol = 0.0;
+        bPedVolText.setValue(vol);
+        bPedPlazoComboBox.setSelectedIndex(0);
+        bPedEstadoComboBox.setSelectedIndex(0);
+        bPedDesdeFecha.setCalendar(null);
+        bPedHastaFecha.setCalendar(null);
+    }//GEN-LAST:event_bPedLimpiarBotonActionPerformed
+
+    private void bPedDesdeFechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_bPedDesdeFechaPropertyChange
+        if (evt.getSource() == bPedDesdeFecha) {
+            if (bPedDesdeFecha.getDate() != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(bPedDesdeFecha.getDate());
+                cal.add(Calendar.MINUTE, 60*24);
+                bPedHastaFecha.setMinSelectableDate(cal.getTime());
+            }
+        }
+    }//GEN-LAST:event_bPedDesdeFechaPropertyChange
 
     private void VerDatos(String strCodigo) {
         int pedidoId = Integer.parseInt(strCodigo);
@@ -932,15 +976,16 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bPedBuscBoton;
+    private com.toedter.calendar.JDateChooser bPedDesdeFecha;
     private javax.swing.JComboBox bPedEstadoComboBox;
+    private com.toedter.calendar.JDateChooser bPedHastaFecha;
+    private javax.swing.JButton bPedLimpiarBoton;
     private javax.swing.JTextField bPedNombText;
     private javax.swing.JTextField bPedNroDocText;
     private javax.swing.JComboBox bPedPlazoComboBox;
     private javax.swing.JTable bPedTabla;
     private javax.swing.JComboBox bPedTipoDocComboBox;
     private javax.swing.JSpinner bPedVolText;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel100;
     private javax.swing.JLabel jLabel83;
     private javax.swing.JLabel jLabel85;
