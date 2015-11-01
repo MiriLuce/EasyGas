@@ -5,9 +5,9 @@
  */
 package algoritmogenetico;
 
+import modeloNecesario.*;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import modelo.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,8 +22,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AlgoritmoGenetico {
 
     //variables principales
-    ArrayList<Camion> camiones;
-    ArrayList<Pedido> pedidos;
+    public ArrayList<Camion> camiones;
+    public ArrayList<Pedido> pedidos;
     ArrayList<Cromosoma> poblacion;
     Cromosoma mejorCromosoma;
 
@@ -34,20 +34,23 @@ public class AlgoritmoGenetico {
     int k;
     int turno;
 
-    Mapa mapa;
+    public static Mapa mapa;
 
     Cromosoma cromosoma;
 
+    
     // constructor
-    public AlgoritmoGenetico(ArrayList<Camion> lstCam, ArrayList<Pedido> lstPed, int nuevaFase, Mapa nuevoMapa) {
-        camiones = lstCam;
-        pedidos = lstPed;
+    public AlgoritmoGenetico(ArrayList<Camion> listaCamiones, ArrayList<Pedido> listaPedidos,
+            int nuevaFase, Mapa nuevoMapa) {
+        
         poblacion = new ArrayList<Cromosoma>();
-
+        camiones = listaCamiones;
+        pedidos = listaPedidos;
         mapa = nuevoMapa;
 
         pedidosConPrioridad = new ArrayList<Pedido>();
         pedidosSinPrioridad = new ArrayList<Pedido>();
+        
         fase = nuevaFase;
         k = 0;
 
@@ -79,32 +82,60 @@ public class AlgoritmoGenetico {
         }
             */
     }
+    
+     public Cromosoma empieza() throws FileNotFoundException, ParseException {
 
-    //funciones auxiliares
-    private int generaNumRandom(int min, int max) {
-
-        int numRandom = ThreadLocalRandom.current().nextInt(min, max + 1);
-        return numRandom;
+        //while (k < 5) {
+        if (fase == 1) {
+            generaCromosomasAleatorio(Constantes.cantPoblacion);
+        } else {
+            generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
+        }
+       
+        seleccionaElite();
+        //emparejaPoblacion();
+        //mutaPoblacion();
+        //System.out.println(poblacion.size());
+        eliminaAberraciones();
+        fase++;
+        //}
+        //System.out.println(poblacion.size());
+        return poblacion.get(0); //solucion optima
     }
 
-    private void anhadeCamiones() {
-        ArrayList<Camion> aux = (ArrayList<Camion>) camiones.clone(); //se copian valores
-
-        while (aux.size() > 0) {
-            int r = generaNumRandom(0, aux.size() - 1);
-            MiRuta cadAux = new MiRuta(aux.get(r));
-            cromosoma.cadena.add(cadAux);
-            aux.remove(r);
+     //crea n nuevos cromosomas de manera aleatoria
+    private void generaCromosomasAleatorio(int cantRequerida){
+        int cantActual = 0;
+        
+        while(cantActual < cantRequerida){
+            Cromosoma cromosoma = new Cromosoma();
+            anhadeCamiones(cromosoma);
+            anhadeEntregas();
+            //Cromosoma cromosoma = generarCromosoma();
+            if(cromosoma.esAberracion){
+                poblacion.add(cromosoma);
+                cantActual++;
+            }
         }
     }
-
-    private double espacioCamion(int i) {
-        double carga = cromosoma.obtenCarga(cromosoma.cadena.get(i).lstEntrega);
-        double capac = cromosoma.cadena.get(i).camion.getIdTipoCamion().getCapacidadGLP();
-
-        return capac - carga;
+    
+    // Crea las cadenas para el cromosoma : la lista de ruta vacia para la solucion
+    // Le asigna a cada ruta un camion al azar
+    private void anhadeCamiones(Cromosoma cromosoma) {
+                
+        ArrayList<Camion> listaCamiones = (ArrayList<Camion>) camiones.clone(); //se copian valores
+        int cantCamiones = listaCamiones.size();
+        int indiceCamion;
+                
+        while (cantCamiones > 0) {
+            indiceCamion = generaNumRandom(0, cantCamiones - 1);
+            Ruta ruta = new Ruta(listaCamiones.get(indiceCamion));
+            cromosoma.cadena.add(ruta);
+            listaCamiones.remove(indiceCamion);
+            cantCamiones--;
+        }
     }
-
+    
     private void anhadeEntregas() {
         
         
@@ -125,7 +156,7 @@ public class AlgoritmoGenetico {
             int nuevoY = auxConPrioridad.get(0).getIdCliente().getIdNodo().getCoordY();
 
             if (espacio >= cantPedida) {
-                Entrega nuevaE = new Entrega(nuevoX, nuevoY, cantPedida, horaSol, true);
+                Pedido nuevaE = new Pedido(nuevoX, nuevoY, cantPedida, horaSol, true);
                 cromosoma.cadena.get(n).lstEntrega.add(nuevaE);
                 auxConPrioridad.remove(0); //ya se atendio
             }
@@ -143,69 +174,80 @@ public class AlgoritmoGenetico {
             int nuevoY = auxSinPrioridad.get(0).getIdCliente().getIdNodo().getCoordY();
 
             if (espacio >= cantPedida) { //si hay espacio
-                Entrega nuevaE = new Entrega(nuevoX, nuevoY, cantPedida, horaSol, false);
+                Pedido nuevaE = new Pedido(nuevoX, nuevoY, cantPedida, horaSol, false);
                 cromosoma.cadena.get(n).lstEntrega.add(nuevaE);
                 auxSinPrioridad.remove(0); //ya se atendio
             }
             else{
-                Entrega nuevaE = new Entrega(nuevoX, nuevoY, espacio, horaSol, false);
+                Pedido nuevaE = new Pedido(nuevoX, nuevoY, espacio, horaSol, false);
                 cromosoma.cadena.get(n).lstEntrega.add(nuevaE);
                 auxSinPrioridad.get(0).setCantGLP(cantPedida-espacio); //aun no se atiende
             }
 
         }
         */
-        ArrayList<Pedido> aux = (ArrayList<Pedido>) pedidos.clone(); 
-       
-       
-
-        int s = camiones.size();
-        int nPedido = generaNumRandom(0, aux.size() - 1);
-
-        while (aux.size() > 0 && hayEspacio(aux)) {
+        
+        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
+        int cantPedidos = listaPedidos.size();
+        int cantCamiones = camiones.size();
+        int pedidoAleatorio, camionAleatorio; // = generaNumRandom(0, listaPedidos.size() - 1);
+        Pedido pedido;
+        
+        while (cantPedidos > 0 && hayEspacio(listaPedidos)) {
            
-            int n = generaNumRandom(0, s - 1); //camion aleatorio
+            camionAleatorio = generaNumRandom(0, cantCamiones - 1); //camion aleatorio
             
-            while(aux.size() > 0 ){
+            while(listaPedidos.size() > 0 ){
                 //System.out.println("Faltan " + aux.size());
-                nPedido = generaNumRandom(0, aux.size() - 1);
+                pedidoAleatorio = generaNumRandom(0, listaPedidos.size() - 1);
+                pedido = listaPedidos.get(pedidoAleatorio);
+                
                 //System.out.println("tengo el "+ aux.get(nPedido).getIdPedido() + " con GLP "+ aux.get(nPedido).getCantGLP() + " camion "+n );
-                double cantPedida = aux.get(nPedido).getCantGLP();
-                Date horaSol = aux.get(nPedido).getHoraSolicitada();
-                double espacio = espacioCamion(n); //espacio que queda en el camion
-                int nuevoX = aux.get(nPedido).getIdCliente().getIdNodo().getCoordX();
-                int nuevoY = aux.get(nPedido).getIdCliente().getIdNodo().getCoordY();
+                double cantPedida = pedido.getCantGLP();
+                Date horaSol = pedido.getHoraSolicitada();
+                
+                double espacio = espacioCamion(camionAleatorio); //espacio que queda en el camion
+                int nuevoX = pedido.getCliente().getDireccion().getCoordX();
+                int nuevoY = pedido.getCliente().getDireccion().getCoordY();
 
-                if (espacio >= cantPedida && cromosoma.alcanzaCombustible( cromosoma.cadena.get(n) )) {
-                    boolean prioridad=((aux.get(nPedido).getIdCliente().getTipoDocumento().equalsIgnoreCase("DNI") && turno == 1) || (aux.get(nPedido).getIdCliente().getTipoDocumento().equalsIgnoreCase("RUC") && turno == 3)) ;
-                    Entrega nuevaE = new Entrega(aux.get(nPedido).getIdPedido(),nuevoX, nuevoY, cantPedida, horaSol, prioridad);
-                    cromosoma.cadena.get(n).lstEntrega.add(nuevaE);
-                    aux.remove(nPedido); //ya se atendio
+                if (espacio >= cantPedida && cromosoma.alcanzaCombustible( cromosoma.cadena.get(camionAleatorio) )) {
+                    boolean prioridad=((pedido.getCliente().getTipoDocumento().equalsIgnoreCase("DNI") && turno == 1) || (listaPedidos.get(pedidoAleatorio).getCliente().getTipoDocumento().equalsIgnoreCase("RUC") && turno == 3)) ;
+                    Pedido nuevaE = new Pedido(pedido.getIdPedido(),nuevoX, nuevoY, cantPedida, horaSol, prioridad);
+                    cromosoma.cadena.get(camionAleatorio).getListaPedido().add(nuevaE);
+                    listaPedidos.remove(pedidoAleatorio); //ya se atendio
                 } else break;
             }
         }
+    }
+    
+    //funciones auxiliares
+    private int generaNumRandom(int min, int max) {
 
-       
+        int numRandom = ThreadLocalRandom.current().nextInt(min, max + 1);
+        return numRandom;
+    }  
 
+    private double espacioCamion(int i) {
+        double carga = cromosoma.obtenCarga(cromosoma.cadena.get(i).getListaPedido());
+        double capac = cromosoma.cadena.get(i).getCamion().getTipoCamion().getCapacidadGLP();
+
+        return capac - carga;
     }
 
     public boolean hayEspacio(ArrayList<Pedido> pedidos){
+        
         int cantCamiones= camiones.size();
         int cantPedidos=pedidos.size();
+        
         for(int i=0;i<cantCamiones;i++){
-            for(int j=0;j<cantPedidos;j++){
-               
+            for(int j=0;j<cantPedidos;j++){               
                 if(espacioCamion(i)>=pedidos.get(j).getCantGLP()){
                   //  System.out.println(" hay espacio "+pedidos.get(j).getIdPedido() + " con glp " +pedidos.get(j).getCantGLP()+ " camion " + j);
                     return true;
-                }
-            
+                }            
             }
-        
-        
         }
-        return false;
-    
+        return false;    
     }
     
     public boolean hayEspacioCamion(ArrayList<Pedido> pedidos, int indiceCamion){
@@ -218,30 +260,10 @@ public class AlgoritmoGenetico {
                 
                 return true;
             }
-            
-          
-        
-        
         }
-        return false;
+        return false;    
+    }
     
-    }
-    //crea n nuevos cromosomas de manera aleatoria
-    private void generaCromosomasAleatorio(int n) throws FileNotFoundException, ParseException {
-        while(poblacion.size()<n){
-            
-            cromosoma = new Cromosoma(mapa);
-            anhadeCamiones();
-            anhadeEntregas();
-            cromosoma.verificaAberracion();
-            //System.out.println(" tamanho " +poblacion.size() + " costo " + cromosoma.costo );
-            if(!cromosoma.esAberracion){
-               // System.out.println("Solucion econtrada");
-                poblacion.add(cromosoma);
-            }
-        }
-    }
-
     //para ordenar los cromosomas segun su costo
     private void ordenaPoblacion() {
         Collections.sort(poblacion, new Comparator<Cromosoma>() {
@@ -264,9 +286,9 @@ public class AlgoritmoGenetico {
         mejorCromosoma = new Cromosoma(mapa);
 
         mejorCromosoma.costo = c.costo;
-        mejorCromosoma.mapa = c.mapa;
+        //mejorCromosoma.mapa = c.mapa;
         mejorCromosoma.esAberracion = c.esAberracion;
-        mejorCromosoma.cadena = (ArrayList<MiRuta>) c.cadena.clone();
+        mejorCromosoma.cadena = (ArrayList<Ruta>) c.cadena.clone();
     }
 
     private void calculaCostos() {
@@ -306,7 +328,7 @@ public class AlgoritmoGenetico {
         ordenaPoblacion(); // poblacion ordenada sin aberraciones
         
         int poblacionFinal = (int) (Constantes.cantPoblacion * Constantes.probSeleccion);
-       
+        // como estan ordenados remuevo los ultimos ya que son los peores
         for (int i = 1; i <= poblacionFinal; i++) {
             poblacion.remove(poblacion.size() - 1);
         }
@@ -326,29 +348,30 @@ public class AlgoritmoGenetico {
         }
     }
 
-    private ArrayList<Cromosoma> intercambiaRutas(Cromosoma c1, Cromosoma c2) throws FileNotFoundException {
-        Cromosoma nuevo1 = new Cromosoma(mapa);
-        Cromosoma nuevo2 = new Cromosoma(mapa);
-        ArrayList<Cromosoma> hijos = new ArrayList<Cromosoma>();
+    private ArrayList<Cromosoma> intercambiaRutas(Cromosoma crom1, Cromosoma crom2) throws FileNotFoundException {
         
-        ArrayList<MiRuta> aux1 = (ArrayList<MiRuta>) c1.cadena.clone();
-        ArrayList<MiRuta> aux2 = (ArrayList<MiRuta>) c2.cadena.clone();
+        ArrayList<Cromosoma> hijos = new ArrayList<Cromosoma>();
+        Cromosoma hijo1 = new Cromosoma();
+        Cromosoma hijo2 = new Cromosoma();
+        
+        ArrayList<Ruta> rutasCrom1 = (ArrayList<Ruta>) crom1.cadena.clone();
+        ArrayList<Ruta> rutasCrom2 = (ArrayList<Ruta>) crom2.cadena.clone();
 
         for (int i = 0; i < camiones.size(); i++) {
             int par= i%2;
-            ArrayList<Entrega> aux = new ArrayList<Entrega>();
+            ArrayList<Pedido> aux = new ArrayList<Pedido>();
             if(par==0){
-                aux = (ArrayList<Entrega>) aux2.get(i).lstEntrega.clone();
-                aux1.get(i).lstEntrega = aux;
+                aux = (ArrayList<Pedido>) rutasCrom1.get(i).getListaPedido().clone();
+                rutasCrom1.get(i).setListaPedido(aux);
             }
             else {
-                aux = (ArrayList<Entrega>) aux1.get(i).lstEntrega.clone();
-                aux2.get(i).lstEntrega =aux;
-            }
-            
+                aux = (ArrayList<Pedido>) rutasCrom1.get(i).getListaPedido().clone();
+                rutasCrom2.get(i).setListaPedido(aux);
+            }            
         }
+        
         /*
-                for (int i = 0; i < camiones.size(); i++) {
+            for (int i = 0; i < camiones.size(); i++) {
             int par= i%2;
             
             ArrayList<Entrega> aux = (ArrayList<Entrega>) aux1.get(i).lstEntrega.clone();
@@ -360,11 +383,11 @@ public class AlgoritmoGenetico {
 
         */
 
-        nuevo1.cadena = (ArrayList<MiRuta>) aux1.clone();
-        nuevo2.cadena = (ArrayList<MiRuta>) aux2.clone();
+        hijo1.cadena = (ArrayList<Ruta>) rutasCrom1.clone();
+        hijo2.cadena = (ArrayList<Ruta>) rutasCrom2.clone();
 
-        hijos.add(nuevo1);
-        hijos.add(nuevo2);
+        hijos.add(hijo1);
+        hijos.add(hijo2);
 
         return hijos;
     }
@@ -398,12 +421,12 @@ public class AlgoritmoGenetico {
         int n1 = generaNumRandom(0, c.cadena.size() - 1);
         int n2 = generaNumRandom(0, c.cadena.size() - 1);
 
-        ArrayList<Entrega> e1 = (ArrayList<Entrega>) poblacion.get(indice).cadena.get(n1).lstEntrega.clone();
-        ArrayList<Entrega> e2 = (ArrayList<Entrega>) poblacion.get(indice).cadena.get(n2).lstEntrega.clone();
+        ArrayList<Pedido> e1 = (ArrayList<Pedido>) poblacion.get(indice).cadena.get(n1).getListaPedido().clone();
+        ArrayList<Pedido> e2 = (ArrayList<Pedido>) poblacion.get(indice).cadena.get(n2).getListaPedido().clone();
 
         if (n1 != n2) {
-            poblacion.get(indice).cadena.get(n1).lstEntrega = e2;
-            poblacion.get(indice).cadena.get(n2).lstEntrega = e1;
+            poblacion.get(indice).cadena.get(n1).setListaPedido(e2);
+            poblacion.get(indice).cadena.get(n2).setListaPedido(e1);
         }
     }
 
@@ -432,25 +455,4 @@ public class AlgoritmoGenetico {
             }
         }
     }
-
-    public Cromosoma empieza() throws FileNotFoundException, ParseException {
-
-        //while (k < 5) {
-        if (fase == 1) {
-            generaCromosomasAleatorio(Constantes.cantPoblacion);
-        } else {
-            generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
-        }
-       
-        seleccionaElite();
-        //emparejaPoblacion();
-        //mutaPoblacion();
-        //System.out.println(poblacion.size());
-        eliminaAberraciones();
-        fase++;
-        //}
-        //System.out.println(poblacion.size());
-        return poblacion.get(0); //solucion optima
-    }
-
 }

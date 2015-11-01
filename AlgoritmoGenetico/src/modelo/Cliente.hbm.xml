@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/10/2015 12:28:15 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="inf226ga" name="modelo.Cliente" optimistic-lock="version" table="CLIENTE">
+    <id name="idCliente" type="java.lang.Integer">
+      <column name="idCliente"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="modelo.Nodo" fetch="select" name="nodo">
+      <column name="idNodo" not-null="true"/>
+    </many-to-one>
+    <property name="nombres" type="string">
+      <column length="100" name="Nombres" not-null="true"/>
+    </property>
+    <property name="fechaRegistro" type="date">
+      <column length="10" name="FechaRegistro" not-null="true"/>
+    </property>
+    <property name="estado" type="string">
+      <column length="20" name="Estado" not-null="true"/>
+    </property>
+    <property name="tipoDocumento" type="string">
+      <column length="10" name="TipoDocumento" not-null="true"/>
+    </property>
+    <property name="nroDocumento" type="string">
+      <column length="20" name="NroDocumento" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="pedidos" table="PEDIDO">
+      <key>
+        <column name="idCliente" not-null="true"/>
+      </key>
+      <one-to-many class="modelo.Pedido"/>
+    </set>
+  </class>
+</hibernate-mapping>

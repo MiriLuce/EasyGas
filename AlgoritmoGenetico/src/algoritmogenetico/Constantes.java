@@ -5,6 +5,7 @@
  */
 package algoritmogenetico;
 
+import modeloNecesario.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -12,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modelo.*;
 
 
 /**
@@ -26,6 +26,7 @@ public class Constantes {
     public static double probEmparejamiento = 0.75;
     public static double probMutacion = 0.05;
     public static int velCamion;
+    
     // todos los camiones empezaran en la central
     public static int posInicialX = 100;
     public static int posInicialY = 100;
@@ -86,7 +87,7 @@ public class Constantes {
 
             for (int j = 0; j < tipos[i][0]; j++) { //se añaden camiones
                 Camion nuevoCamion = new Camion();
-                nuevoCamion.setIdTipoCamion(nuevoTipo);
+                nuevoCamion.setTipoCamion(nuevoTipo);
                 Principal.lstCamiones.add(nuevoCamion);
             }
         }
@@ -114,12 +115,10 @@ public class Constantes {
 
             int tipoCliente = s.nextInt();
 
-            Nodo nuevoNodo = new Nodo();
-            nuevoNodo.setCoordX(nuevoX);
-            nuevoNodo.setCoordY(nuevoY);
+            Nodo nuevoNodo = new Nodo(nuevoX, nuevoY, true);
 
             Cliente nuevoCliente = new Cliente();
-            nuevoCliente.setIdNodo(nuevoNodo);
+            nuevoCliente.setDireccion(nuevoNodo);
 
             if (tipoCliente == 1) {
                 nuevoCliente.setTipoDocumento("DNI");
@@ -130,7 +129,7 @@ public class Constantes {
            
             nuevoPedido.setCantGLP(nuevaCantGLP);
             nuevoPedido.setHoraSolicitada(c.getTime());
-            nuevoPedido.setIdCliente(nuevoCliente);
+            nuevoPedido.setCliente(nuevoCliente);
 
             Principal.lstPedidos.add(nuevoPedido);
            

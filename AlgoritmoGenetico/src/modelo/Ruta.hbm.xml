@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/10/2015 12:28:15 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="inf226ga" name="modelo.Ruta" optimistic-lock="version" table="RUTA">
+    <id name="idRuta" type="java.lang.Integer">
+      <column name="idRuta"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="modelo.Accidente" fetch="select" name="accidente">
+      <column name="idAccidente"/>
+    </many-to-one>
+    <many-to-one class="modelo.Camion" fetch="select" name="camion">
+      <column name="idCamion" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="modelo.Empleado" fetch="select" name="empleado">
+      <column name="idConductor" not-null="true"/>
+    </many-to-one>
+    <property name="fechaEntrega" type="date">
+      <column length="10" name="FechaEntrega" not-null="true"/>
+    </property>
+    <property name="horaSalida" type="timestamp">
+      <column length="19" name="HoraSalida" not-null="true"/>
+    </property>
+    <property name="horaLlegada" type="timestamp">
+      <column length="19" name="HoraLlegada"/>
+    </property>
+    <property name="cantGlp" type="int">
+      <column name="CantGLP" not-null="true"/>
+    </property>
+    <property name="cantDiesel" type="int">
+      <column name="CantDiesel" not-null="true"/>
+    </property>
+    <property name="idCopiloto" type="int">
+      <column name="idCopiloto" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="aristas" table="ARISTA">
+      <key>
+        <column name="idRuta" not-null="true"/>
+      </key>
+      <one-to-many class="modelo.Arista"/>
+    </set>
+  </class>
+</hibernate-mapping>

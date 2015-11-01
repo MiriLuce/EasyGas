@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/10/2015 12:28:15 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="inf226ga" name="modelo.Empleado" optimistic-lock="version" table="EMPLEADO">
+    <id name="idEmpleado" type="java.lang.Integer">
+      <column name="idEmpleado"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="modelo.Turno" fetch="select" name="turno">
+      <column name="idTurno" not-null="true"/>
+    </many-to-one>
+    <property name="fechaRegistro" type="date">
+      <column length="10" name="FechaRegistro" not-null="true"/>
+    </property>
+    <property name="estado" type="string">
+      <column length="20" name="Estado" not-null="true"/>
+    </property>
+    <property name="puesto" type="string">
+      <column length="20" name="Puesto" not-null="true"/>
+    </property>
+    <property name="nombres" type="string">
+      <column length="20" name="Nombres" not-null="true"/>
+    </property>
+    <property name="apellidoPat" type="string">
+      <column length="20" name="ApellidoPat" not-null="true"/>
+    </property>
+    <property name="apellidoMat" type="string">
+      <column length="20" name="ApellidoMat" not-null="true"/>
+    </property>
+    <property name="dni" type="string">
+      <column length="8" name="DNI" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="rutas" table="RUTA">
+      <key>
+        <column name="idConductor" not-null="true"/>
+      </key>
+      <one-to-many class="modelo.Ruta"/>
+    </set>
+  </class>
+</hibernate-mapping>

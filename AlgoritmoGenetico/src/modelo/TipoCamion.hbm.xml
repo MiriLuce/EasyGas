@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/10/2015 12:28:15 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class catalog="inf226ga" name="modelo.TipoCamion" optimistic-lock="version" table="TIPO_CAMION">
+    <id name="idTipoCamion" type="java.lang.Integer">
+      <column name="idTipoCamion"/>
+      <generator class="identity"/>
+    </id>
+    <property name="nombre" type="string">
+      <column length="30" name="Nombre"/>
+    </property>
+    <property name="capacidadDiesel" type="int">
+      <column name="CapacidadDiesel" not-null="true"/>
+    </property>
+    <property name="capacidadGlp" type="int">
+      <column name="CapacidadGLP" not-null="true"/>
+    </property>
+    <property name="tara" type="int">
+      <column name="Tara" not-null="true"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="camions" table="CAMION">
+      <key>
+        <column name="idTipoCamion" not-null="true"/>
+      </key>
+      <one-to-many class="modelo.Camion"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -2,21 +2,21 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="AlgoritmoGeneticoPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>modelo.Conductor</class>
-    <class>modelo.Arista</class>
-    <class>modelo.Camion</class>
-    <class>modelo.Copiloto</class>
-    <class>modelo.Turno</class>
-    <class>modelo.Perfil</class>
-    <class>modelo.Ruta</class>
-    <class>modelo.Persona</class>
-    <class>modelo.Usuario</class>
-    <class>modelo.Mantenimiento</class>
-    <class>modelo.Nodo</class>
-    <class>modelo.Cliente</class>
-    <class>modelo.Pedido</class>
-    <class>modelo.Accidente</class>
-    <class>modelo.TipoCamion</class>
+    <class>modeloCompleto.Persona</class>
+    <class>modeloCompleto.Accidente</class>
+    <class>modeloCompleto.Turno</class>
+    <class>modeloCompleto.Arista</class>
+    <class>modeloCompleto.Perfil</class>
+    <class>modeloCompleto.Cliente</class>
+    <class>modeloCompleto.Mantenimiento</class>
+    <class>modeloCompleto.Nodo</class>
+    <class>modeloCompleto.Pedido</class>
+    <class>modeloCompleto.Usuario</class>
+    <class>modeloCompleto.Copiloto</class>
+    <class>modeloCompleto.TipoCamion</class>
+    <class>modeloCompleto.Camion</class>
+    <class>modeloCompleto.Conductor</class>
+    <class>modeloCompleto.Ruta</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dp1_easygas?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

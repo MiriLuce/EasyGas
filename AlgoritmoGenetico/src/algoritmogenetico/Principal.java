@@ -5,9 +5,9 @@
  */
 package algoritmogenetico;
 
+import modeloNecesario.*;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import modelo.*;
 import java.util.ArrayList;
 
 /**
@@ -20,18 +20,18 @@ public class Principal {
     public static ArrayList<Pedido> lstPedidos;
 
     public static void main(String[] args) throws FileNotFoundException, ParseException {
+        
         Constantes.leeDataset(0);
-
         Mapa mapa = Constantes.obtenMapa();
         
         AlgoritmoGenetico algoritmo = new AlgoritmoGenetico(lstCamiones, lstPedidos, 1, mapa);
-        
         Cromosoma solucion = algoritmo.empieza();
         solucion.calculaCosto();
+        
         for(int i=0;i<solucion.cadena.size();i++){
             
-             for(int j=0;j<solucion.cadena.get(i).lstEntrega.size();j++){
-                 System.out.print(solucion.cadena.get(i).lstEntrega.get(j).getIdPedido() + " -> "); 
+             for(int j=0;j<solucion.cadena.get(i).getListaPedido().size();j++){
+                 System.out.print(solucion.cadena.get(i).getListaPedido().get(j).getIdPedido() + " -> "); 
              }
              System.out.println();
         }

@@ -5,12 +5,13 @@
  */
 package algoritmogenetico;
 
+import modeloNecesario.*;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import modelo.Camion;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -19,32 +20,39 @@ import modelo.Camion;
  */
 public class Cromosoma {
 
-    ArrayList<MiRuta> cadena; //representa una lista de  //representa el orden en que se atenderan los pedidos
-
-    Mapa mapa;
+    //representa una lista de  //representa el orden en que se atenderan los pedidos
+    ArrayList<Ruta> cadena; 
+    //Mapa mapa;
     Date horaActual;
-
-    double cantDiesel;
-
     double costo;
     boolean esAberracion;
 
     int distancia;
     double sumatoriaGLP;
     double sumatoriaTEntrega;
+    
     double cantGLPEntregado;
+    double cantDiesel;
+    
     int cantPedidosPrioridad;
 
     public Cromosoma(Mapa nuevoMapa) throws FileNotFoundException {
-        cadena = new ArrayList<MiRuta>();
+        cadena = new ArrayList<Ruta>();
         costo = 0;
         esAberracion = false;
-        mapa = nuevoMapa;
+        //mapa = nuevoMapa;
     }
-
+    
+    public Cromosoma(){
+        //mapa = AlgoritmoGenetico.mapa;
+        cadena = new ArrayList<Ruta>();
+        esAberracion = false;      
+        costo = 0;          
+    }
+    
     private Date horaLlegada(int xi, int yi, int xf, int yf, int v) {
 
-        int d = mapa.distanciaMinima(xi, yi, xf, yf);
+        int d = AlgoritmoGenetico.mapa.distanciaMinima(xi, yi, xf, yf);
 
         double t = d / v; //tiempo en horas que se demora en recorrer de un punto a otro
 
@@ -56,23 +64,22 @@ public class Cromosoma {
         return cal.getTime();
     }
 
-    public double obtenCarga(ArrayList<Entrega> r) {
-        double c = 0;
-
-        for (int i = 0; i < r.size(); i++) {
-            c += r.get(i).cantGLP;
+    public double obtenCarga(ArrayList<Pedido> listaPedido) {
+        
+        double cantGLP = 0;
+        for (int i = 0; i < listaPedido.size(); i++) {
+            cantGLP += listaPedido.get(i).getCantGLP();
         }
-
-        return c;
+        return cantGLP;
     }
 
-    private boolean sobrepasaCarga(MiRuta mr) {
-        Camion c = mr.camion;
-        ArrayList<Entrega> r = mr.lstEntrega;
+    private boolean sobrepasaCarga(Ruta mr) {
+        Camion c = mr.getCamion();
+        ArrayList<Pedido> r = mr.getListaPedido();
 
         double sum = obtenCarga(r);
 
-        if (sum > c.getIdTipoCamion().getCapacidadGLP()) {
+        if (sum > c.getTipoCamion().getCapacidadGLP()) {
             return true;
         } else {
             return false;
@@ -80,7 +87,7 @@ public class Cromosoma {
     }
 
     private boolean esSuficienteDiesel(int actualX, int actualY, int xf, int yf, double cantGLP, double pesoTara) {
-        double d = mapa.distanciaMinima(actualX, actualY, xf, yf);
+        double d = AlgoritmoGenetico.mapa.distanciaMinima(actualX, actualY, xf, yf);
 
         double c = 0.05 * (pesoTara + cantGLP) / 52;
 
@@ -94,24 +101,24 @@ public class Cromosoma {
         }
     }
 
-    public boolean alcanzaCombustible(MiRuta mr) {
-        Camion c = mr.camion;
-        ArrayList<Entrega> r = mr.lstEntrega;
+    public boolean alcanzaCombustible(Ruta mr) {
+        Camion c = mr.getCamion();
+        ArrayList<Pedido> r = mr.getListaPedido();
 
         int actualX = Constantes.posInicialX;
         int actualY = Constantes.posInicialY;
         double cantGLP = obtenCarga(r);
-        cantDiesel = c.getIdTipoCamion().getCapacidadDiesel();
-        double pesoTara = c.getIdTipoCamion().getTara();
+        cantDiesel = c.getTipoCamion().getCapacidadDiesel();
+        double pesoTara = c.getTipoCamion().getTara();
 
         for (int i = 0; i < r.size(); i++) {
 
-            if (!esSuficienteDiesel(actualX, actualY, r.get(i).posX, r.get(i).posY, cantGLP, pesoTara)) {
+            if (!esSuficienteDiesel(actualX, actualY, r.get(i).getPosX(), r.get(i).getPosY(), cantGLP, pesoTara)) {
                 return false;
             }
-            actualX = r.get(i).posX;
-            actualY = r.get(i).posY;
-            cantGLP -= r.get(i).cantGLP;
+            actualX = r.get(i).getPosX();
+            actualY = r.get(i).getPosY();
+            cantGLP -= r.get(i).getCantGLP();
         }
 
         if (!esSuficienteDiesel(actualX, actualY, Constantes.posCentralX, Constantes.posCentralY, cantGLP, pesoTara)) {
@@ -143,38 +150,38 @@ public class Cromosoma {
 
     }
 
-    private void calculaDistanciaTotal(int xi, int yi, ArrayList<Entrega> lista) {
+    private void calculaDistanciaTotal(int xi, int yi, ArrayList<Pedido> lista) {
         int actualX = xi;
         int actualY = yi;
 
         for (int i = 0; i < lista.size(); i++) {
-            Entrega e = lista.get(i);
-            distancia += mapa.distanciaMinima(actualX, actualY, e.posX, e.posY);
-            actualX = e.posX;
-            actualY = e.posY;
+            Pedido e = lista.get(i);
+            distancia += AlgoritmoGenetico.mapa.distanciaMinima(actualX, actualY, e.getPosX(), e.getPosY());
+            actualX = e.getPosX();
+            actualY = e.getPosY();
         }
 
         //distancia += mapa.distanciaMinima(actualX, actualY, Constantes.posCentralX, Constantes.posCentralY); //distancia hasta la base
     }
 
-    private void calculaSumatoriaDifGLP(Camion c, ArrayList<Entrega> lista) {
-        double capacidadGLP = c.getIdTipoCamion().getCapacidadGLP();
+    private void calculaSumatoriaDifGLP(Camion c, ArrayList<Pedido> lista) {
+        double capacidadGLP = c.getTipoCamion().getCapacidadGLP();
 
         for (int i = 0; i < lista.size(); i++) {
-            sumatoriaGLP += lista.get(i).cantGLP;
+            sumatoriaGLP += lista.get(i).getCantGLP();
         }
         sumatoriaGLP=capacidadGLP-sumatoriaGLP;
     }
 
-    private void calculaSumatoriaDifTiemposEntrega(int xi, int yi, Camion c, ArrayList<Entrega> lista) {
+    private void calculaSumatoriaDifTiemposEntrega(int xi, int yi, Camion c, ArrayList<Pedido> lista) {
 
         Date horaf;
         long dif;
 
         for (int i = 0; i < lista.size(); i++) {
-            horaf = horaLlegada(xi, yi, lista.get(i).posX, lista.get(i).posY, Constantes.velCamion);
+            horaf = horaLlegada(xi, yi, lista.get(i).getPosX(), lista.get(i).getPosY(), Constantes.velCamion);
             
-            dif = horaf.getTime() - lista.get(i).horaSolicitada.getTime();
+            dif = horaf.getTime() - lista.get(i).getHoraSolicitada().getTime();
 
             /*if (dif < 0) //si llega antes de la hora solicitada
             {
@@ -187,17 +194,17 @@ public class Cromosoma {
             sumatoriaTEntrega += dif / 60000; //en minutos
             
             
-            xi = lista.get(i).posX;
-            yi = lista.get(i).posY;
+            xi = lista.get(i).getPosX();
+            yi = lista.get(i).getPosY();
             horaActual = horaf;
         }
 
     }
 
-    private void calculaCantPedidosPrioridad(ArrayList<Entrega> lista) {
+    private void calculaCantPedidosPrioridad(ArrayList<Pedido> lista) {
 
         for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).tienePrioridad) {
+            if (lista.get(i).isTienePrioridad()) {
                 cantPedidosPrioridad++;
             }
         }
@@ -212,7 +219,7 @@ public class Cromosoma {
             double costo=arriba/abajo;*/
         for (int j = 0; j < cadena.size(); j++) { //para cada ruta de cada camion
 
-            MiRuta nuevaRuta = cadena.get(j);
+            Ruta nuevaRuta = cadena.get(j);
             distancia = 0;
             sumatoriaGLP = 0;
             sumatoriaTEntrega = 0;
@@ -220,11 +227,11 @@ public class Cromosoma {
             horaActual = Constantes.obtenHoraActual(); // hora inicio
             cantPedidosPrioridad = 0;
 
-            calculaDistanciaTotal(Constantes.posInicialX, Constantes.posInicialY, nuevaRuta.lstEntrega);
-            calculaSumatoriaDifGLP(nuevaRuta.camion, nuevaRuta.lstEntrega);
-            calculaSumatoriaDifTiemposEntrega(Constantes.posInicialX, Constantes.posInicialY, nuevaRuta.camion, nuevaRuta.lstEntrega);
-            cantGLPEntregado = obtenCarga(nuevaRuta.lstEntrega);
-            calculaCantPedidosPrioridad(nuevaRuta.lstEntrega);
+            calculaDistanciaTotal(Constantes.posInicialX, Constantes.posInicialY, nuevaRuta.getListaPedido());
+            calculaSumatoriaDifGLP(nuevaRuta.getCamion(), nuevaRuta.getListaPedido());
+            calculaSumatoriaDifTiemposEntrega(Constantes.posInicialX, Constantes.posInicialY, nuevaRuta.getCamion(), nuevaRuta.getListaPedido());
+            cantGLPEntregado = obtenCarga(nuevaRuta.getListaPedido());
+            calculaCantPedidosPrioridad(nuevaRuta.getListaPedido());
             
             if (cantGLPEntregado == 0) {
                 cantGLPEntregado = 1;
