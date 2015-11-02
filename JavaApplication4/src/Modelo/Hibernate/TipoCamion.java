@@ -1,5 +1,5 @@
 package Modelo.Hibernate;
-// Generated Oct 26, 2015 10:41:07 PM by Hibernate Tools 4.3.1
+// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
@@ -78,9 +78,7 @@ public class TipoCamion  implements java.io.Serializable {
         this.camions = camions;
     }
 
-    public String toString(){
-        return nombre;
-    }
+
 
 
 }

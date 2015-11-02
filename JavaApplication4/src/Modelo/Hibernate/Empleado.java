@@ -1,5 +1,5 @@
 package Modelo.Hibernate;
-// Generated Oct 26, 2015 10:41:07 PM by Hibernate Tools 4.3.1
+// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -21,7 +21,8 @@ public class Empleado  implements java.io.Serializable {
      private String apellidoPat;
      private String apellidoMat;
      private String dni;
-     private Set rutas = new HashSet(0);
+     private Set rutasForIdCopiloto = new HashSet(0);
+     private Set rutasForIdConductor = new HashSet(0);
      private Set usuarios = new HashSet(0);
 
     public Empleado() {
@@ -38,7 +39,7 @@ public class Empleado  implements java.io.Serializable {
         this.apellidoMat = apellidoMat;
         this.dni = dni;
     }
-    public Empleado(Turno turno, Date fechaRegistro, String estado, String puesto, String nombres, String apellidoPat, String apellidoMat, String dni, Set rutas, Set usuarios) {
+    public Empleado(Turno turno, Date fechaRegistro, String estado, String puesto, String nombres, String apellidoPat, String apellidoMat, String dni, Set rutasForIdCopiloto, Set rutasForIdConductor, Set usuarios) {
        this.turno = turno;
        this.fechaRegistro = fechaRegistro;
        this.estado = estado;
@@ -47,7 +48,8 @@ public class Empleado  implements java.io.Serializable {
        this.apellidoPat = apellidoPat;
        this.apellidoMat = apellidoMat;
        this.dni = dni;
-       this.rutas = rutas;
+       this.rutasForIdCopiloto = rutasForIdCopiloto;
+       this.rutasForIdConductor = rutasForIdConductor;
        this.usuarios = usuarios;
     }
    
@@ -114,12 +116,19 @@ public class Empleado  implements java.io.Serializable {
     public void setDni(String dni) {
         this.dni = dni;
     }
-    public Set getRutas() {
-        return this.rutas;
+    public Set getRutasForIdCopiloto() {
+        return this.rutasForIdCopiloto;
     }
     
-    public void setRutas(Set rutas) {
-        this.rutas = rutas;
+    public void setRutasForIdCopiloto(Set rutasForIdCopiloto) {
+        this.rutasForIdCopiloto = rutasForIdCopiloto;
+    }
+    public Set getRutasForIdConductor() {
+        return this.rutasForIdConductor;
+    }
+    
+    public void setRutasForIdConductor(Set rutasForIdConductor) {
+        this.rutasForIdConductor = rutasForIdConductor;
     }
     public Set getUsuarios() {
         return this.usuarios;

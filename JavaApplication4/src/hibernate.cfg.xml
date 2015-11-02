@@ -10,19 +10,19 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="hibernate.current_session_context_class">thread</property>
-    <mapping resource="Modelo/Hibernate/Turno.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Nodo.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/Mantenimiento.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/Disponibilidad.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Cliente.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Empleado.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Pedido.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Ruta.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Accidente.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/Perfil.hbm.xml"/>
-    <mapping resource="Modelo/Hibernate/Arista.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/TipoCamion.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Arista.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/Camion.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Empleado.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Turno.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Cliente.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Nodo.hbm.xml"/>
     <mapping resource="Modelo/Hibernate/Usuario.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Accidente.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Ruta.hbm.xml"/>
+    <mapping resource="Modelo/Hibernate/Pedido.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

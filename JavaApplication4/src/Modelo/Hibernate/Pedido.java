@@ -1,5 +1,5 @@
 package Modelo.Hibernate;
-// Generated Oct 26, 2015 10:41:07 PM by Hibernate Tools 4.3.1
+// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -32,7 +32,7 @@ public class Pedido  implements java.io.Serializable {
         this.prioridad = prioridad;
         this.estado = "ACTIVO";
     }
-	
+    
     public Pedido(Cliente cliente, Date fechaRegistro, Date horaSolicitada, double cantGlp, int plazo, String prioridad, String estado) {
         this.cliente = cliente;
         this.fechaRegistro = fechaRegistro;

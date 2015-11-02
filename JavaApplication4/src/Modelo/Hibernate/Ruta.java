@@ -1,5 +1,5 @@
 package Modelo.Hibernate;
-// Generated Oct 26, 2015 10:41:07 PM by Hibernate Tools 4.3.1
+// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -13,41 +13,40 @@ public class Ruta  implements java.io.Serializable {
 
 
      private Integer idRuta;
-     private Accidente accidente;
      private Camion camion;
-     private Empleado empleado;
+     private Empleado empleadoByIdCopiloto;
+     private Empleado empleadoByIdConductor;
      private Date fechaEntrega;
      private Date horaSalida;
      private Date horaLlegada;
      private int cantGlp;
      private int cantDiesel;
-     private int idCopiloto;
      private Set aristas = new HashSet(0);
+     private Set accidentes = new HashSet(0);
 
     public Ruta() {
     }
 
 	
-    public Ruta(Camion camion, Empleado empleado, Date fechaEntrega, Date horaSalida, int cantGlp, int cantDiesel, int idCopiloto) {
+    public Ruta(Camion camion, Empleado empleadoByIdConductor, Date fechaEntrega, Date horaSalida, int cantGlp, int cantDiesel) {
         this.camion = camion;
-        this.empleado = empleado;
+        this.empleadoByIdConductor = empleadoByIdConductor;
         this.fechaEntrega = fechaEntrega;
         this.horaSalida = horaSalida;
         this.cantGlp = cantGlp;
         this.cantDiesel = cantDiesel;
-        this.idCopiloto = idCopiloto;
     }
-    public Ruta(Accidente accidente, Camion camion, Empleado empleado, Date fechaEntrega, Date horaSalida, Date horaLlegada, int cantGlp, int cantDiesel, int idCopiloto, Set aristas) {
-       this.accidente = accidente;
+    public Ruta(Camion camion, Empleado empleadoByIdCopiloto, Empleado empleadoByIdConductor, Date fechaEntrega, Date horaSalida, Date horaLlegada, int cantGlp, int cantDiesel, Set aristas, Set accidentes) {
        this.camion = camion;
-       this.empleado = empleado;
+       this.empleadoByIdCopiloto = empleadoByIdCopiloto;
+       this.empleadoByIdConductor = empleadoByIdConductor;
        this.fechaEntrega = fechaEntrega;
        this.horaSalida = horaSalida;
        this.horaLlegada = horaLlegada;
        this.cantGlp = cantGlp;
        this.cantDiesel = cantDiesel;
-       this.idCopiloto = idCopiloto;
        this.aristas = aristas;
+       this.accidentes = accidentes;
     }
    
     public Integer getIdRuta() {
@@ -57,13 +56,6 @@ public class Ruta  implements java.io.Serializable {
     public void setIdRuta(Integer idRuta) {
         this.idRuta = idRuta;
     }
-    public Accidente getAccidente() {
-        return this.accidente;
-    }
-    
-    public void setAccidente(Accidente accidente) {
-        this.accidente = accidente;
-    }
     public Camion getCamion() {
         return this.camion;
     }
@@ -71,12 +63,19 @@ public class Ruta  implements java.io.Serializable {
     public void setCamion(Camion camion) {
         this.camion = camion;
     }
-    public Empleado getEmpleado() {
-        return this.empleado;
+    public Empleado getEmpleadoByIdCopiloto() {
+        return this.empleadoByIdCopiloto;
     }
     
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
+    public void setEmpleadoByIdCopiloto(Empleado empleadoByIdCopiloto) {
+        this.empleadoByIdCopiloto = empleadoByIdCopiloto;
+    }
+    public Empleado getEmpleadoByIdConductor() {
+        return this.empleadoByIdConductor;
+    }
+    
+    public void setEmpleadoByIdConductor(Empleado empleadoByIdConductor) {
+        this.empleadoByIdConductor = empleadoByIdConductor;
     }
     public Date getFechaEntrega() {
         return this.fechaEntrega;
@@ -113,19 +112,19 @@ public class Ruta  implements java.io.Serializable {
     public void setCantDiesel(int cantDiesel) {
         this.cantDiesel = cantDiesel;
     }
-    public int getIdCopiloto() {
-        return this.idCopiloto;
-    }
-    
-    public void setIdCopiloto(int idCopiloto) {
-        this.idCopiloto = idCopiloto;
-    }
     public Set getAristas() {
         return this.aristas;
     }
     
     public void setAristas(Set aristas) {
         this.aristas = aristas;
+    }
+    public Set getAccidentes() {
+        return this.accidentes;
+    }
+    
+    public void setAccidentes(Set accidentes) {
+        this.accidentes = accidentes;
     }
 
 
