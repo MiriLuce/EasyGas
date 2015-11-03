@@ -8,6 +8,7 @@ package Controlador;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Mantenimiento;
 import Modelo.Hibernate.Camion;
+import Modelo.Hibernate.Disponibilidad;
 import Util.HibernateUtil;
 import java.util.*;
 import javax.swing.JOptionPane;
@@ -231,5 +232,42 @@ public class MantenimientoControlador {
         }
         
         return listaCamion;
+    }
+    
+    //Para llenar la tabla disponibilidad
+    
+    public String GuardarDisponibilidadEnMantenimiento(Mantenimiento man, int turnos){
+        Disponibilidad disp = new Disponibilidad();
+        disp.setFecha(man.getFecha());
+        disp.setHoraInicio(man.getHora());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(man.getHora());
+        cal.add(Calendar.HOUR_OF_DAY, 8*turnos);
+        disp.setHoraFin(cal.getTime());
+        disp.setCamion(man.getCamion());
+        
+        String mensaje = "Se guardaron los cambios exitosamente";
+        
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null; 
+        
+        try {
+            tx = EasyGas.sesion.beginTransaction();   
+            EasyGas.sesion.saveOrUpdate(disp);
+            tx.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error en la conexion");
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+        return mensaje;
     }
 }
