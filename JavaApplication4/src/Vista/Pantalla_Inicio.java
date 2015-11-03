@@ -42,11 +42,15 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
 
         if (nombreDeUsuario.equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Ingrese un nombre de usuario");
+            textoUsuario.setText("");
+            textoContrasenha.setText("");
             return;
         } else {
             if (nombreDeUsuario.equalsIgnoreCase("admin")) {
                 if (!contrasenhaUsuario.equalsIgnoreCase("admin")) {
                     JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+                    textoUsuario.setText("");
+                    textoContrasenha.setText("");
                     return;
                 } else {
                     //this.setVisible(false); para que se muestre el cambio del cursos a WAIT la pantalla inicial debe estar visible
@@ -75,6 +79,8 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
                     return;
                 } else {
                     JOptionPane.showMessageDialog(null, "Usuario y/o contraseña invalidos");
+                    textoUsuario.setText("");
+                    textoContrasenha.setText("");
                     return;
                 }
             }
