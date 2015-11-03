@@ -8,11 +8,13 @@ package Controlador;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Accidente;
 import Modelo.Hibernate.Nodo;
+import Modelo.Hibernate.Ruta;
 import Util.HibernateUtil;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -22,6 +24,8 @@ import org.hibernate.Transaction;
  * @author Luis
  */
 public class AccidenteControlador {
+    
+    //Listar todos los accidentes
     public List<Accidente> ListarAccidente(){
         List<Accidente> lista = null;
         if (!EasyGas.sesion.isOpen()) {
@@ -31,8 +35,12 @@ public class AccidenteControlador {
         try{
            tx = EasyGas.sesion.beginTransaction();
             lista = EasyGas.sesion.createCriteria(Accidente.class).list();
+           
             for(Accidente acc : lista){
-                Hibernate.initialize(acc.getNodo());
+                Hibernate.initialize(acc.getNodo());                
+                Hibernate.initialize(acc.getRuta());
+                Hibernate.initialize(acc.getRuta().getCamion());
+                Hibernate.initialize(acc.getRuta().getEmpleadoByIdConductor());
             }
             tx.commit();  
         }catch(Exception e){
@@ -49,6 +57,65 @@ public class AccidenteControlador {
         return lista;
     }
     
+    public List<Accidente> BuscarAccidente(String placa, String conductor){
+        List<Accidente> lista = null;
+        
+        String consulta = "SELECT ACCIDENTE.* FROM ACCIDENTE " +
+"INNER JOIN RUTA  on ACCIDENTE.idRuta=RUTA.idRuta " +
+"INNER JOIN CAMION  on CAMION.idCamion=RUTA.idCamion" +
+"INNER JOIN EMPLEADO  on EMPLEADO.idEmpleado=RUTA.idConductor" +
+"WHERE 1";
+        if((placa.compareTo("   -   ")==0) && (conductor.compareTo("")==0)){
+            lista = this.ListarAccidente();
+            return lista;
+        }else{
+            if(!(placa.compareTo("   -   ")==0)){
+                consulta += " and CAMION.Placa = :placa";
+            }
+            if(!(conductor.compareTo("")==0)){
+                consulta += " and Empleado.Nombres= :conductor";
+            }
+        }
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null;
+        
+        try {
+            tx = EasyGas.sesion.beginTransaction(); 
+            
+            SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
+            query.addEntity(Accidente.class);
+            if(!(placa.compareTo("   -   ")==0)){
+                query.setParameter("placa", placa);
+            }
+            if(!(conductor.compareTo("")==0)){
+                query.setParameter("conductor", conductor);
+            }
+            lista = query.list();
+            for(Accidente acc : lista){
+                Hibernate.initialize(acc.getNodo());                
+                Hibernate.initialize(acc.getRuta());
+                Hibernate.initialize(acc.getRuta().getCamion());
+                Hibernate.initialize(acc.getRuta().getEmpleadoByIdConductor());
+            }
+            tx.commit();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No hay un accidente con estos datos");
+            if (tx != null) {
+                tx.rollback();
+            }
+        }finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+        return lista;
+    }
+    
+    //Busca accidente por id
     public Accidente BuscarAccidentePorId(int id){
         Accidente accidente = null;
         if (!EasyGas.sesion.isOpen()) {
@@ -60,6 +127,9 @@ public class AccidenteControlador {
             tx = EasyGas.sesion.beginTransaction();
             accidente = (Accidente) EasyGas.sesion.get(Accidente.class, id);
             Hibernate.initialize(accidente.getNodo());
+            Hibernate.initialize(accidente.getRuta());
+            Hibernate.initialize(accidente.getRuta().getCamion());
+            Hibernate.initialize(accidente.getRuta().getEmpleadoByIdConductor());
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error en la conexion");
@@ -75,6 +145,7 @@ public class AccidenteControlador {
         return accidente;
     }
     
+    //Guarda un accidente
     public String GuardarAccidente (Accidente acc){
         String mensaje = "Se guardaron los cambios exitosamente";
         
@@ -106,6 +177,7 @@ public class AccidenteControlador {
         return mensaje;
     }
     
+    //Elimina un accidente
     public String EliminarAccidente(int id){
         String mensaje = "Se eliminado el registro exitosamente";
         SessionFactory sesFact = null;
@@ -127,4 +199,43 @@ public class AccidenteControlador {
         }
         return mensaje;
     }
+    
+    //Busca ruta por placa
+    //Estara temporalmente aqui mientras RutaControlador no se cree
+    
+   public Ruta BuscarRutaPorPlaca(String placa){
+       Ruta ruta = null;
+       
+       String consulta ="select RUTA.* from RUTA inner join CAMION on RUTA.idCamion where";
+       consulta += "CAMION.placa = :placa";
+       
+       if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null;
+        
+        try {
+           tx = EasyGas.sesion.beginTransaction(); 
+            
+            SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
+            query.addEntity(Ruta.class);
+            query.setParameter("placa", placa);
+            ruta = (Ruta) query.list().get(0);
+            Hibernate.initialize(ruta.getCamion());
+            Hibernate.initialize(ruta.getEmpleadoByIdConductor());
+            Hibernate.initialize(ruta.getEmpleadoByIdCopiloto());
+            tx.commit();
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null, "Error en la conexion");
+            if (tx != null) {
+                tx.rollback();
+            }
+       } finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+       return ruta;
+   }
 }

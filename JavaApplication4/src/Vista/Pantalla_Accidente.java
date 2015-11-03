@@ -14,6 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import Modelo.Hibernate.Accidente;
 import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Camion;
+import Modelo.Hibernate.Ruta;
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Date;
@@ -39,8 +41,10 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         tablaAccidente.setModel(accModelo);
         panelAccidente.addMouseListener(evento);
         tablaAccidente.addMouseListener(evento);
-        RefrescarTabla();
+        RefrescarTabla(null);
         llenaCmbCamion();
+        dateDesde.setDate(new Date());
+        dateHasta.setDate(new Date());
     }
     
     //Combo Camiones
@@ -48,20 +52,28 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     private void llenaCmbCamion(){
         List<Camion> lista = camControlador.ListarCamion();
         for(Camion cam : lista){
-            cmbPlaca.addItem(cam);
+            if((cam.getEstado().compareTo("En curso")==0) || (cam.getEstado().compareTo("De regreso")==0)){
+                cmbPlaca.addItem(cam);
+            }
+            
         }
     }
     
     //Refrescar tabla
     
-    private void RefrescarTabla(){
-        accModelo.lista = accControlador.ListarAccidente();
+    private void RefrescarTabla(List<Accidente> lista){
+        if(lista == null){
+            accModelo.lista = accControlador.ListarAccidente();
+        }else{
+            accModelo.lista = lista;
+        }
+        
         accModelo.fireTableChanged(null);
     }
     
     private class AccidenteModelo extends AbstractTableModel{
 
-        String [] titles = {"Código","Coordenadas","Fecha de Registro","Estado"};
+        String [] titles = {"Código","Coordenadas","Placa","Conductor","Fecha de Registro","Estado"};
         List<Accidente> lista = new ArrayList<Accidente>();
         
         @Override
@@ -83,10 +95,10 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             switch(columnIndex){
                 case 0: value = lista.get(rowIndex).getIdAccidente(); break;
                 case 1: value = "(" + lista.get(rowIndex).getNodo().getCoordX() + ";" + lista.get(rowIndex).getNodo().getCoordY() + ")"; break;
-                //case 2: value = lista.get(rowIndex).getCamion.getPlaca(); break;
-                //case 3: value = lista.get(rowIndex).getCamion.getEmpleado.getNombre(); break;
-                case 2: value = lista.get(rowIndex).getFecha(); break;
-                case 3: value = lista.get(rowIndex).getEstado(); break;
+                case 2: value = lista.get(rowIndex).getRuta().getCamion().getPlaca(); break;
+                case 3: value = lista.get(rowIndex).getRuta().getEmpleadoByIdConductor().getNombres(); break;
+                case 4: value = lista.get(rowIndex).getFecha(); break;
+                case 5: value = lista.get(rowIndex).getEstado(); break;
             }
             return value;
         }
@@ -156,6 +168,8 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         cmbPlaca = new javax.swing.JComboBox();
         spinX = new javax.swing.JSpinner();
         spinY = new javax.swing.JSpinner();
+        jLabel55 = new javax.swing.JLabel();
+        cmbEstado = new javax.swing.JComboBox();
         btnNuevo = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
@@ -170,8 +184,8 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         jPanel21 = new javax.swing.JPanel();
         jLabel53 = new javax.swing.JLabel();
         txtConductorBuscar = new javax.swing.JTextField();
-        txtPlacaBuscar = new javax.swing.JTextField();
         jLabel52 = new javax.swing.JLabel();
+        formatPlaca = new javax.swing.JFormattedTextField();
         jScrollPane6 = new javax.swing.JScrollPane();
         tablaAccidente = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
@@ -221,7 +235,15 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
         jLabel112.setText("Código:");
 
-        cmbPlaca.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione", "B14490", "G40M12" }));
+        cmbPlaca.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione" }));
+
+        spinX.setModel(new javax.swing.SpinnerNumberModel(0, 0, 300, 1));
+
+        spinY.setModel(new javax.swing.SpinnerNumberModel(0, 0, 200, 1));
+
+        jLabel55.setText("Estado:");
+
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "En reparacion", "Atendido" }));
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
@@ -230,22 +252,24 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGroup(jPanel22Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel22Layout.createSequentialGroup()
+                        .addComponent(jLabel56)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane5)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel22Layout.createSequentialGroup()
                         .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel54)
                             .addComponent(jLabel112)
                             .addComponent(jLabel46)
-                            .addComponent(jLabel49))
+                            .addComponent(jLabel49)
+                            .addComponent(jLabel55))
                         .addGap(54, 66, Short.MAX_VALUE)
                         .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtCodigo, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(cmbPlaca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(spinX)
-                            .addComponent(spinY)))
-                    .addGroup(jPanel22Layout.createSequentialGroup()
-                        .addComponent(jLabel56)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane5))
+                            .addComponent(spinY)
+                            .addComponent(cmbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(20, 20, 20))
         );
         jPanel22Layout.setVerticalGroup(
@@ -268,10 +292,14 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                     .addComponent(jLabel49)
                     .addComponent(spinY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel22Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel55))
+                .addGap(18, 18, 18)
                 .addComponent(jLabel56)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         btnNuevo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -333,12 +361,12 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(40, 40, 40))
+                    .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45))
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,8 +376,8 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                     .addComponent(label9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
-                .addComponent(jPanel22, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addComponent(jPanel22, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -357,7 +385,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnCancelar))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel19.setBackground(new java.awt.Color(240, 240, 225));
@@ -419,13 +447,13 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             }
         });
 
-        txtPlacaBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPlacaBuscarActionPerformed(evt);
-            }
-        });
-
         jLabel52.setText("Placa:");
+
+        try {
+            formatPlaca.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("UUU-###")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
@@ -441,9 +469,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                         .addComponent(jLabel52)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtConductorBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPlacaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtConductorBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(formatPlaca))
                 .addGap(20, 20, 20))
         );
         jPanel21Layout.setVerticalGroup(
@@ -451,8 +479,8 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPlacaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel52))
+                    .addComponent(jLabel52)
+                    .addComponent(formatPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtConductorBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -531,7 +559,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGroup(panelAccidenteLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(28, 28, 28)
                 .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(70, Short.MAX_VALUE))
         );
@@ -552,9 +580,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGap(0, 1300, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 6, Short.MAX_VALUE)
                     .addComponent(panelAccidente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 6, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -573,7 +601,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         int id = Integer.parseInt(stringId);
         Accidente acc = accControlador.BuscarAccidentePorId(id);
         txtCodigo.setText("" + acc.getIdAccidente());
-        //cmbPlaca.setSelectedItem(acc.getCamion.getPlaca());
+        cmbPlaca.setSelectedItem(acc.getRuta().getCamion());
         spinX.setValue(acc.getNodo().getCoordX());
         spinY.setValue(acc.getNodo().getCoordY());
         txtObservacion.setText(acc.getObservacion());
@@ -594,33 +622,46 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        DatosEditables(false);
-        BotonesEditables(false);
-        
-        Accidente acc = new Accidente();
-        String strCodigo = txtCodigo.getText();
-        Nodo nod = new Nodo();
-        int x = (int)spinX.getValue();
-        int y = (int)spinY.getValue();
-        nod.setCoordX(x);
-        nod.setCoordY(y);
-        nod.setHabilitado("SI");        
-        acc.setNodo(nod);
-        acc.setEstado("Accidentado");
-        acc.setFecha(new Date());
-        acc.setHora(new Date());
-        acc.setObservacion(txtObservacion.getText());
-        
-        //Editar
-        if(!strCodigo.equals("")){
-            acc.setIdAccidente(Integer.parseInt(strCodigo));
-            acc.getNodo().setIdNodo(idNodo);
-        }else{//Nuevo
-            nodControlador.GuardarNodo(nod);
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios");
+        if(confirmacion==0){
+            DatosEditables(false);
+            BotonesEditables(false);
+            cmbEstado.setEnabled(false);
+
+            Accidente acc = new Accidente();
+            String strCodigo = txtCodigo.getText();
+            Nodo nod = new Nodo();
+            int x = (int)spinX.getValue();
+            int y = (int)spinY.getValue();
+            nod.setCoordX(x);
+            nod.setCoordY(y);
+            nod.setHabilitado("SI");        
+            acc.setNodo(nod);
+            acc.setEstado(cmbEstado.getSelectedItem().toString());
+            acc.setFecha(new Date());
+            acc.setHora(new Date());
+            acc.setObservacion(txtObservacion.getText());
+            if(cmbPlaca.getSelectedIndex()==0){
+                JOptionPane.showMessageDialog(null,"Seleccione una placa");
+                return;
+            }else{
+                Ruta ruta = accControlador.BuscarRutaPorPlaca(cmbPlaca.getSelectedItem().toString());
+                acc.setRuta(ruta);
+            }
+            
+
+            //Editar
+            if(!strCodigo.equals("")){
+                acc.setIdAccidente(Integer.parseInt(strCodigo));
+                acc.getNodo().setIdNodo(idNodo);
+            }else{//Nuevo
+                nodControlador.GuardarNodo(nod);
+            }
+            String mensaje = accControlador.GuardarAccidente(acc);
+            JOptionPane.showMessageDialog(null, mensaje);
+            RefrescarTabla(null);
         }
-        String mensaje = accControlador.GuardarAccidente(acc);
-        JOptionPane.showMessageDialog(null, mensaje);
-        RefrescarTabla();
+        
         
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -637,23 +678,29 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         spinX.setValue(0);
         spinY.setValue(0);
         txtObservacion.setText("");
+        cmbEstado.setSelectedIndex(0);
         DatosEditables(true);
         BotonesEditables(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-        VerDatos(txtCodigo.getText());
-        spinX.setEnabled(false);
-        spinY.setEnabled(false);
-        DatosEditables(false);
-        BotonesEditables(false);
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que no desea guardar los cambios");
+        if(confirmacion==0){
+            VerDatos(txtCodigo.getText());
+            spinX.setEnabled(false);
+            spinY.setEnabled(false);
+            DatosEditables(false);
+            BotonesEditables(false);
+        }
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
         spinX.setEnabled(false);
         spinY.setEnabled(false);
+        cmbEstado.setEnabled(true);
         DatosEditables(true);
         BotonesEditables(true);
     }//GEN-LAST:event_btnEditarActionPerformed
@@ -663,7 +710,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         int confirma = JOptionPane.showConfirmDialog(null, "¿Seguro que desea eliminar el registro?");
         if(confirma==0){
             int id = Integer.parseInt(txtCodigo.getText());
-            RefrescarTabla();
+            RefrescarTabla(null);
             String mensaje = accControlador.EliminarAccidente(id);
             JOptionPane.showMessageDialog(null, mensaje);
             txtCodigo.setText("");
@@ -682,12 +729,24 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtConductorBuscarActionPerformed
 
-    private void txtPlacaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPlacaBuscarActionPerformed
-
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
+        DatosEditables(false);
+        BotonesEditables(false);
+        if((dateDesde.getDate()!=null)&&(dateHasta.getDate()!=null) && (dateDesde.getDate().getTime()>dateHasta.getDate().getTime())){
+            JOptionPane.showMessageDialog(null, "Las fechas dadas no conforman un rango (desde - hasta)");
+            return;
+        }        
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        List<Accidente> aux = accControlador.BuscarAccidente(formatPlaca.getText(), txtConductorBuscar.getText());
+        List<Accidente> lista = new ArrayList<Accidente>();
+        for(Accidente acc : aux){
+            if(acc.getFecha().after(dateDesde.getDate()) && acc.getFecha().before(dateHasta.getDate())){
+                lista.add(acc);
+            }
+        }
+        RefrescarTabla(lista);
+        this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_btnBuscarActionPerformed
 
 
@@ -698,9 +757,11 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JComboBox cmbEstado;
     private javax.swing.JComboBox cmbPlaca;
     private com.toedter.calendar.JDateChooser dateDesde;
     private com.toedter.calendar.JDateChooser dateHasta;
+    private javax.swing.JFormattedTextField formatPlaca;
     private javax.swing.JLabel jLabel112;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel49;
@@ -709,6 +770,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel19;
@@ -726,6 +788,5 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtConductorBuscar;
     private javax.swing.JTextArea txtObservacion;
-    private javax.swing.JTextField txtPlacaBuscar;
     // End of variables declaration//GEN-END:variables
 }

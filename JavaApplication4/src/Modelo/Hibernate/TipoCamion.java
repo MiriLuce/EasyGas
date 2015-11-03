@@ -78,7 +78,10 @@ public class TipoCamion  implements java.io.Serializable {
         this.camions = camions;
     }
 
-
+    @Override
+    public String toString(){
+        return nombre;
+    }
 
 
 }

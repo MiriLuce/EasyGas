@@ -157,7 +157,7 @@ public class Principal extends javax.swing.JFrame {
         });
         menuLogistica.add(mantCamionCargaMasiva);
 
-        mantMantenimiento.setText("Mantenimiento");
+        mantMantenimiento.setText("Mantenimiento de Camiones");
         mantMantenimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mantMantenimientoActionPerformed(evt);

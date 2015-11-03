@@ -51,16 +51,23 @@ public class PedidoControlador {
             query.addEntity(Pedido.class);
             List aux = query.list();
 
-            tx.commit();
-
+//            for (Iterator i = aux.iterator(); i.hasNext();) {
+//                Pedido p = (Pedido) i.next();
+//                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
+//                p.setCliente(c);
+//                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
+//                p.getCliente().setNodo(n);
+//                lista.add(p);
+//            }
+            
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Pedido p = (Pedido) i.next();
-                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-                p.setCliente(c);
-                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-                p.getCliente().setNodo(n);
+                Hibernate.initialize(p.getCliente());
+                Hibernate.initialize(p.getCliente().getNodo());
                 lista.add(p);
             }
+            
+            tx.commit();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
@@ -218,16 +225,24 @@ public class PedidoControlador {
             query.setParameter("idpedido", pedidoId);
             List aux = query.list();
 
-            tx.commit();
-
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Pedido p = (Pedido) i.next();
-                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-                p.setCliente(c);
-                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-                p.getCliente().setNodo(n);
+                Hibernate.initialize(p.getCliente());
+                Hibernate.initialize(p.getCliente().getNodo());
                 lista.add(p);
             }
+            
+            tx.commit();
+
+//            for (Iterator i = aux.iterator(); i.hasNext();) {
+//                Pedido p = (Pedido) i.next();
+//                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
+//                p.setCliente(c);
+//                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
+//                p.getCliente().setNodo(n);
+//                lista.add(p);
+//            }
+            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");

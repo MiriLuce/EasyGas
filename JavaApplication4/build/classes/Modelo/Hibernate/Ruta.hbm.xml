@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Oct 26, 2015 10:41:08 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 02/11/2015 06:39:49 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="Modelo.Hibernate.Ruta" table="RUTA" catalog="inf226ga" optimistic-lock="version">
         <id name="idRuta" type="java.lang.Integer">
             <column name="idRuta" />
             <generator class="identity" />
         </id>
-        <many-to-one name="accidente" class="Modelo.Hibernate.Accidente" fetch="select">
-            <column name="idAccidente" />
-        </many-to-one>
         <many-to-one name="camion" class="Modelo.Hibernate.Camion" fetch="select">
             <column name="idCamion" not-null="true" />
         </many-to-one>
-        <many-to-one name="empleado" class="Modelo.Hibernate.Empleado" fetch="select">
+        <many-to-one name="empleadoByIdCopiloto" class="Modelo.Hibernate.Empleado" fetch="select">
+            <column name="idCopiloto" />
+        </many-to-one>
+        <many-to-one name="empleadoByIdConductor" class="Modelo.Hibernate.Empleado" fetch="select">
             <column name="idConductor" not-null="true" />
         </many-to-one>
         <property name="fechaEntrega" type="date">
@@ -32,14 +32,17 @@
         <property name="cantDiesel" type="int">
             <column name="CantDiesel" not-null="true" />
         </property>
-        <property name="idCopiloto" type="int">
-            <column name="idCopiloto" not-null="true" />
-        </property>
         <set name="aristas" table="ARISTA" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="idRuta" not-null="true" />
             </key>
             <one-to-many class="Modelo.Hibernate.Arista" />
+        </set>
+        <set name="accidentes" table="ACCIDENTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idRuta" />
+            </key>
+            <one-to-many class="Modelo.Hibernate.Accidente" />
         </set>
     </class>
 </hibernate-mapping>

@@ -37,7 +37,8 @@ public class MantenimientoControlador {
             tx = EasyGas.sesion.beginTransaction();             
             lista = EasyGas.sesion.createCriteria(Mantenimiento.class).list();
             for(Mantenimiento man : lista){
-                Hibernate.initialize(man.getCamion());                
+                Hibernate.initialize(man.getCamion());
+                Hibernate.initialize(man.getCamion().getTipoCamion());
             }
             tx.commit();
             
@@ -89,7 +90,8 @@ public class MantenimientoControlador {
             }
             lista = query.list();
             for(Mantenimiento man : lista){
-                Hibernate.initialize(man.getCamion());                
+                Hibernate.initialize(man.getCamion());
+                Hibernate.initialize(man.getCamion().getTipoCamion());
             }
             
             tx.commit();
@@ -118,6 +120,7 @@ public class MantenimientoControlador {
             tx = EasyGas.sesion.beginTransaction();   
             mantenimiento = (Mantenimiento) EasyGas.sesion.get(Mantenimiento.class, codigo);
             Hibernate.initialize(mantenimiento.getCamion());
+            Hibernate.initialize(mantenimiento.getCamion().getTipoCamion());
             tx.commit();
         }
         catch(Exception e){

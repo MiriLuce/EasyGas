@@ -98,7 +98,10 @@ public class Camion  implements java.io.Serializable {
         this.disponibilidads = disponibilidads;
     }
 
-
+    @Override
+    public String toString(){
+        return placa;
+    }
 
 
 }
