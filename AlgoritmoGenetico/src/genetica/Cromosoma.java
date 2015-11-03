@@ -9,6 +9,7 @@ import algoritmogenetico.Constantes;
 import static genetica.AlgoritmoGenetico.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 import modeloNecesario.*;
 
@@ -39,6 +40,17 @@ public class Cromosoma {
         sumatoriaTEntrega = 0;
     }
  
+    public Cromosoma(Cromosoma crom){
+        cadena = (ArrayList<Ruta>) crom.cadena.clone();
+        costo = crom.getCosto();
+        aberracion = crom.isAberracion();      
+        distanciaTotal = crom.getDistanciaTotal();
+        cantTiempoTotal = crom.getCantTiempoTotal();
+        cantGLPTotal = crom.getCantGLPTotal();
+        cantDieselTotal = crom.getCantDieselTotal();
+        sumatoriaTEntrega = crom.getSumatoriaTEntrega();
+    }
+    
     private int generaNumRandom(int min, int max) {
 
         int numRandom = ThreadLocalRandom.current().nextInt(min, max + 1);
@@ -66,7 +78,7 @@ public class Cromosoma {
     // considerando la capacidad del camion de la ruta
     // considerando la hora solicitada del pedido con la hora de salida de la ruta
     // considerando la capacidad de diesel incluudo el regreso  
-    public void asignarPedidos(){
+    public void asignarPedidos(ArrayList<Pedido> pedidos){
     
         ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
         int indicePedidoAleatorio, indiceRutaAleatoria;
@@ -84,7 +96,7 @@ public class Cromosoma {
             Arrays.fill(listaEscogido, 0);
             
             // sera asignado a la primera ruta disponible que encuentre
-            while(estaAsignado){
+            while(!estaAsignado){
                 int contador = 1;
                 indiceRutaAleatoria = generaNumRandom(0, cantRutas - 1);
                 while(listaEscogido[indiceRutaAleatoria]== 1){
@@ -96,7 +108,7 @@ public class Cromosoma {
                 listaEscogido[indiceRutaAleatoria] = 1;
                 
                 rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                estaAsignado = rutaAleatoria.agregarPedido(pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
                 if(!estaAsignado && cantRutas==0) break;
             }
             if (aberracion) break;
@@ -105,7 +117,225 @@ public class Cromosoma {
         }        
     }
     
+    public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
+    
+        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
+        ArrayList<Camion> listaCamiones = (ArrayList<Camion>) camiones.clone();        
+        int indicePedidoAleatorio, indiceRutaAleatoria;
+        int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
+        Pedido pedidoAleatorio;  
+        Ruta rutaAleatoria;
+        
+        while(cantPedidos > 0){
+            
+            indicePedidoAleatorio =  generaNumRandom(0, cantPedidos - 1);
+            pedidoAleatorio = listaPedidos.get(indicePedidoAleatorio);
+            boolean estaAsignado = false;
+            int[] listaEscogido = new int [cantRutas];
+            Arrays.fill(listaEscogido, 0);
+            
+            // Intento incrustar el pedido en la lista de rutas existente 
+            // sera asignado a la primera ruta disponible que encuentre
+            while(!estaAsignado){
+                if (cantRutas == 0)break;
+                else{
+                    int contador = 1;
+                    indiceRutaAleatoria = generaNumRandom(0, cantRutas - 1);
+                    while(listaEscogido[indiceRutaAleatoria]== 1){
+                        if (contador == cantRutas ) break; // ya todas estan escogidas
+                        indiceRutaAleatoria = generaNumRandom(0, cantRutas - 1);
+                        contador++;                     
+                    } 
+                    if (listaEscogido[indiceRutaAleatoria]== 1) break;
+                    listaEscogido[indiceRutaAleatoria] = 1;
+
+                    rutaAleatoria = getCadena().get(indiceRutaAleatoria);
+                    estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                }
+            }
+            if(!estaAsignado){ // Crear una nueva ruta
+                rutaAleatoria = new Ruta();
+                rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                cadena.add(rutaAleatoria);
+                cantRutas++;
+            }            
+            
+            listaPedidos.remove(indicePedidoAleatorio);
+            cantPedidos--;
+        }        
+    }
+     
+    public void intercambiarPedidos(Ruta ruta){
+        int cantPedidosHijo = 0;
+        for (int i= 0; i< cadena.size(); i++)
+                cantPedidosHijo += cadena.get(i).getListaPedido().size();
+            
+        Ruta tmpRuta = new Ruta(ruta);
+        ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        int cantPedidoRuta = listaRuta.size();
+        int cantCadena = this.cadena.size();
+        int indiceCadenaRuta = 0, indicePedidos, indicePedRuta;
+        boolean verificar = true;
+        
+        String[] arrRutas = new String[cadena.size()];
+        for (int i= 0; i< cadena.size(); i++){
+            arrRutas[i] = "";
+            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
+                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
+        }
+        String pedEliminar = "" ;
+        for (int i= 0; i< cantPedidoRuta; i++){
+            pedEliminar = pedEliminar +"-" + listaRuta.get(i).getIdPedido();
+        }
+        
+        // Se eliminan todos los pedidos de las rutas
+        while(indiceCadenaRuta < cantCadena){
+            int cantPedidos = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
+            indicePedidos = 0;
+            while(indicePedidos < cantPedidos){ 
+                indicePedRuta = 0;
+                while(indicePedRuta <cantPedidoRuta){
+                    int indicePedido = this.cadena.get(indiceCadenaRuta).getListaPedido().get(indicePedidos).getIdPedido();
+                    if(indicePedido == listaRuta.get(indicePedRuta).getIdPedido()){
+                        verificar = this.cadena.get(indiceCadenaRuta).quitarPedido(indicePedidos); 
+                        cantPedidosHijo = 0;
+                        for (int i= 0; i< cadena.size(); i++)
+                                cantPedidosHijo += cadena.get(i).getListaPedido().size();
+                        
+                        // Si la ruta queda vacia se elimina
+                        if(this.cadena.get(indiceCadenaRuta).getListaPedido().isEmpty()){
+                            this.cadena.remove(indiceCadenaRuta);
+                            cantCadena--;
+                            if (indiceCadenaRuta != cantCadena -1)indiceCadenaRuta--;
+                        }
+                        arrRutas = new String[cadena.size()];
+                        for (int i= 0; i< cadena.size(); i++){
+                            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
+                                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
+                        }
+                        if (indicePedidos != cantPedidos -1)indicePedidos--;
+                        if (indicePedRuta != cantPedidoRuta -1)indicePedRuta--;
+                        cantPedidoRuta--;
+                        cantPedidos--;
+                        listaRuta.remove(indicePedRuta);
+                       if(!verificar)break;
+                    }
+                    indicePedRuta++;
+                }
+                indicePedidos++;
+                if(!verificar || cantPedidoRuta == 0)break;                
+            }
+            indiceCadenaRuta++;
+            if(!verificar  || cantPedidoRuta == 0)break;            
+        }
+        aberracion = !verificar;        
+        this.cadena.add(tmpRuta);
+        cantPedidosHijo = 0;
+        for (int i= 0; i< cadena.size(); i++)
+                cantPedidosHijo += cadena.get(i).getListaPedido().size();
+        
+    }
+    
+    public void agregarRuta(Ruta ruta, int cantPedidosHijoA){
+        
+        int cantPedidosHijo = 0;
+        for (int i= 0; i< cadena.size(); i++)
+                cantPedidosHijo += cadena.get(i).getListaPedido().size();
+        if(cantPedidosHijoA != cantPedidosHijo){
+            System.out.println("error");
+        }
+        Ruta tmpRuta = new Ruta(ruta);
+        ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        int cantPedidoRuta = listaRuta.size();
+        int cantCadena = this.cadena.size(), cantPedidos;
+        
+        int indiceCadenaRuta = 0, indicePedidos, indicePedRuta;
+        boolean verificar = false;
+        int exito;
+        
+        String[] arrRutas = new String[cadena.size()];
+        for (int i= 0; i< cadena.size(); i++){
+            arrRutas[i] = "";
+            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
+                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
+        }
+        String pedEliminar = "" ;
+        for (int i= 0; i< cantPedidoRuta; i++){
+            pedEliminar = pedEliminar +"-" + listaRuta.get(i).getIdPedido();
+        }
+        
+        // Se eliminan todos los pedidos de las rutas
+        while(indiceCadenaRuta < cantCadena){
+            cantPedidos = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
+            indicePedidos = 0;
+            
+            while(indicePedidos < cantPedidos){ 
+                indicePedRuta = 0;
+                
+                while(indicePedRuta <cantPedidoRuta){
+                    exito = quitarPedido(indiceCadenaRuta, indicePedidos, 
+                            this.cadena.get(indiceCadenaRuta).getListaPedido().get(indicePedidos).getIdPedido(),
+                            listaRuta.get(indicePedRuta).getIdPedido());
+                    
+                    if (exito == 1) {
+                        // verificar si se elimino una ruta de la cadena
+                        if (this.cadena.size() != cantCadena){ 
+                            cantCadena--;
+                        }
+                        verificar = true;
+                        if (indicePedidos != cantPedidos -1){
+                            indicePedidos--;
+                        }
+                        cantPedidos--;
+                        cantPedidoRuta--;
+                        listaRuta.remove(indicePedRuta);   
+                    }
+                    else if (exito == -1) aberracion = true;  
+                    indicePedRuta++;
+                    if(verificar) break; // se elimino el pedido
+                }
+                indicePedidos++;
+                if(aberracion || cantPedidoRuta == 0)break;                
+            }
+            indiceCadenaRuta++;
+            if(aberracion  || cantPedidoRuta == 0)break;           
+            for (int i= 0; i< cadena.size(); i++){
+            arrRutas[i] = "";
+            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
+                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
+            }
+        }       
+        this.cadena.add(tmpRuta);        
+        for (int i= 0; i< cadena.size(); i++){
+            arrRutas[i] = "";
+            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
+                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
+        }
+        this.cadena = (ArrayList<Ruta>)this.cadena.clone();
+        
+        cantPedidosHijo=0;
+        for (int i= 0; i< cadena.size(); i++)
+                cantPedidosHijo += cadena.get(i).getListaPedido().size();
+        
+    }
+    
+    private int  quitarPedido(int indiceRuta, int indicePedido, int idPedido, int idEliminar){
+        
+        if (idPedido ==  idEliminar){
+            boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
+            if (verificar){ // true: se quito con exito
+                // Si la ruta queda vacia se elimina
+                if(this.cadena.get(indiceRuta).getListaPedido().isEmpty())
+                    this.cadena.remove(indiceRuta);
+                return 1; // 1: exito
+            }
+            else return -1; // -1: es una aberracion
+        }
+        else return 0; // 0: no paso nada
+    }
+
     public void condensarCromosoma(){
+        
         
         ArrayList<Ruta> listaRutas = new ArrayList<Ruta>();
         Ruta rutaEscogida = null;
@@ -138,8 +368,8 @@ public class Cromosoma {
         ArrayList<Pedido> e2 = (ArrayList<Pedido>) cadena.get(n2).getListaPedido().clone();
 
         if (n1 != n2) {
-            cadena.get(n1).setListaPedido(e2);
-            cadena.get(n2).setListaPedido(e1);
+            this.asignarPedidos(e1);
+            this.asignarPedidos(e2);
         }
     }
     

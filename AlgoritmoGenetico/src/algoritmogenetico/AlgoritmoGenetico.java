@@ -415,7 +415,7 @@ public class AlgoritmoGenetico {
 
         }
     }
-
+    
     private void intercambiaAleatorio(int indice) {
         Cromosoma c = poblacion.get(indice);
         int n1 = generaNumRandom(0, c.cadena.size() - 1);
@@ -429,7 +429,7 @@ public class AlgoritmoGenetico {
             poblacion.get(indice).cadena.get(n2).setListaPedido(e1);
         }
     }
-
+    
     //cambia puntos de entrega entre cada camión por cromosoma
     private void mutaPoblacion() {
         int tam = poblacion.size();
