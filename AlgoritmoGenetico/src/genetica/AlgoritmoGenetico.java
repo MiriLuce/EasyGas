@@ -41,7 +41,7 @@ public class AlgoritmoGenetico {
         mejorCromosoma.setCosto(-1);
         camiones = listaCamiones;
         pedidos = listaPedidos;
-        mapa = nuevoMapa;        
+        mapa = nuevoMapa;      
     }
     
     public Cromosoma empieza(){
@@ -72,7 +72,7 @@ public class AlgoritmoGenetico {
             // cerrar cromosoma con 
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
-            
+            //cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
@@ -117,13 +117,14 @@ public class AlgoritmoGenetico {
 
     //mezcla las rutas de los camiones
     private void emparejaPoblacion(){
-        
+        /*
         int[] cantPedidosPoblacion = new int [poblacion.size()];
-            for (int i= 0; i< poblacion.size(); i++){
-                cantPedidosPoblacion[i] = 0;
-                for (int j= 0; j< poblacion.get(i).getCadena().size(); j++)
-                    cantPedidosPoblacion[i] += poblacion.get(i).getCadena().get(j).getListaPedido().size();
-            }
+        for (int i= 0; i< poblacion.size(); i++){
+            cantPedidosPoblacion[i] = 0;
+            for (int j= 0; j< poblacion.get(i).getCadena().size(); j++)
+                cantPedidosPoblacion[i] += poblacion.get(i).getCadena().get(j).getListaPedido().size();
+        }
+        */
         int indAux = 0;
         int cantAux = poblacion.size() - 1;
         boolean seguirEmparejando = true;
@@ -134,13 +135,14 @@ public class AlgoritmoGenetico {
             if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));
             if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1));
             
+            /*
             int cantPedidosHijo1 = 0, cantPedidosHijo2 = 0;
             for (int i= 0; i< hijos.get(0).getCadena().size(); i++)
                 cantPedidosHijo1 += hijos.get(0).getCadena().get(i).getListaPedido().size();
             
             for (int i= 0; i< hijos.get(1).getCadena().size(); i++)
                 cantPedidosHijo2 += hijos.get(1).getCadena().get(i).getListaPedido().size();
-            
+            */
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;
             } else indAux += 2;
@@ -154,8 +156,9 @@ public class AlgoritmoGenetico {
         Cromosoma hijo2 = new Cromosoma(crom2);        
         int cantHijo1 = hijo1.getCadena().size();
         int cantHijo2 = hijo2.getCadena().size();
-        String[] arrRutas;
-        
+        //String[] arrRutas;
+        crom1.imprimir();
+        crom2.imprimir();
         int cantPedidosHijoA = 0, cantPedidosHijoD = 0;
         
         boolean verificar1 = true, verificar2 = true;
@@ -163,13 +166,14 @@ public class AlgoritmoGenetico {
         for (int i = 0; i < cant; i++) {
             int par = i%2;
             if(par == 0){ 
+                /*
                 cantPedidosHijoA = 0;
                 for (int k= 0; k< hijo1.getCadena().size(); k++)
                     cantPedidosHijoA += hijo1.getCadena().get(k).getListaPedido().size();
                 if (cantPedidosHijoA != pedidos.size()) hijo1.setAberracion(true);
-                else 
-                    hijo1.agregarRuta(hijo2.getCadena().get(i), cantPedidosHijoA);                
-                
+                else */
+                    hijo1.agregarRuta(hijo2.getCadena().get(i));                
+                /*
                 cantPedidosHijoD = 0;
                 for (int k= 0; k< hijo1.getCadena().size(); k++)
                     cantPedidosHijoD += hijo1.getCadena().get(k).getListaPedido().size();
@@ -177,26 +181,27 @@ public class AlgoritmoGenetico {
                 if (cantPedidosHijoA != cantPedidosHijoD) {
                     //System.out.println("error");
                     hijo1.setAberracion(true);
-                }
+                }*/
                 if (hijo1.isAberracion()) break;
-                
+                //hijo1.imprimir();
+                /*
                 arrRutas = new String[hijo1.getCadena().size()];
                 for (int k= 0; k< hijo1.getCadena().size(); k++){
                     arrRutas[k] = "";
                     for (int j= 0; j< hijo1.getCadena().get(k).getListaPedido().size(); j++)
                         arrRutas[k] = arrRutas[k] + "-" + hijo1.getCadena().get(k).getListaPedido().get(j).getIdPedido();
                 }
-                
+                */
             }
             else{ 
-                cantPedidosHijoA = 0;
+                /*cantPedidosHijoA = 0;
                 for (int k= 0; k< hijo1.getCadena().size(); k++)
                     cantPedidosHijoA += hijo1.getCadena().get(k).getListaPedido().size();
                             
                 if (cantPedidosHijoA != pedidos.size()) hijo2.setAberracion(true);
-                else
-                    hijo2.agregarRuta(hijo1.getCadena().get(i), cantPedidosHijoA);                
-                
+                else*/
+                    hijo2.agregarRuta(hijo1.getCadena().get(i));                
+                /*
                 cantPedidosHijoD = 0;
                 for (int k= 0; k< hijo2.getCadena().size(); k++)
                     cantPedidosHijoD += hijo2.getCadena().get(k).getListaPedido().size();
@@ -204,17 +209,18 @@ public class AlgoritmoGenetico {
                 if (cantPedidosHijoA != cantPedidosHijoD){
                     System.out.println("error");
                     hijo2.setAberracion(true);
-                }
+                }*/
                 if (hijo2.isAberracion()) break;
-                
+                //hijo2.imprimir();
+                /*
                 arrRutas = new String[hijo1.getCadena().size()];
                 for (int k= 0; k< hijo1.getCadena().size(); k++){
                     arrRutas[k] = "";
                     for (int j= 0; j< hijo1.getCadena().get(k).getListaPedido().size(); j++)
                         arrRutas[k] = arrRutas[k] + "-" + hijo1.getCadena().get(k).getListaPedido().get(j).getIdPedido();
-                }
+                }*/
             }           
-            arrRutas=arrRutas;
+            //arrRutas=arrRutas;
         }
         
         /*while(verificar1){

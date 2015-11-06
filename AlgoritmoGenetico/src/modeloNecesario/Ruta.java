@@ -7,6 +7,7 @@ package modeloNecesario;
 
 import algoritmogenetico.Constantes;
 import static genetica.AlgoritmoGenetico.mapa;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,8 +50,21 @@ public class Ruta {
         cantDiesel = ruta.getCantDiesel();
         cantGLP = ruta.getCantGLP();
         distancia = ruta.getDistancia();
+        salida = ruta.getSalida();
+        llegada = ruta.getLlegada();
     }
    
+    public void imprimir(){
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+        System.out.print(" GLP: " + camion.getTipoCamion().getCapacidadGLP());
+        System.out.println(" Distancia: " + distancia);
+        System.out.println("Salida: " + sdf.format(salida) + " Llegada: " + sdf.format(llegada));
+            
+        for (int j= 0; j< listaPedido.size(); j++)
+            System.out.print( " -> " + listaPedido.get(j).getIdPedido());
+        System.out.println();
+    }
+    
     private Date obtenerTiempo(int distanciaPedido, Date inicio, int accion ){
         
         double tiempo = distanciaPedido / Constantes.velCamion; 
@@ -222,10 +236,10 @@ public class Ruta {
             verificar = false;
         } 
         else{
-            posXAnt = Constantes.posCentralX;
-            posYAnt = Constantes.posCentralY; 
-            posXPos = Constantes.posCentralX;
-            posYPos = Constantes.posCentralY; 
+            posXAnt = listaPedido.get(indicePedido - 1).getPosX();
+            posYAnt = listaPedido.get(indicePedido - 1).getPosX();
+            posXPos = listaPedido.get(indicePedido + 1).getPosX();
+            posYPos = listaPedido.get(indicePedido + 1).getPosX();
         }
         cantGLP -= pedido.getCantGLP();
         distancia -= mapa.distanciaMinima(posXAnt, posYAnt, pedido.getPosX(), pedido.getPosY());
@@ -237,15 +251,16 @@ public class Ruta {
             return true;
         }
         // Calcular hora de entrega de cada pedido
-        Pedido pedidoAnterior = listaPedido.get(indicePedido);
+        Pedido pedidoAnterior = listaPedido.get(indicePedido - 1);
         Pedido pedidoActual = null;
-        for(int i = indicePedido + 1; i< cantPedidos; i++){
+        for(int i = indicePedido + 1; i < cantPedidos; i++){
             pedidoActual = listaPedido.get(i);
             int tramo = mapa.distanciaMinima(pedidoAnterior.getPosX(), pedidoAnterior.getPosY(),
                 pedidoActual.getPosX(), pedidoActual.getPosY());         
-            pedidoActual.setHoraEntregada(obtenerTiempo(tramo, pedidoActual.getHoraSolicitada(), 1));
+            pedidoActual.setHoraEntregada(obtenerTiempo(tramo, pedidoAnterior.getHoraEntregada(), 1));
             if (pedidoActual.getHoraEntregada().before(pedidoActual.getHoraSolicitada()))
                 return false;
+            pedidoAnterior = pedidoActual;
         }
         listaPedido.remove(indicePedido);
         return true;
