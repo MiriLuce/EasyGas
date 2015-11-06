@@ -101,6 +101,8 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
 
         jLabel96.setText("Nombre:");
 
+        txtNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+
         jLabel97.setText("Apellido Paterno:");
 
         jLabel101.setText("Apellido Materno:");

@@ -52,13 +52,10 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         cmbCamionBuscarTipo.removeAllItems();
         cmbCamionBuscarTipo.addItem("Todos");*/
         List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
-        if (listaTipoCamion!=null){
-            //List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
-            int cantLista = listaTipoCamion.size();
-            for(int i=0; i<cantLista; i++){
-                cmbCamionTipo.addItem(listaTipoCamion.get(i).getNombre());
-                cmbCamionBuscarTipo.addItem(listaTipoCamion.get(i).getNombre());
-            }
+        List<TipoCamion> lista = tpCamionControlador.ListarTipoCamion();
+        for (TipoCamion tp : lista) {
+            cmbCamionTipo.addItem(tp);
+            cmbCamionBuscarTipo.addItem(tp);
         }
     }
     
@@ -77,11 +74,11 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         }
         
         List<Camion> listaCamion= camionControlador.BuscarCamion(placa, estado, codTipo, desde, hasta);
+        DefaultTableModel modelo = (DefaultTableModel) tblCamion.getModel();
+        modelo.setRowCount(0);
         
         if (listaCamion.size()!=0){
-            DefaultTableModel modelo = (DefaultTableModel) tblCamion.getModel();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            modelo.setRowCount(0);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");           
             
             for (int i = 0; i < listaCamion.size(); i++) {
                 Object[] fila = new Object[6];
@@ -616,6 +613,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCamionNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCamionNuevoActionPerformed
+        RefrescarCmbCamion();
         LimpiarDatos();
         txtCamionPlaca.setEnabled(true);
         cmbCamionTipo.setEnabled(true);
@@ -733,6 +731,9 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
 
     private void tblCamionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCamionMouseClicked
         if (evt.getSource() == tblCamion){
+            BotonesEditables(true);
+            txtCamionPlaca.setEnabled(false);
+            cmbCamionTipo.setEnabled(false);
             int fila = tblCamion.getSelectedRow();
             VerDatos(tblCamion.getValueAt(fila, 0).toString());
         }
