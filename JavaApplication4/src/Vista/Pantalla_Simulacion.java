@@ -33,11 +33,11 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         jPanel57 = new javax.swing.JPanel();
         jLabel125 = new javax.swing.JLabel();
         jLabel126 = new javax.swing.JLabel();
-        jTextField59 = new javax.swing.JTextField();
+        txtHoraInicio = new javax.swing.JTextField();
         jLabel127 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
-        jButton56 = new javax.swing.JButton();
-        jButton58 = new javax.swing.JButton();
+        txtDuracion = new javax.swing.JSpinner();
+        btnIniciar = new javax.swing.JButton();
+        btnDetener = new javax.swing.JButton();
         jPanel60 = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
 
@@ -60,9 +60,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
         jLabel126.setText("Fecha de Salida:");
 
-        jTextField59.addActionListener(new java.awt.event.ActionListener() {
+        txtHoraInicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField59ActionPerformed(evt);
+                txtHoraInicioActionPerformed(evt);
             }
         });
 
@@ -85,8 +85,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                         .addComponent(jLabel127)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jTextField59, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jSpinner5))
+                    .addComponent(txtHoraInicio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(txtDuracion))
                 .addGap(60, 60, 60))
         );
         jPanel57Layout.setVerticalGroup(
@@ -97,29 +97,29 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel125)
-                    .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel127)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDuracion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
         );
 
-        jButton56.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton56.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_iniciar.png"))); // NOI18N
-        jButton56.setText("Iniciar");
-        jButton56.addActionListener(new java.awt.event.ActionListener() {
+        btnIniciar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_iniciar.png"))); // NOI18N
+        btnIniciar.setText("Iniciar");
+        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton56ActionPerformed(evt);
+                btnIniciarActionPerformed(evt);
             }
         });
 
-        jButton58.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton58.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_detener.png"))); // NOI18N
-        jButton58.setText("Detener");
-        jButton58.addActionListener(new java.awt.event.ActionListener() {
+        btnDetener.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnDetener.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_detener.png"))); // NOI18N
+        btnDetener.setText("Detener");
+        btnDetener.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton58ActionPerformed(evt);
+                btnDetenerActionPerformed(evt);
             }
         });
 
@@ -136,8 +136,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton56, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton58, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
+                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDetener, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
                 .addGap(118, 118, 118))
         );
         jPanel56Layout.setVerticalGroup(
@@ -146,12 +146,12 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addComponent(label23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton56)
-                .addGap(18, 18, 18)
-                .addComponent(jButton58)
-                .addContainerGap(272, Short.MAX_VALUE))
+                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnIniciar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnDetener)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel60.setBackground(new java.awt.Color(240, 240, 225));
@@ -215,30 +215,30 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGap(0, 759, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 2, Short.MAX_VALUE)
                     .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 2, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField59ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField59ActionPerformed
+    private void txtHoraInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoraInicioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField59ActionPerformed
+    }//GEN-LAST:event_txtHoraInicioActionPerformed
 
-    private void jButton56ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton56ActionPerformed
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton56ActionPerformed
+    }//GEN-LAST:event_btnIniciarActionPerformed
 
-    private void jButton58ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton58ActionPerformed
+    private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton58ActionPerformed
+    }//GEN-LAST:event_btnDetenerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton56;
-    private javax.swing.JButton jButton58;
+    private javax.swing.JButton btnDetener;
+    private javax.swing.JButton btnIniciar;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel125;
     private javax.swing.JLabel jLabel126;
@@ -246,9 +246,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel56;
     private javax.swing.JPanel jPanel57;
     private javax.swing.JPanel jPanel60;
-    private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JTextField jTextField59;
     private java.awt.Label label23;
     private javax.swing.JPanel panelSimulacion;
+    private javax.swing.JSpinner txtDuracion;
+    private javax.swing.JTextField txtHoraInicio;
     // End of variables declaration//GEN-END:variables
 }

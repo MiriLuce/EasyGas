@@ -25,6 +25,8 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Accidente ventanaAccidente = null;
     private Pantalla_Empleado ventanaEmpleado = null;
     private Pantalla_Usuario ventanaUsuario = null;
+    private Pantalla_Simulacion ventanaSimulacion=null;
+    private Pantalla_Ruta ventanaRuta=null;
 
     public Principal() {
         initComponents();
@@ -58,7 +60,7 @@ public class Principal extends javax.swing.JFrame {
         mantPedido = new javax.swing.JMenuItem();
         mantAccidente = new javax.swing.JMenuItem();
         mantRuta = new javax.swing.JMenuItem();
-        menuSimulacion = new javax.swing.JMenu();
+        mantSimulacion = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -186,12 +188,22 @@ public class Principal extends javax.swing.JFrame {
         menuReparto.add(mantAccidente);
 
         mantRuta.setText("Ruta de Reparto");
+        mantRuta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mantRutaActionPerformed(evt);
+            }
+        });
         menuReparto.add(mantRuta);
 
-        jMenuBar.add(menuReparto);
+        mantSimulacion.setText("Simulación");
+        mantSimulacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mantSimulacionActionPerformed(evt);
+            }
+        });
+        menuReparto.add(mantSimulacion);
 
-        menuSimulacion.setText("Simulación");
-        jMenuBar.add(menuSimulacion);
+        jMenuBar.add(menuReparto);
 
         menuAyuda.setText("Ayuda");
         jMenuBar.add(menuAyuda);
@@ -226,7 +238,9 @@ public class Principal extends javax.swing.JFrame {
         ventanaMantenimiento = null;
         ventanaAccidente = null;
         ventanaEmpleado = null;
-        ventanaUsuario=null;        
+        ventanaUsuario=null;   
+        ventanaSimulacion=null;
+        ventanaRuta=null;
     }
 
     private void mantTipoCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantTipoCamionActionPerformed
@@ -372,6 +386,40 @@ public class Principal extends javax.swing.JFrame {
         ventanaCamionCarga.setVisible(true);
     }//GEN-LAST:event_mantCamionCargaMasivaActionPerformed
 
+    private void mantSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantSimulacionActionPerformed
+        // TODO add your handling code here:
+        ActualizaVentanas();
+        
+        if (ventanaSimulacion == null) {
+            ventanaSimulacion = new Pantalla_Simulacion();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaSimulacion);
+            try {
+                ventanaSimulacion.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaSimulacion.setVisible(true);
+    }//GEN-LAST:event_mantSimulacionActionPerformed
+
+    private void mantRutaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantRutaActionPerformed
+        // TODO add your handling code here:
+        ActualizaVentanas();
+        
+        if (ventanaRuta == null) {
+            ventanaRuta = new Pantalla_Ruta();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaRuta);
+            try {
+                ventanaRuta.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaRuta.setVisible(true);
+    }//GEN-LAST:event_mantRutaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JMenuBar jMenuBar;
@@ -383,13 +431,13 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mantMantenimiento;
     private javax.swing.JMenuItem mantPedido;
     private javax.swing.JMenuItem mantRuta;
+    private javax.swing.JMenuItem mantSimulacion;
     private javax.swing.JMenuItem mantTipoCamion;
     private javax.swing.JMenuItem mantUsuario;
     private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenu menuLogistica;
     private javax.swing.JMenu menuPlanilla;
     private javax.swing.JMenu menuReparto;
-    private javax.swing.JMenu menuSimulacion;
     public javax.swing.JLabel nombreUsuario;
     private javax.swing.JPanel pnlSesion;
     // End of variables declaration//GEN-END:variables

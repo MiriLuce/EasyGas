@@ -33,7 +33,7 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
         
     }
     public void habilitado(boolean flag){
-        
+        this.btnBuscarEmpleado.setEnabled(flag);
         txtCorreo.setEnabled(flag);
         txtNombreUsuario.setEnabled(flag);
         this.btnUsuarioEditar.setEnabled(!flag);
@@ -165,15 +165,18 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
                 .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel113)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel133)
-                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel28Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel133))
+                    .addGroup(jPanel28Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(txtDNI, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel67)
+                    .addComponent(txtNombreCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombreCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel67))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(btnBuscarEmpleado)
                 .addContainerGap())
         );
@@ -291,8 +294,8 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
                     .addComponent(label13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUSuarioNuevo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel28, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel28, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jPanel29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -300,9 +303,9 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
                     .addComponent(btnUsuarioEditar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUsuarioGuardar)
-                    .addComponent(btnUsuarioCancelar))
-                .addContainerGap(116, Short.MAX_VALUE))
+                    .addComponent(btnUsuarioCancelar)
+                    .addComponent(btnUsuarioGuardar))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         jPanel58.setBackground(new java.awt.Color(240, 240, 225));
@@ -526,6 +529,7 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
 
     private void btnUsuarioBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioBuscarActionPerformed
         // TODO add your handling code here:
+       
         habilitado(false);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         List<Usuario> lista = usuarioControlador.buscaUsuarioFiltro(txtDNIBuscar.getText() ,txtNombreBuscar.getText(),cmbxPuestos.getSelectedItem().toString(),txtNombreUsuarioBuscar.getText());
@@ -564,6 +568,7 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
     private void btnUsuarioEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioEditarActionPerformed
         // TODO add your handling code here:
         habilitado(true);
+        this.btnBuscarEmpleado.setEnabled(false);
     }//GEN-LAST:event_btnUsuarioEditarActionPerformed
 
     private void btnUsuarioCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioCancelarActionPerformed
@@ -577,6 +582,7 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
 
     private void btnUSuarioNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUSuarioNuevoActionPerformed
         habilitado(true);
+        txtDNI.setEnabled(true);
         txtNombreUsuario.setText("");
         txtNombreCompleto.setText("");
         txtDNI.setText("");
