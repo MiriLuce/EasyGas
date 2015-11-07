@@ -16,6 +16,10 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
      */
     public Pantalla_Simulacion() {
         initComponents();
+        
+        this.btnIniciar.setEnabled(false);
+        this.btnDetener.setEnabled(false);
+        this.btnGrabar.setEnabled(false);
     }
 
     /**
@@ -36,8 +40,14 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         txtHoraInicio = new javax.swing.JTextField();
         jLabel127 = new javax.swing.JLabel();
         txtDuracion = new javax.swing.JSpinner();
+        jPanel58 = new javax.swing.JPanel();
         btnIniciar = new javax.swing.JButton();
         btnDetener = new javax.swing.JButton();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        tblResultados = new javax.swing.JTable();
+        btnCalcular = new javax.swing.JButton();
+        btnGrabar = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         jPanel60 = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
 
@@ -85,14 +95,14 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                         .addComponent(jLabel127)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtHoraInicio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(txtDuracion))
-                .addGap(60, 60, 60))
+                    .addComponent(txtHoraInicio, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDuracion, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
+                .addGap(44, 44, 44))
         );
         jPanel57Layout.setVerticalGroup(
             jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel57Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel126)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -102,12 +112,15 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel127)
                     .addComponent(txtDuracion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
+
+        jPanel58.setBackground(new java.awt.Color(240, 240, 225));
+        jPanel58.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos"));
+        jPanel58.setPreferredSize(new java.awt.Dimension(360, 120));
 
         btnIniciar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnIniciar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_iniciar.png"))); // NOI18N
-        btnIniciar.setText("Iniciar");
         btnIniciar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIniciarActionPerformed(evt);
@@ -116,10 +129,94 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
         btnDetener.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnDetener.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_detener.png"))); // NOI18N
-        btnDetener.setText("Detener");
         btnDetener.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDetenerActionPerformed(evt);
+            }
+        });
+
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Camiones", "Diesel (m3)", "Duración (hrs)", "Costo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblResultadosMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(tblResultados);
+
+        javax.swing.GroupLayout jPanel58Layout = new javax.swing.GroupLayout(jPanel58);
+        jPanel58.setLayout(jPanel58Layout);
+        jPanel58Layout.setHorizontalGroup(
+            jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel58Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel58Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDetener, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
+        jPanel58Layout.setVerticalGroup(
+            jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel58Layout.createSequentialGroup()
+                .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnIniciar)
+                    .addComponent(btnDetener))
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        btnCalcular.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnCalcular.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_calcular.png"))); // NOI18N
+        btnCalcular.setText("Calcular");
+        btnCalcular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCalcularActionPerformed(evt);
+            }
+        });
+
+        btnGrabar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnGrabar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_guardar.png"))); // NOI18N
+        btnGrabar.setText("Grabar");
+        btnGrabar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGrabarActionPerformed(evt);
+            }
+        });
+
+        btnExportar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_descargar.png"))); // NOI18N
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
             }
         });
 
@@ -128,30 +225,38 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         jPanel56Layout.setHorizontalGroup(
             jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel56Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDetener, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
-                .addGap(118, 118, 118))
+                    .addGroup(jPanel56Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(label23, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jPanel57, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                                .addComponent(jPanel58, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE))
+                            .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel56Layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(btnExportar, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGrabar, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel56Layout.setVerticalGroup(
             jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel56Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(label23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCalcular)
+                .addGap(29, 29, 29)
+                .addComponent(jPanel58, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(btnIniciar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDetener)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnExportar)
+                    .addComponent(btnGrabar))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         jPanel60.setBackground(new java.awt.Color(240, 240, 225));
@@ -168,14 +273,14 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(jPanel60Layout.createSequentialGroup()
                 .addGap(274, 274, 274)
                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         jPanel60Layout.setVerticalGroup(
             jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel60Layout.createSequentialGroup()
                 .addGap(146, 146, 146)
                 .addComponent(jButton7)
-                .addContainerGap(261, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelSimulacionLayout = new javax.swing.GroupLayout(panelSimulacion);
@@ -184,9 +289,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             panelSimulacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSimulacionLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addComponent(jPanel56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jPanel60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel56, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(jPanel60, javax.swing.GroupLayout.PREFERRED_SIZE, 721, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         panelSimulacionLayout.setVerticalGroup(
@@ -194,8 +299,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(panelSimulacionLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(panelSimulacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel60, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel56, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel60, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
+                    .addComponent(jPanel56, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE))
                 .addContainerGap(99, Short.MAX_VALUE))
         );
 
@@ -203,21 +308,17 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1300, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 759, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 2, Short.MAX_VALUE)
-                    .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 2, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -229,15 +330,55 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
+        this.btnDetener.setEnabled(true);
+        this.btnIniciar.setEnabled(false);
+        this.btnGrabar.setEnabled(false);
+        this.btnExportar.setEnabled(false);
+        //pintar
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
         // TODO add your handling code here:
+        this.btnDetener.setEnabled(false);
+        this.btnIniciar.setEnabled(true);
+        this.btnGrabar.setEnabled(true);
+        this.btnExportar.setEnabled(true);
     }//GEN-LAST:event_btnDetenerActionPerformed
+
+    private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
+        // TODO add your handling code here:
+        // algoritmo
+    }//GEN-LAST:event_btnCalcularActionPerformed
+
+    private void tblResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultadosMouseClicked
+        if (evt.getSource() == tblResultados){
+           this.btnIniciar.setEnabled(true);
+           this.btnDetener.setEnabled(false);
+           this.btnGrabar.setEnabled(true);
+        }
+    }//GEN-LAST:event_tblResultadosMouseClicked
+
+    private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
+        // TODO add your handling code here:
+        //envio mensaje de confirmacion
+        // guardo la ruta seleccionada por el algoritmo a bd
+        // mensaje de que se guardaron los datos exitosamente
+        this.btnCalcular.setEnabled(true);
+    }//GEN-LAST:event_btnGrabarActionPerformed
+
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        // TODO add your handling code here:
+        // opcion si quiere imprimir todos las rutas de los camiones o los camiones por separado
+        // es decir una imagen o n imagenes (n camiones)
+        // con la leyenda (si es que una imagen) si es con varias imagenes el titulo del camion a la hoja (con conductor)
+    }//GEN-LAST:event_btnExportarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCalcular;
     private javax.swing.JButton btnDetener;
+    private javax.swing.JButton btnExportar;
+    private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnIniciar;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel125;
@@ -245,9 +386,12 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel127;
     private javax.swing.JPanel jPanel56;
     private javax.swing.JPanel jPanel57;
+    private javax.swing.JPanel jPanel58;
     private javax.swing.JPanel jPanel60;
+    private javax.swing.JScrollPane jScrollPane8;
     private java.awt.Label label23;
     private javax.swing.JPanel panelSimulacion;
+    private javax.swing.JTable tblResultados;
     private javax.swing.JSpinner txtDuracion;
     private javax.swing.JTextField txtHoraInicio;
     // End of variables declaration//GEN-END:variables

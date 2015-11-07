@@ -5,6 +5,15 @@
  */
 package Vista;
 
+import Controlador.RutaControlador;
+import Controlador.TipoCamionControlador;
+import Modelo.Hibernate.Empleado;
+import Modelo.Hibernate.Ruta;
+import Modelo.Hibernate.TipoCamion;
+import java.awt.Cursor;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 /**
  *
  * @author alulab14
@@ -14,10 +23,27 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
     /**
      * Creates new form InternalFrameRuta
      */
+    RutaControlador rutaControlador = new RutaControlador();
+    TipoCamionControlador tipoCamionControlador = new TipoCamionControlador();  
     public Pantalla_Ruta() {
         initComponents();
+        List<Ruta> lista = rutaControlador.listarRutas();
+        rutaControlador.actualizaTablaRutas(lista,this.tblRuta);
+        this.btnVisualizar.setEnabled(false);
+        RefrescarCmbCamion(); 
     }
-
+     private void RefrescarCmbCamion(){
+        /*cmbCamionTipo.setEnabled(true);
+        cmbCamionTipo.removeAllItems();
+        cmbCamionBuscarTipo.removeAllItems();
+        cmbCamionBuscarTipo.addItem("Todos");*/
+        List<TipoCamion> listaTipoCamion = tipoCamionControlador.ListarTipoCamion();
+        for (TipoCamion tp : listaTipoCamion) {
+            cmbTipoCamion.addItem(tp);
+            
+        }
+    } 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,38 +57,41 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         jPanel56 = new javax.swing.JPanel();
         label23 = new java.awt.Label();
         jPanel57 = new javax.swing.JPanel();
-        jTextField59 = new javax.swing.JTextField();
+        txtHoraLlegada = new javax.swing.JTextField();
         jLabel110 = new javax.swing.JLabel();
         jLabel112 = new javax.swing.JLabel();
         jLabel125 = new javax.swing.JLabel();
-        jTextField66 = new javax.swing.JTextField();
+        txtHoraSalida = new javax.swing.JTextField();
         jLabel126 = new javax.swing.JLabel();
         jLabel127 = new javax.swing.JLabel();
-        jTextField67 = new javax.swing.JTextField();
-        jTextField68 = new javax.swing.JTextField();
+        txtCantDiesel = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
         jLabel128 = new javax.swing.JLabel();
-        jTextField69 = new javax.swing.JTextField();
-        jTextField72 = new javax.swing.JTextField();
+        txtCantGLP = new javax.swing.JTextField();
+        txtFechaSalida = new javax.swing.JTextField();
+        btnVisualizar = new javax.swing.JButton();
         jPanel58 = new javax.swing.JPanel();
-        jTextField70 = new javax.swing.JTextField();
-        jTextField73 = new javax.swing.JTextField();
+        txtConductor = new javax.swing.JTextField();
+        txtPlaca = new javax.swing.JTextField();
         jLabel129 = new javax.swing.JLabel();
         jLabel130 = new javax.swing.JLabel();
-        jTextField74 = new javax.swing.JTextField();
+        txtDNI = new javax.swing.JTextField();
         jLabel131 = new javax.swing.JLabel();
         jPanel59 = new javax.swing.JPanel();
         label24 = new java.awt.Label();
         jPanel60 = new javax.swing.JPanel();
         jLabel132 = new javax.swing.JLabel();
         jLabel133 = new javax.swing.JLabel();
+        datFechaDesde = new com.toedter.calendar.JDateChooser();
+        datFechaHasta = new com.toedter.calendar.JDateChooser();
         jPanel61 = new javax.swing.JPanel();
         jLabel134 = new javax.swing.JLabel();
         jLabel135 = new javax.swing.JLabel();
-        jComboBox27 = new javax.swing.JComboBox();
-        jTextField2 = new javax.swing.JTextField();
+        cmbTipoCamion = new javax.swing.JComboBox();
+        txtPlacaBuscar = new javax.swing.JTextField();
         jScrollPane12 = new javax.swing.JScrollPane();
-        tablaCamiones10 = new javax.swing.JTable();
-        jButton58 = new javax.swing.JButton();
+        tblRuta = new javax.swing.JTable();
+        btnBuscar = new javax.swing.JButton();
 
         panelRuta1.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -80,10 +109,10 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         jPanel57.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Salida"));
         jPanel57.setPreferredSize(new java.awt.Dimension(360, 180));
 
-        jTextField59.setEnabled(false);
-        jTextField59.addActionListener(new java.awt.event.ActionListener() {
+        txtHoraLlegada.setEnabled(false);
+        txtHoraLlegada.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField59ActionPerformed(evt);
+                txtHoraLlegadaActionPerformed(evt);
             }
         });
 
@@ -93,10 +122,10 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
         jLabel125.setText("Fecha de Salida:");
 
-        jTextField66.setEnabled(false);
-        jTextField66.addActionListener(new java.awt.event.ActionListener() {
+        txtHoraSalida.setEnabled(false);
+        txtHoraSalida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField66ActionPerformed(evt);
+                txtHoraSalidaActionPerformed(evt);
             }
         });
 
@@ -104,33 +133,42 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
         jLabel127.setText("Carga de Diesel:");
 
-        jTextField67.setEnabled(false);
-        jTextField67.addActionListener(new java.awt.event.ActionListener() {
+        txtCantDiesel.setEnabled(false);
+        txtCantDiesel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField67ActionPerformed(evt);
+                txtCantDieselActionPerformed(evt);
             }
         });
 
-        jTextField68.setEnabled(false);
-        jTextField68.addActionListener(new java.awt.event.ActionListener() {
+        txtCodigo.setEnabled(false);
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField68ActionPerformed(evt);
+                txtCodigoActionPerformed(evt);
             }
         });
 
         jLabel128.setText("Código:");
 
-        jTextField69.setEnabled(false);
-        jTextField69.addActionListener(new java.awt.event.ActionListener() {
+        txtCantGLP.setEnabled(false);
+        txtCantGLP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField69ActionPerformed(evt);
+                txtCantGLPActionPerformed(evt);
             }
         });
 
-        jTextField72.setEnabled(false);
-        jTextField72.addActionListener(new java.awt.event.ActionListener() {
+        txtFechaSalida.setEnabled(false);
+        txtFechaSalida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField72ActionPerformed(evt);
+                txtFechaSalidaActionPerformed(evt);
+            }
+        });
+
+        btnVisualizar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnVisualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_buscar.png"))); // NOI18N
+        btnVisualizar.setText("Visualizar");
+        btnVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVisualizarActionPerformed(evt);
             }
         });
 
@@ -138,23 +176,34 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         jPanel57.setLayout(jPanel57Layout);
         jPanel57Layout.setHorizontalGroup(
             jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel57Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel128)
-                    .addComponent(jLabel125)
-                    .addComponent(jLabel112)
-                    .addComponent(jLabel110)
-                    .addComponent(jLabel126)
-                    .addComponent(jLabel127))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField72, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField66, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField59, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField69, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField67, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField68, javax.swing.GroupLayout.Alignment.TRAILING))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel57Layout.createSequentialGroup()
+                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel57Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVisualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel57Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel57Layout.createSequentialGroup()
+                                .addComponent(jLabel110)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtHoraLlegada, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel57Layout.createSequentialGroup()
+                                .addComponent(jLabel112)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtHoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel57Layout.createSequentialGroup()
+                                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel128)
+                                    .addComponent(jLabel126)
+                                    .addComponent(jLabel127)
+                                    .addComponent(jLabel125))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtFechaSalida, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                    .addComponent(txtCantGLP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                    .addComponent(txtCantDiesel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addGap(20, 20, 20))
         );
         jPanel57Layout.setVerticalGroup(
@@ -163,44 +212,46 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel128)
-                    .addComponent(jTextField68, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel125)
-                    .addComponent(jTextField72, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel125))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel112)
-                    .addComponent(jTextField66, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(txtHoraSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel110)
-                    .addComponent(jTextField59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(txtHoraLlegada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel126)
-                    .addComponent(jTextField69, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(txtCantGLP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel126))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel127)
-                    .addComponent(jTextField67, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                    .addComponent(txtCantDiesel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(btnVisualizar)
+                .addContainerGap())
         );
 
         jPanel58.setBackground(new java.awt.Color(240, 240, 225));
         jPanel58.setBorder(javax.swing.BorderFactory.createTitledBorder("Asignaciones"));
 
-        jTextField70.setEnabled(false);
-        jTextField70.addActionListener(new java.awt.event.ActionListener() {
+        txtConductor.setEnabled(false);
+        txtConductor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField70ActionPerformed(evt);
+                txtConductorActionPerformed(evt);
             }
         });
 
-        jTextField73.setEnabled(false);
-        jTextField73.addActionListener(new java.awt.event.ActionListener() {
+        txtPlaca.setEnabled(false);
+        txtPlaca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField73ActionPerformed(evt);
+                txtPlacaActionPerformed(evt);
             }
         });
 
@@ -208,10 +259,10 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
         jLabel130.setText("Conductor:");
 
-        jTextField74.setEnabled(false);
-        jTextField74.addActionListener(new java.awt.event.ActionListener() {
+        txtDNI.setEnabled(false);
+        txtDNI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField74ActionPerformed(evt);
+                txtDNIActionPerformed(evt);
             }
         });
 
@@ -229,9 +280,9 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                     .addComponent(jLabel131))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField74)
-                    .addComponent(jTextField70, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField73))
+                    .addComponent(txtDNI)
+                    .addComponent(txtConductor, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                    .addComponent(txtPlaca))
                 .addGap(20, 20, 20))
         );
         jPanel58Layout.setVerticalGroup(
@@ -240,16 +291,16 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel129)
-                    .addComponent(jTextField73, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel130)
+                    .addComponent(txtConductor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel130)
-                    .addComponent(jTextField70, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addGroup(jPanel58Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel131)
-                    .addComponent(jTextField74, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel131))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel56Layout = new javax.swing.GroupLayout(jPanel56);
@@ -271,11 +322,11 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
             .addGroup(jPanel56Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(label23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel58, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(152, 152, 152))
+                .addContainerGap())
         );
 
         jPanel59.setBackground(new java.awt.Color(240, 240, 225));
@@ -306,16 +357,24 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 .addGroup(jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel133, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel132, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap(274, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(datFechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(datFechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel60Layout.setVerticalGroup(
             jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel60Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel133)
-                .addGap(20, 20, 20)
-                .addComponent(jLabel132)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel133)
+                    .addComponent(datFechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel132)
+                    .addComponent(datFechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jPanel61.setBackground(new java.awt.Color(240, 240, 225));
@@ -326,11 +385,11 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
         jLabel135.setText("Tipo de Camión:");
 
-        jComboBox27.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione", "Tipo 1", "Tipo 2", "Tipo 3", "Tipo 4" }));
+        cmbTipoCamion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos" }));
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtPlacaBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtPlacaBuscarActionPerformed(evt);
             }
         });
 
@@ -345,8 +404,8 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                     .addComponent(jLabel134))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel61Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox27, 0, 200, Short.MAX_VALUE)
-                    .addComponent(jTextField2))
+                    .addComponent(cmbTipoCamion, 0, 200, Short.MAX_VALUE)
+                    .addComponent(txtPlacaBuscar))
                 .addGap(20, 20, 20))
         );
         jPanel61Layout.setVerticalGroup(
@@ -354,16 +413,16 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
             .addGroup(jPanel61Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel61Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbTipoCamion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel135))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel61Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel134)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPlacaBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        tablaCamiones10.setModel(new javax.swing.table.DefaultTableModel(
+        tblRuta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 { new Integer(32), "12/09/15", "07:45", "09:30", "B14490"},
                 { new Integer(254), "12/09/15", "15:20", "16:30", "G40M12"},
@@ -376,19 +435,31 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-        });
-        jScrollPane12.setViewportView(tablaCamiones10);
 
-        jButton58.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton58.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_buscar.png"))); // NOI18N
-        jButton58.setText("Buscar");
-        jButton58.addActionListener(new java.awt.event.ActionListener() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblRuta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRutaMouseClicked(evt);
+            }
+        });
+        jScrollPane12.setViewportView(tblRuta);
+
+        btnBuscar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_buscar.png"))); // NOI18N
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton58ActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
 
@@ -407,7 +478,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                         .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel61, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton58, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnBuscar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(20, 20, 20))
         );
         jPanel59Layout.setVerticalGroup(
@@ -416,7 +487,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(label24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton58))
+                    .addComponent(btnBuscar))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel60, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -433,7 +504,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
             .addGroup(panelRuta1Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addComponent(jPanel56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(43, 43, 43)
                 .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(70, Short.MAX_VALUE))
         );
@@ -451,74 +522,106 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1300, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelRuta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 9, Short.MAX_VALUE)
+                .addComponent(panelRuta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 9, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 679, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelRuta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 4, Short.MAX_VALUE)
+                .addComponent(panelRuta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 4, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField59ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField59ActionPerformed
+    private void VerDatos(String strCodigo){    
+        int idRutaCodigo = Integer.parseInt(strCodigo);
+        Ruta ruta = rutaControlador.obtenerRutaPorCodigo(idRutaCodigo);
+        txtCodigo.setText(ruta.getIdRuta().toString());
+        this.txtDNI.setText(ruta.getCamion().getPlaca());
+        this.txtFechaSalida.setText(new SimpleDateFormat("dd/MM/yyyy").format(ruta.getFechaEntrega()));
+        this.txtHoraSalida.setText(new SimpleDateFormat("HH:mm:ss").format(ruta.getHoraSalida()));
+        this.txtHoraLlegada.setText(new SimpleDateFormat("HH:mm:ss").format(ruta.getHoraLlegada()));
+        this.txtPlaca.setText(ruta.getCamion().getPlaca());
+        this.txtConductor.setText(ruta.getEmpleadoByIdConductor().getNombres() + " " +ruta.getEmpleadoByIdConductor().getApellidoPat() + " " + ruta.getEmpleadoByIdConductor().getApellidoMat());
+        this.txtDNI.setText(ruta.getEmpleadoByIdConductor().getDni());
+        this.btnVisualizar.setEnabled(true);
+        
+        
+        
+    }  
+    private void txtHoraLlegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoraLlegadaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField59ActionPerformed
+    }//GEN-LAST:event_txtHoraLlegadaActionPerformed
 
-    private void jTextField66ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField66ActionPerformed
+    private void txtCantDieselActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantDieselActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField66ActionPerformed
+    }//GEN-LAST:event_txtCantDieselActionPerformed
 
-    private void jTextField67ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField67ActionPerformed
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField67ActionPerformed
+    }//GEN-LAST:event_txtCodigoActionPerformed
 
-    private void jTextField68ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField68ActionPerformed
+    private void txtCantGLPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantGLPActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField68ActionPerformed
+    }//GEN-LAST:event_txtCantGLPActionPerformed
 
-    private void jTextField69ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField69ActionPerformed
+    private void txtFechaSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaSalidaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField69ActionPerformed
+    }//GEN-LAST:event_txtFechaSalidaActionPerformed
 
-    private void jTextField72ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField72ActionPerformed
+    private void txtConductorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConductorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField72ActionPerformed
+    }//GEN-LAST:event_txtConductorActionPerformed
 
-    private void jTextField70ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField70ActionPerformed
+    private void txtPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField70ActionPerformed
+    }//GEN-LAST:event_txtPlacaActionPerformed
 
-    private void jTextField73ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField73ActionPerformed
+    private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField73ActionPerformed
+    }//GEN-LAST:event_txtDNIActionPerformed
 
-    private void jTextField74ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField74ActionPerformed
+    private void txtPlacaBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaBuscarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField74ActionPerformed
+    }//GEN-LAST:event_txtPlacaBuscarActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void jButton58ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton58ActionPerformed
+    private void txtHoraSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoraSalidaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton58ActionPerformed
+    }//GEN-LAST:event_txtHoraSalidaActionPerformed
 
+    private void tblRutaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRutaMouseClicked
+        // TODO add your handling code here:
+         if (evt.getSource() == tblRuta){
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            int fila = tblRuta.getSelectedRow();
+            VerDatos(tblRuta.getValueAt(fila, 0).toString());
+            List<Ruta> lista = rutaControlador.listarRutas();
+            rutaControlador.actualizaTablaRutas(lista,this.tblRuta);
+            this.setCursor(Cursor.getDefaultCursor());
+         
+         }
+    }//GEN-LAST:event_tblRutaMouseClicked
+
+    private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVisualizarActionPerformed
+         
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton58;
-    private javax.swing.JComboBox jComboBox27;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnVisualizar;
+    private javax.swing.JComboBox cmbTipoCamion;
+    private com.toedter.calendar.JDateChooser datFechaDesde;
+    private com.toedter.calendar.JDateChooser datFechaHasta;
     private javax.swing.JLabel jLabel110;
     private javax.swing.JLabel jLabel112;
     private javax.swing.JLabel jLabel125;
@@ -539,19 +642,19 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel60;
     private javax.swing.JPanel jPanel61;
     private javax.swing.JScrollPane jScrollPane12;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField59;
-    private javax.swing.JTextField jTextField66;
-    private javax.swing.JTextField jTextField67;
-    private javax.swing.JTextField jTextField68;
-    private javax.swing.JTextField jTextField69;
-    private javax.swing.JTextField jTextField70;
-    private javax.swing.JTextField jTextField72;
-    private javax.swing.JTextField jTextField73;
-    private javax.swing.JTextField jTextField74;
     private java.awt.Label label23;
     private java.awt.Label label24;
     private javax.swing.JPanel panelRuta1;
-    private javax.swing.JTable tablaCamiones10;
+    private javax.swing.JTable tblRuta;
+    private javax.swing.JTextField txtCantDiesel;
+    private javax.swing.JTextField txtCantGLP;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtConductor;
+    private javax.swing.JTextField txtDNI;
+    private javax.swing.JTextField txtFechaSalida;
+    private javax.swing.JTextField txtHoraLlegada;
+    private javax.swing.JTextField txtHoraSalida;
+    private javax.swing.JTextField txtPlaca;
+    private javax.swing.JTextField txtPlacaBuscar;
     // End of variables declaration//GEN-END:variables
 }
