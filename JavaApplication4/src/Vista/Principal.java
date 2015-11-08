@@ -5,8 +5,13 @@
  */
 package Vista;
 
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.beans.PropertyVetoException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -29,11 +34,19 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Usuario ventanaUsuario = null;
     private Pantalla_Simulacion ventanaSimulacion=null;
     private Pantalla_Ruta ventanaRuta=null;
+    private Pantalla_Perfil ventanaPerfil=null;
 
     public Principal() {
+        
         initComponents();
         this.setVisible(true);
-
+        nombreUsuario.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        Font font = nombreUsuario.getFont();
+        Map attributes = font.getAttributes();
+        attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        nombreUsuario.setFont(font.deriveFont(attributes));
+        
+         
     }
 
     /**
@@ -49,6 +62,7 @@ public class Principal extends javax.swing.JFrame {
         nombreUsuario = new javax.swing.JLabel();
         btnCerrarSesion = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         menuPlanilla = new javax.swing.JMenu();
         mantEmpleado = new javax.swing.JMenuItem();
@@ -73,8 +87,14 @@ public class Principal extends javax.swing.JFrame {
         pnlSesion.setBackground(new java.awt.Color(189, 209, 190));
 
         nombreUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        nombreUsuario.setForeground(new java.awt.Color(0, 51, 204));
         nombreUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         nombreUsuario.setText("Usuario");
+        nombreUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nombreUsuarioMouseClicked(evt);
+            }
+        });
 
         btnCerrarSesion.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnCerrarSesion.setText("Cerrar Sesión");
@@ -104,15 +124,23 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(240, 240, 225));
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/logo_fondo.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(405, 405, 405)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 779, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(118, 118, 118)
+                .addComponent(jLabel1)
+                .addContainerGap(659, Short.MAX_VALUE))
         );
 
         menuPlanilla.setText("Planilla");
@@ -231,8 +259,10 @@ public class Principal extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+   
     private void ActualizaVentanas() {
+       
+        jLabel1.setPreferredSize(new Dimension(0, 0));
         ventanaTipoCamion = null;
         ventanaCamionCarga = null;
         ventanaCamion = null;
@@ -243,6 +273,7 @@ public class Principal extends javax.swing.JFrame {
         ventanaUsuario=null;   
         ventanaSimulacion=null;
         ventanaRuta=null;
+        ventanaPerfil=null;
     }
 
     private void mantTipoCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantTipoCamionActionPerformed
@@ -422,8 +453,26 @@ public class Principal extends javax.swing.JFrame {
         ventanaRuta.setVisible(true);
     }//GEN-LAST:event_mantRutaActionPerformed
 
+    private void nombreUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nombreUsuarioMouseClicked
+        // TODO add your handling code here:
+        ActualizaVentanas();
+        
+        if (ventanaPerfil == null) {
+            ventanaPerfil = new Pantalla_Perfil();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaPerfil);
+            try {
+                ventanaPerfil.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaPerfil.setVisible(true);
+    }//GEN-LAST:event_nombreUsuarioMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem mantAccidente;

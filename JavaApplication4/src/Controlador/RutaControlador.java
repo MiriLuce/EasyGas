@@ -10,12 +10,15 @@ import Modelo.Hibernate.Empleado;
 import Modelo.Hibernate.Ruta;
 import Modelo.Hibernate.Usuario;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Transaction;
 
 /**
@@ -99,6 +102,94 @@ public class RutaControlador {
             }
         }
         return ruta;
+    }
+      
+    public  List<Ruta> buscaRutaFiltro(Date dtfechaDesde, Date dtfechaHasta,String placa,String nombreTipoCamion) {
+       
+        List aux=null;
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String fechaDesde=dtfechaDesde==null?"":myFormat.format(dtfechaDesde);
+        String fechaHasta=dtfechaHasta==null?"":myFormat.format(dtfechaHasta);
+        String sql = "SELECT RUTA.* FROM RUTA INNER JOIN CAMION  on CAMION.idCamion=RUTA.idCamion INNER JOIN TIPO_CAMION ON TIPO_CAMION.idTipoCamion=CAMION.idCamion INNER JOIN EMPLEADO ON EMPLEADO.idEmpleado=RUTA.idConductor WHERE 1";
+        if ((fechaDesde.compareTo("")==0) && (fechaHasta.compareTo("")==0) && (placa.compareTo("")==0) && (nombreTipoCamion.compareTo("Todos")==0) ) {
+            aux=listarRutas();
+            return aux;
+           
+        }
+        else{ 
+            if (!(fechaDesde.compareTo("")==0) ) {
+                
+                sql = sql + " and  RUTA.FechaEntrega >= :fechaDesde";
+               
+
+            }
+             if(!(fechaHasta.compareTo("")==0)) {
+                    sql = sql + " and  RUTA.FechaEntrega <= :fechaHasta";
+             }
+             
+             if(!(placa.compareTo("")==0)){
+                    sql = sql + " and  CAMION.Placa = :placa";
+             }
+             
+             if(!(nombreTipoCamion.compareTo("Todos")==0)){
+                    sql = sql + " and  TIPO_CAMION.Nombre = :nombreTipoCamion";
+             }
+        }
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+
+        Transaction tx = null;
+        try {
+            tx = EasyGas.sesion.beginTransaction();
+
+            //query SQL
+            SQLQuery query = EasyGas.sesion.createSQLQuery(sql);
+            query.addEntity(Ruta.class);
+           
+
+            if (!(fechaHasta.compareTo("")==0)) {
+               
+              
+                query.setParameter("fechaHasta",fechaHasta);
+           
+            }
+            if (!(fechaDesde.compareTo("")==0)) {
+                
+                
+                 query.setParameter("fechaDesde",fechaDesde);
+            }
+            
+            if(!(placa.compareTo("")==0)){
+                    query.setParameter("placa",placa);
+             }
+             
+             if(!(nombreTipoCamion.compareTo("Todos")==0)){
+                     query.setParameter("nombreTipoCamion",nombreTipoCamion);
+             }
+            aux = query.list();
+            
+            for(Ruta u : (ArrayList<Ruta>)aux){
+                Hibernate.initialize(u.getCamion());
+                Hibernate.initialize(u.getEmpleadoByIdConductor());
+            }
+            
+            tx.commit();
+
+            
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexion");
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (EasyGas.sesion.isOpen()) {
+                EasyGas.sesion.close();
+            }
+        }
+
+        return aux;
     }
      
 }

@@ -164,6 +164,11 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblResultados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblResultadosMouseClicked(evt);
+            }
+        });
         jScrollPane8.setViewportView(tblResultados);
 
         javax.swing.GroupLayout jPanel59Layout = new javax.swing.GroupLayout(jPanel59);
@@ -171,11 +176,11 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         jPanel59Layout.setHorizontalGroup(
             jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel59Layout.createSequentialGroup()
-                .addGap(193, 193, 193)
+                .addGap(201, 201, 201)
                 .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDetener)
-                .addGap(15, 15, 15))
+                .addGap(7, 7, 7))
             .addGroup(jPanel59Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -216,26 +221,21 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel56Layout.createSequentialGroup()
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel56Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel56Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel56Layout.createSequentialGroup()
-                                .addGap(119, 119, 119)
-                                .addComponent(btnExportar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnGrabar)))
-                        .addGap(0, 6, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel56Layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(btnExportar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGrabar)))
+                .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
         jPanel56Layout.setVerticalGroup(
