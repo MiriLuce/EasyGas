@@ -8,11 +8,9 @@ package Controlador;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Accidente;
 import Modelo.Hibernate.Disponibilidad;
-import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Ruta;
 import Util.HibernateUtil;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.hibernate.Hibernate;
@@ -208,8 +206,8 @@ public class AccidenteControlador {
    public Ruta BuscarRutaPorPlaca(String placa){
        Ruta ruta = null;
        
-       String consulta ="select RUTA.* from RUTA inner join CAMION on RUTA.idCamion where";
-       consulta += "CAMION.placa = :placa";
+       String consulta ="select RUTA.* from RUTA inner join CAMION on RUTA.idCamion where ";
+       consulta += "CAMION.Placa = :placa";
        
        if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();

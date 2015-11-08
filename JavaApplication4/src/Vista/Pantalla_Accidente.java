@@ -244,6 +244,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         jLabel55.setText("Estado:");
 
         cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "En reparacion", "Atendido" }));
+        cmbEstado.setEnabled(false);
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);
         jPanel22.setLayout(jPanel22Layout);
@@ -490,8 +491,6 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
         tablaAccidente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(32), "( 20, 630)", "B14490", "Carlos Mamani", "12/09/15", "Atendido"},
-                { new Integer(254), "( 360, 580 )", "G40M12", "Pedro Galvez", "12/09/15", "Atendido"},
                 {null, null, null, null, null, null}
             },
             new String [] {
@@ -601,7 +600,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         int id = Integer.parseInt(stringId);
         Accidente acc = accControlador.BuscarAccidentePorId(id);
         txtCodigo.setText("" + acc.getIdAccidente());
-        cmbPlaca.setSelectedItem(acc.getRuta().getCamion());
+        cmbPlaca.setSelectedItem(acc.getRuta().getCamion().getPlaca());
         spinX.setValue(acc.getNodo().getCoordX());
         spinY.setValue(acc.getNodo().getCoordY());
         txtObservacion.setText(acc.getObservacion());
@@ -622,7 +621,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios");
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios?");
         if(confirmacion==0){
             DatosEditables(false);
             BotonesEditables(false);
@@ -646,6 +645,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                 return;
             }else{
                 Ruta ruta = accControlador.BuscarRutaPorPlaca(cmbPlaca.getSelectedItem().toString());
+                if(ruta == null) return;
                 acc.setRuta(ruta);
             }
             
