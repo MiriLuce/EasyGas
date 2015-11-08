@@ -426,7 +426,43 @@ public class EmpleadoControlador {
         return null;
     }
     
+   public boolean  existeDependenciaEmpleado (int codigo){
+       Empleado empleado=null;
+        
+        
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+
+        Transaction tx = null;
+        try{
+            tx = EasyGas.sesion.beginTransaction();
+            Query query = EasyGas.sesion.createQuery("from Empleado INNER JOIN RUTA ON RUTA.idConductor=Empleado.idEmpleado INNER JOIN USUARIO.idEmpleado=Empleado.idEmpleado where idEmpleado = :id ");
+            query.setParameter("codigo", codigo);
+           
+            empleado = (Empleado) query.list().get(0);     
+            tx.commit();
+        }
+        catch(Exception e){
+           
+            if (tx != null) {
+                tx.rollback();
+            }
+        }           
+        finally{
+            if (EasyGas.sesion.isOpen()) {
+                EasyGas.sesion.close();
+            }
+           
+        }
+        
+        return !(empleado==null);
+   
+   }
    public String EliminarEmpleado(int codigo){
+       if(!existeDependenciaEmpleado(codigo)){
+          return "Este empleado tiene dependecias";
+       }
        String mensaje = "Se ha eliminado el registro exitosamente";
        if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();

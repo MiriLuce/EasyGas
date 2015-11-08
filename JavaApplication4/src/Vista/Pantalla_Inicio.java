@@ -59,6 +59,7 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     EasyGas.sesion = EasyGas.sesFact.openSession();
                     Principal main = new Principal(); //esto es lo que hace demorar
+                    main.nombreUsuario.setText("Administrador");
                     this.setCursor(Cursor.getDefaultCursor());
                     this.dispose();
                 }
@@ -74,7 +75,7 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombreUsuario() + " \nNivel de acceso: " + usuario.getPerfil().getNombre(), "", JOptionPane.INFORMATION_MESSAGE, icon);
 
                     Principal main = new Principal();
-                    main.nombreUsuario.setText(usuario.getEmpleado().getNombres());
+                    main.nombreUsuario.setText(usuario.getEmpleado().getNombres() + " " + usuario.getEmpleado().getApellidoPat() );
                     this.dispose();
                     return;
                 } else {
