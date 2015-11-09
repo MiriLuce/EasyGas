@@ -10,6 +10,7 @@ import Modelo.Hibernate.Mantenimiento;
 import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.Disponibilidad;
 import Util.HibernateUtil;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
 import org.hibernate.Hibernate;
@@ -57,14 +58,23 @@ public class MantenimientoControlador {
         return lista;
     }
     
-    public List<Mantenimiento> BuscarMantenimiento(String idTipoCamion, String placa){
+    public List<Mantenimiento> BuscarMantenimiento(Date dtFechaDesde, Date dtFechaHasta,String idTipoCamion, String placa){
         List<Mantenimiento> lista = null;
         
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String fechaDesde=dtFechaDesde==null?"":myFormat.format(dtFechaDesde);
+        String fechaHasta=dtFechaHasta==null?"":myFormat.format(dtFechaHasta);
         String consulta = "select MANTENIMIENTO.* from MANTENIMIENTO inner join CAMION on MANTENIMIENTO.idCamion = CAMION.idCamion where 1";
-        if((idTipoCamion.compareTo("Todos")==0) && (placa.compareTo("Todos")==0)){
+        if((fechaDesde.compareTo("")==0) && (fechaHasta.compareTo("")==0) && (idTipoCamion.compareTo("Todos")==0) && (placa.compareTo("Todos")==0)){
             lista = this.ListarMantenimiento();
             return lista;
         }else{
+            if (!(fechaDesde.compareTo("")==0) ) {                
+                consulta += " and  MANTENIMIENTO.Fecha >= :fechaDesde";
+            }
+             if(!(fechaHasta.compareTo("")==0)) {
+                consulta += " and  MANTENIMIENTO.Fecha <= :fechaHasta";
+             }  
             if(!(idTipoCamion.compareTo("Todos")==0)){
                 consulta += " and CAMION.idTipoCamion = :idTipoCamion";
             }
@@ -83,6 +93,12 @@ public class MantenimientoControlador {
             
             SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
             query.addEntity(Mantenimiento.class);
+            if (!(fechaHasta.compareTo("")==0)) {
+                query.setParameter("fechaHasta",fechaHasta);           
+            }
+            if (!(fechaDesde.compareTo("")==0)) {
+                 query.setParameter("fechaDesde",fechaDesde);
+            }
             if(!(idTipoCamion.compareTo("Todos")==0)){
                 query.setParameter("idTipoCamion", Integer.parseInt(idTipoCamion));
             }

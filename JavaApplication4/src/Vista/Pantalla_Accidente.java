@@ -18,6 +18,7 @@ import Modelo.Hibernate.Ruta;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 /**
@@ -42,9 +43,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         panelAccidente.addMouseListener(evento);
         tablaAccidente.addMouseListener(evento);
         RefrescarTabla(null);
-        llenaCmbCamion();
-        dateDesde.setDate(new Date());
-        dateHasta.setDate(new Date());
+        llenaCmbCamion();        
     }
     
     //Combo Camiones
@@ -218,6 +217,11 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
         txtObservacion.setColumns(20);
         txtObservacion.setRows(5);
+        txtObservacion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtObservacionKeyTyped(evt);
+            }
+        });
         jScrollPane5.setViewportView(txtObservacion);
 
         jLabel49.setText("Coord Y:");
@@ -407,6 +411,18 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
         jLabel51.setText("Desde:");
 
+        dateDesde.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dateDesdePropertyChange(evt);
+            }
+        });
+
+        dateHasta.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dateHastaPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
         jPanel20Layout.setHorizontalGroup(
@@ -523,30 +539,32 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel19Layout.createSequentialGroup()
+                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6)
+                    .addGroup(jPanel19Layout.createSequentialGroup()
                         .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                         .addComponent(jPanel21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel19Layout.createSequentialGroup()
+                    .addGroup(jPanel19Layout.createSequentialGroup()
                         .addComponent(label10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane6))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                .addComponent(label10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20)
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -588,9 +606,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGap(0, 700, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 2, Short.MAX_VALUE)
+                    .addGap(0, 4, Short.MAX_VALUE)
                     .addComponent(panelAccidente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 2, Short.MAX_VALUE)))
+                    .addGap(0, 4, Short.MAX_VALUE)))
         );
 
         pack();
@@ -620,46 +638,45 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     }
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
+        Accidente acc = new Accidente();
+        String strCodigo = txtCodigo.getText();
+        Nodo nod = new Nodo();
+        int x = (int)spinX.getValue();
+        int y = (int)spinY.getValue();
+        nod.setCoordX(x);
+        nod.setCoordY(y);
+        nod.setHabilitado("SI");        
+        acc.setNodo(nod);
+        acc.setEstado(cmbEstado.getSelectedItem().toString());
+        acc.setFecha(new Date());
+        acc.setHora(new Date());
+        acc.setObservacion(txtObservacion.getText());
+        if(cmbPlaca.getSelectedIndex()==0){
+            JOptionPane.showMessageDialog(null,"Seleccione una placa");
+            return;
+        }else{
+            Ruta ruta = accControlador.BuscarRutaPorPlaca(cmbPlaca.getSelectedItem().toString());
+            if(ruta == null) return;
+            acc.setRuta(ruta);
+        }
+
+        //Editar
+        if(!strCodigo.equals("")){
+            acc.setIdAccidente(Integer.parseInt(strCodigo));
+            acc.getNodo().setIdNodo(idNodo);
+        }else{//Nuevo
+            nodControlador.GuardarNodo(nod);
+        }
+        
         int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios?");
-        if(confirmacion==0){
-            DatosEditables(false);
-            BotonesEditables(false);
-            cmbEstado.setEnabled(false);
-
-            Accidente acc = new Accidente();
-            String strCodigo = txtCodigo.getText();
-            Nodo nod = new Nodo();
-            int x = (int)spinX.getValue();
-            int y = (int)spinY.getValue();
-            nod.setCoordX(x);
-            nod.setCoordY(y);
-            nod.setHabilitado("SI");        
-            acc.setNodo(nod);
-            acc.setEstado(cmbEstado.getSelectedItem().toString());
-            acc.setFecha(new Date());
-            acc.setHora(new Date());
-            acc.setObservacion(txtObservacion.getText());
-            if(cmbPlaca.getSelectedIndex()==0){
-                JOptionPane.showMessageDialog(null,"Seleccione una placa");
-                return;
-            }else{
-                Ruta ruta = accControlador.BuscarRutaPorPlaca(cmbPlaca.getSelectedItem().toString());
-                if(ruta == null) return;
-                acc.setRuta(ruta);
-            }
-            
-
-            //Editar
-            if(!strCodigo.equals("")){
-                acc.setIdAccidente(Integer.parseInt(strCodigo));
-                acc.getNodo().setIdNodo(idNodo);
-            }else{//Nuevo
-                nodControlador.GuardarNodo(nod);
-            }
+        if(confirmacion==0){            
             String mensaje = accControlador.GuardarAccidente(acc);
             JOptionPane.showMessageDialog(null, mensaje);
             RefrescarTabla(null);
+            DatosEditables(false);
+            BotonesEditables(false);
+            cmbEstado.setEnabled(false);
         }
         
         
@@ -733,21 +750,55 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         DatosEditables(false);
         BotonesEditables(false);
-        if((dateDesde.getDate()!=null)&&(dateHasta.getDate()!=null) && (dateDesde.getDate().getTime()>dateHasta.getDate().getTime())){
+        /*if((dateDesde.getDate()!=null)&&(dateHasta.getDate()!=null) && (dateDesde.getDate().getTime()>dateHasta.getDate().getTime())){
             JOptionPane.showMessageDialog(null, "Las fechas dadas no conforman un rango (desde - hasta)");
             return;
-        }        
+        } */       
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        List<Accidente> aux = accControlador.BuscarAccidente(formatPlaca.getText(), txtConductorBuscar.getText());
+        List<Accidente> lista = accControlador.BuscarAccidente(dateDesde.getDate(),dateHasta.getDate(),formatPlaca.getText(), txtConductorBuscar.getText());
+        /*List<Accidente> aux = accControlador.BuscarAccidente(formatPlaca.getText(), txtConductorBuscar.getText());
         List<Accidente> lista = new ArrayList<Accidente>();
         for(Accidente acc : aux){
             if(acc.getFecha().after(dateDesde.getDate()) && acc.getFecha().before(dateHasta.getDate())){
                 lista.add(acc);
             }
-        }
+        }*/
         RefrescarTabla(lista);
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void dateDesdePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateDesdePropertyChange
+        // TODO add your handling code here:
+        if (evt.getSource() == dateDesde) {
+            if (dateHasta.getDate() != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateDesde.getDate());
+                cal.add(Calendar.MINUTE, 60*24);
+                dateHasta.setMinSelectableDate(cal.getTime());
+            }
+        }
+    }//GEN-LAST:event_dateDesdePropertyChange
+
+    private void dateHastaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateHastaPropertyChange
+        // TODO add your handling code here:
+        if (evt.getSource() == dateHasta) {
+            if (dateDesde.getDate() != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateHasta.getDate());
+                cal.add(Calendar.MINUTE, 60*24);
+                dateDesde.setMaxSelectableDate(cal.getTime());
+            }
+        }
+    }//GEN-LAST:event_dateHastaPropertyChange
+
+    private void txtObservacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtObservacionKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+
+        if (txtObservacion.getText().length() > 400) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtObservacionKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

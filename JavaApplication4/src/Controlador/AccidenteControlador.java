@@ -10,7 +10,9 @@ import Modelo.Hibernate.Accidente;
 import Modelo.Hibernate.Disponibilidad;
 import Modelo.Hibernate.Ruta;
 import Util.HibernateUtil;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.hibernate.Hibernate;
@@ -57,23 +59,32 @@ public class AccidenteControlador {
         return lista;
     }
     
-    public List<Accidente> BuscarAccidente(String placa, String conductor){
+    public List<Accidente> BuscarAccidente(Date dtFechaDesde, Date dtFechaHasta, String placa, String conductor){
         List<Accidente> lista = null;
         
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String fechaDesde=dtFechaDesde==null?"":myFormat.format(dtFechaDesde);
+        String fechaHasta=dtFechaHasta==null?"":myFormat.format(dtFechaHasta);
         String consulta = "SELECT ACCIDENTE.* FROM ACCIDENTE " +
 "INNER JOIN RUTA  on ACCIDENTE.idRuta=RUTA.idRuta " +
-"INNER JOIN CAMION  on CAMION.idCamion=RUTA.idCamion" +
-"INNER JOIN EMPLEADO  on EMPLEADO.idEmpleado=RUTA.idConductor" +
+"INNER JOIN CAMION  on CAMION.idCamion=RUTA.idCamion " +
+"INNER JOIN EMPLEADO  on EMPLEADO.idEmpleado=RUTA.idConductor " +
 "WHERE 1";
-        if((placa.compareTo("   -   ")==0) && (conductor.compareTo("")==0)){
+        if((fechaDesde.compareTo("")==0) && (fechaHasta.compareTo("")==0) && (placa.compareTo("   -   ")==0) && (conductor.compareTo("")==0)){
             lista = this.ListarAccidente();
             return lista;
         }else{
+            if (!(fechaDesde.compareTo("")==0) ) {                
+                consulta += " and  ACCIDENTE.Fecha >= :fechaDesde";
+            }
+             if(!(fechaHasta.compareTo("")==0)) {
+                consulta += " and  ACCIDENTE.Fecha <= :fechaHasta";
+             }            
             if(!(placa.compareTo("   -   ")==0)){
                 consulta += " and CAMION.Placa = :placa";
             }
             if(!(conductor.compareTo("")==0)){
-                consulta += " and Empleado.Nombres= :conductor";
+                consulta += " and EMPLEADO.Nombres= :conductor";
             }
         }
         if (!EasyGas.sesion.isOpen()) {
@@ -87,6 +98,12 @@ public class AccidenteControlador {
             
             SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
             query.addEntity(Accidente.class);
+            if (!(fechaHasta.compareTo("")==0)) {
+                query.setParameter("fechaHasta",fechaHasta);           
+            }
+            if (!(fechaDesde.compareTo("")==0)) {
+                 query.setParameter("fechaDesde",fechaDesde);
+            }
             if(!(placa.compareTo("   -   ")==0)){
                 query.setParameter("placa", placa);
             }

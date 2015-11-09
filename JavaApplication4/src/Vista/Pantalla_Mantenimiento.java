@@ -14,11 +14,13 @@ import Modelo.Hibernate.Camion;
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -52,8 +54,6 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         RefrescarTabla(null);        
         llenaCmbTipoCamion();
         llenaCmbPlaca();
-        dateDesde.setDate(new Date());
-        dateHasta.setDate(new Date());
     }
     
     //Llenado de cmb Tipo Camion
@@ -280,11 +280,20 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
 
         jLabel58.setText("Placa:");
 
+        cmbTipoCamion.setEnabled(false);
+
         jLabel57.setText("Turnos Bloqueados:");
 
         spinTurnos.setModel(new javax.swing.SpinnerNumberModel(1, 1, 3, 1));
+        spinTurnos.setEnabled(false);
+        spinTurnos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                spinTurnosKeyTyped(evt);
+            }
+        });
 
         cmbPlaca.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione" }));
+        cmbPlaca.setEnabled(false);
 
         jLabel59.setText("Tipo de Camión:");
 
@@ -297,7 +306,20 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
 
         jLabel90.setText("Código:");
 
+        dateFecha.setEnabled(false);
+        dateFecha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dateFechaKeyTyped(evt);
+            }
+        });
+
         txtHora.setToolTipText("");
+        txtHora.setEnabled(false);
+        txtHora.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHoraKeyTyped(evt);
+            }
+        });
 
         jLabel1.setText("Estado:");
 
@@ -467,6 +489,18 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
 
         jLabel61.setText("Desde:");
 
+        dateDesde.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dateDesdePropertyChange(evt);
+            }
+        });
+
+        dateHasta.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dateHastaPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
         jPanel25Layout.setHorizontalGroup(
@@ -562,34 +596,28 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
             jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel24Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel24Layout.createSequentialGroup()
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(label12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel24Layout.createSequentialGroup()
+                            .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel24Layout.createSequentialGroup()
-                        .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel24Layout.createSequentialGroup()
-                                .addComponent(label12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(321, 321, 321)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel24Layout.createSequentialGroup()
-                                .addComponent(jPanel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(20, 20, 20))))
+                        .addComponent(btnBuscar)))
+                .addGap(20, 28, Short.MAX_VALUE))
         );
         jPanel24Layout.setVerticalGroup(
             jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel24Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
-                .addGap(20, 20, 20)
+                .addComponent(label12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel25, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                     .addComponent(jPanel26, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscar)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -629,12 +657,12 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 704, Short.MAX_VALUE)
+            .addGap(0, 708, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 2, Short.MAX_VALUE)
+                    .addGap(0, 4, Short.MAX_VALUE)
                     .addComponent(panelMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 2, Short.MAX_VALUE)))
+                    .addGap(0, 4, Short.MAX_VALUE)))
         );
 
         pack();
@@ -647,14 +675,14 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         cmbTipoCamion.setSelectedItem(man.getCamion().getTipoCamion());
         cmbPlaca.setSelectedItem(man.getCamion());
         dateFecha.setDate(man.getFecha());
-        txtHora.setText(formatoHora.format(man.getHora()));
+        txtHora.setText(formatoHora.format(man.getHora()));        
         spinTurnos.setValue(man.getCantTurnos());
     }
     
     private void DatosEditables(boolean valor){
         cmbTipoCamion.setEnabled(valor);
         cmbPlaca.setEnabled(valor);
-        dateFecha.setEnabled(valor);
+        dateFecha.setEnabled(valor);        
         txtHora.setEnabled(valor);
         spinTurnos.setEnabled(valor);
     }
@@ -668,44 +696,61 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
     }
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios");
-        if(confirmacion==0){
-            DatosEditables(false);
-            BotonesEditables(false);
-            cmbEstado.setEnabled(false);
-
-            Date hora = new Date();
-            Mantenimiento man = new Mantenimiento();
-            String strCodigo = txtCodigo.getText();
-            if(cmbPlaca.getItemCount()==0){
-                JOptionPane.showMessageDialog(null,"Seleccione una placa");
-                return;
-            }else{
-                String strCam = (String)cmbPlaca.getSelectedItem();
-                Camion cam = camControlador.BuscarCamionPorPlaca(strCam);
-                man.setCamion(cam);
-            }
+        
+        Date hora = new Date();
+        Mantenimiento man = new Mantenimiento();
+        String strCodigo = txtCodigo.getText();
+        if(cmbPlaca.getItemCount()==0){
+            JOptionPane.showMessageDialog(null,"Seleccione una placa");
+            return;
+        }else{
+            String strCam = (String)cmbPlaca.getSelectedItem();
+            Camion cam = camControlador.BuscarCamionPorPlaca(strCam);
+            man.setCamion(cam);
+        }
+        if(dateFecha.getCalendar()==null){
+            JOptionPane.showMessageDialog(null,"Ingrese una fecha");
+            return;
+        }else{
+            man.setFecha(dateFecha.getDate());
+        }
+        if(txtHora.getText().equalsIgnoreCase("")){
+            JOptionPane.showMessageDialog(null,"Ingrese una hora");
+            return;
+        }else{
             try {
                 hora = formatoHora.parse(txtHora.getText());
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null,"La hora no esta en el formato adecuado");
                 return;
-            }
-            man.setFecha(new Date());
+            }           
             man.setHora(hora);
-            String estado = (String) cmbEstado.getSelectedItem();
-            man.setEstado(estado);
-            man.setIdTipoMantenimiento("");
-            man.setCantTurnos(Integer.parseInt(spinTurnos.getValue().toString()));
+        }/*
+        try {
+            hora = formatoHora.parse(txtHora.getText());
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null,"La hora no esta en el formato adecuado");
+            return;
+        }*/
 
-            //Si es Editar
-            if(!strCodigo.equals("")){
-                man.setIdMantenimiento(Integer.parseInt(strCodigo));
-            }
+        String estado = (String) cmbEstado.getSelectedItem();
+        man.setEstado(estado);
+        man.setIdTipoMantenimiento("");
+        man.setCantTurnos(Integer.parseInt(spinTurnos.getValue().toString()));
+
+        //Si es Editar
+        if(!strCodigo.equals("")){
+            man.setIdMantenimiento(Integer.parseInt(strCodigo));
+        }
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios");
+        if(confirmacion==0){            
             String mensaje = mantenControlador.GuardarMantenimiento(man);
             mantenControlador.GuardarDisponibilidadEnMantenimiento(man, man.getCantTurnos());
             JOptionPane.showMessageDialog(null, mensaje);
             RefrescarTabla(null);
+            DatosEditables(false);
+            BotonesEditables(false);
+            cmbEstado.setEnabled(false);
         }
         
         //String mensaje = mantenControlador.GuardarMantenimiento(turnos, camion);
@@ -720,8 +765,8 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         llenaCmbTipoCamion();
         llenaCmbPlaca();
         txtCodigo.setText("");
-        dateFecha.setDate(new Date());
-        txtHora.setText(formatoHora.format(new Date()));
+        dateFecha.setCalendar(null);        
+        txtHora.setText("");
         spinTurnos.setValue(1);
         cmbEstado.setSelectedIndex(0);
         DatosEditables(true);
@@ -753,9 +798,9 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
             int id = Integer.parseInt(txtCodigo.getText());                       
             String mensaje = mantenControlador.EliminarMantenimiento(id);
             JOptionPane.showMessageDialog(null, mensaje);
-            txtCodigo.setText("");
-            dateFecha.setDate(new Date());
-            txtHora.setText(formatoHora.format(new Date()));
+            txtCodigo.setText("");            
+            txtHora.setText("");
+            dateFecha.setCalendar(null);            
             spinTurnos.setValue(1);
             cmbEstado.setSelectedIndex(0);
             RefrescarTabla(null); 
@@ -771,10 +816,10 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         
         DatosEditables(false);
         BotonesEditables(false);
-        if(dateDesde.getDate().getTime()>dateHasta.getDate().getTime()){
+        /*if(dateDesde.getDate().getTime()>dateHasta.getDate().getTime()){
             JOptionPane.showMessageDialog(null, "Las fechas dadas no conforman un rango (desde - hasta)");
             return;
-        }
+        }*/
         String stringId = null;
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if(cmbTipoCamionBuscar.getSelectedIndex()==0){
@@ -783,16 +828,72 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
             TipoCamion tp = (TipoCamion)cmbTipoCamionBuscar.getSelectedItem();
             stringId = tp.getIdTipoCamion().toString();        
         }        
-        List<Mantenimiento> aux = mantenControlador.BuscarMantenimiento(stringId, cmbPlacaBuscar.getSelectedItem().toString());
+        List<Mantenimiento> lista = mantenControlador.BuscarMantenimiento(dateDesde.getDate(),dateHasta.getDate(),stringId, cmbPlacaBuscar.getSelectedItem().toString());
+        /*List<Mantenimiento> aux = mantenControlador.BuscarMantenimiento(stringId, cmbPlacaBuscar.getSelectedItem().toString());
         List<Mantenimiento> lista = new ArrayList<Mantenimiento>();
         for(Mantenimiento man : aux){
             if(man.getFecha().after(dateDesde.getDate()) && man.getFecha().before(dateHasta.getDate())){
                 lista.add(man);
             }
-        }
+        }*/
         RefrescarTabla(lista);
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void dateDesdePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateDesdePropertyChange
+        // TODO add your handling code here:
+        if (evt.getSource() == dateDesde) {
+            if (dateHasta.getDate() != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateDesde.getDate());
+                cal.add(Calendar.MINUTE, 60*24);
+                dateHasta.setMinSelectableDate(cal.getTime());
+            }
+        }
+    }//GEN-LAST:event_dateDesdePropertyChange
+
+    private void dateHastaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateHastaPropertyChange
+        // TODO add your handling code here:
+        if (evt.getSource() == dateHasta) {
+            if (dateDesde.getDate() != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dateHasta.getDate());
+                cal.add(Calendar.MINUTE, 60*24);
+                dateDesde.setMaxSelectableDate(cal.getTime());
+            }
+        }
+    }//GEN-LAST:event_dateHastaPropertyChange
+
+    private void dateFechaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateFechaKeyTyped
+        // TODO add your handling code here:  
+        /*evt.consume();*/
+    }//GEN-LAST:event_dateFechaKeyTyped
+
+    private void txtHoraKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHoraKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+
+        if (txtHora.getText().length() > 5) {
+            evt.consume();
+        }
+
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE) && car!=':') {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtHoraKeyTyped
+
+    private void spinTurnosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_spinTurnosKeyTyped
+        // TODO add your handling code here:
+        /*char car = evt.getKeyChar();
+
+        if (spinTurnos.getValue().toString().length() > 2) {
+            evt.consume();
+        }
+
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }*/
+    }//GEN-LAST:event_spinTurnosKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
