@@ -126,8 +126,8 @@ public class AlgoritmoGenetico {
         while (seguirEmparejando) {
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
-            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));
-            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1));
+            if (!hijos.get(0).isAberracion()){ poblacion.add(hijos.get(0)); hijos.get(0).imprimir();}
+            if (!hijos.get(1).isAberracion()) { poblacion.add(hijos.get(1)); hijos.get(1).imprimir();}
             //System.out.println(indAux);
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;
@@ -185,7 +185,7 @@ public class AlgoritmoGenetico {
             if (i != 0 && r <= prob) { 
                 poblacion.get(r).mutar();
                 int cantPedido = 0, cantCad = poblacion.get(r).getCadena().size();
-                for (int k= 0; k< cantCad; k++)
+                for (int k = 0; k< cantCad; k++)
                     cantPedido += poblacion.get(r).getCadena().get(k).getListaPedido().size();
                 if (cantPedido != pedidos.size()) poblacion.get(r).setAberracion(true);
                                 

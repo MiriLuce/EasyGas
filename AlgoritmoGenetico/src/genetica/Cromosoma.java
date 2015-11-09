@@ -266,8 +266,6 @@ public class Cromosoma {
     
     public void agregarRuta(Ruta ruta){
         
-        //ruta.imprimir();
-        //this.imprimir();
         Ruta tmpRuta = new Ruta(ruta);
         ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
         int cantPedidoRuta = listaRuta.size();
@@ -278,8 +276,6 @@ public class Cromosoma {
         int exito;
         // Se eliminan todos los pedidos de las rutas
         while(indiceCadenaRuta < cantCadena){
-            if(this.cadena.get(indiceCadenaRuta) == null)
-                System.out.println("Error");
             cantPedidos = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
             indicePedidos = 0;
             
@@ -287,7 +283,6 @@ public class Cromosoma {
                 indicePedRuta = 0;
                 
                 while(indicePedRuta <cantPedidoRuta){
-                    //System.out.println("-------- inicio: ");
                     exito = quitarPedido(indiceCadenaRuta, indicePedidos, 
                             this.cadena.get(indiceCadenaRuta).getListaPedido().get(indicePedidos).getIdPedido(),
                             listaRuta.get(indicePedRuta).getIdPedido());
@@ -304,7 +299,6 @@ public class Cromosoma {
                     else if (exito == -1) aberracion = true;  
                     indicePedRuta++;
                     if(verificar) break; // se elimino el pedido
-                    //System.out.println("-------- fin: ");
                 }
                 indicePedidos++;
                 if(aberracion || cantPedidoRuta == 0) break;                
@@ -317,7 +311,7 @@ public class Cromosoma {
     
     private int  quitarPedido(int indiceRuta, int indicePedido, int idPedido, int idEliminar){
         
-        if (idPedido ==  idEliminar){//System.out.println("-------- quitarPedido: ");
+        if (idPedido ==  idEliminar){
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
             if (verificar){ // true: se quito con exito
                 // Si la ruta queda vacia se elimina
@@ -362,7 +356,6 @@ public class Cromosoma {
     public void imprimir() {
         System.out.println("--------------------------------------------------");
         System.out.println("Costo: " + costo + " Cantidad: " + cadena.size());
-        
         for (int i= 0; i< cadena.size(); i++){
             System.out.print("Nro Ruta: " + i);
             cadena.get(i).imprimir();
@@ -378,8 +371,12 @@ public class Cromosoma {
         ArrayList<Pedido> e2 = (ArrayList<Pedido>) cadena.get(n2).getListaPedido().clone();
 
         if (n1 != n2) {
-            this.asignarPedidos(e1);
-            this.asignarPedidos(e2);
+            Ruta r1 = cadena.get(n1);
+            Ruta r2 = cadena.get(n2);
+            this.agregarRuta(r1);
+            this.agregarRuta(r2);
+            //this.agregarRuta(e1);
+            //this.asignarPedidos(e2);
         }
     }
     

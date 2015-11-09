@@ -59,13 +59,16 @@ public class Ruta {
     }
    
     public void imprimir(){
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         System.out.print(" GLP: " + camion.getTipoCamion().getCapacidadGLP());
         System.out.println(" Distancia: " + distancia + " Cantidad: " + listaPedido.size());
         System.out.println("Salida: " + sdf.format(salida) + " Llegada: " + sdf.format(llegada));
             
-        for (int j= 0; j< listaPedido.size(); j++)
+        for (int j= 0; j< listaPedido.size(); j++){
             System.out.print( " -> " + listaPedido.get(j).getIdPedido());
+            System.out.print(" S: " + sdf.format(listaPedido.get(j).getHoraSolicitada()));
+            System.out.print(" E: " + sdf.format(listaPedido.get(j).getHoraEntregada()));
+        }
         System.out.println();
     }
     
@@ -172,8 +175,7 @@ public class Ruta {
                 listaPedido.add(pedido);
                 pedido.setHoraEntregada(horaEntrega);
                 int diff = (int) pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
-                if (estaAsignado) 
-                    difTiempo += (diff) / 6000;
+                difTiempo += (diff) / 6000;
                 //System.out.println("H: " + diff);
             }
         }
@@ -214,8 +216,14 @@ public class Ruta {
             posYAnt = Constantes.posCentralY; 
             posXPos = listaPedido.get(1).getPosX();
             posYPos = listaPedido.get(1).getPosY();
+            
+            int diffAntigua, diffNueva;
+            diffAntigua = (int)listaPedido.get(1).getHoraEntregada().getTime() - (int)listaPedido.get(1).getHoraSolicitada().getTime();
             dist = mapa.distanciaMinima(posXAnt, posYAnt, posXPos, posYPos);
-            salida = obtenerTiempo(dist, listaPedido.get(1).getHoraEntregada(), -1);
+            salida = obtenerTiempo(dist, listaPedido.get(1).getHoraSolicitada(), -1);
+            listaPedido.get(1).setHoraEntregada(listaPedido.get(1).getHoraSolicitada());
+            diffNueva = (int)listaPedido.get(1).getHoraEntregada().getTime() - (int)listaPedido.get(1).getHoraSolicitada().getTime();
+            difTiempo += (diffNueva / 6000) - (diffAntigua / 6000)  ;
             verificar = false;
         } 
         else if (indicePedido == cantPedidos -1){ // si es el ultimo     
@@ -223,6 +231,7 @@ public class Ruta {
             posYAnt = listaPedido.get(cantPedidos - 2).getPosY();
             posXPos = Constantes.posCentralX;
             posYPos = Constantes.posCentralY; 
+            
             dist = mapa.distanciaMinima(posXAnt, posYAnt, posXPos, posYPos);
             llegada = obtenerTiempo(dist, listaPedido.get(cantPedidos - 2).getHoraEntregada(), 1);
             verificar = false;
@@ -240,23 +249,33 @@ public class Ruta {
         //System.out.println("-------- fin: ");
         if (!verificar){
             listaPedido.remove(indicePedido);
-            difTiempo -= ( pedido.getHoraEntregada().getTime() - pedido.getHoraSolicitada().getTime() ) / 6000;
+            int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
+            difTiempo -= diff / 6000;
             return true;
         }
         // Calcular hora de entrega de cada pedido
         Pedido pedidoAnterior = listaPedido.get(indicePedido - 1);
         Pedido pedidoActual = null;
+        int diffAntigua, diffNueva;
+        
         for(int i = indicePedido + 1; i < cantPedidos; i++){
             pedidoActual = listaPedido.get(i);
             int tramo = mapa.distanciaMinima(pedidoAnterior.getPosX(), pedidoAnterior.getPosY(),
                 pedidoActual.getPosX(), pedidoActual.getPosY());         
+            
+            diffAntigua = (int)pedidoActual.getHoraEntregada().getTime() - (int)pedidoActual.getHoraSolicitada().getTime();
             pedidoActual.setHoraEntregada(obtenerTiempo(tramo, pedidoAnterior.getHoraEntregada(), 1));
+            diffNueva = (int)pedidoActual.getHoraEntregada().getTime() - (int)pedidoActual.getHoraSolicitada().getTime();
+            
             if (pedidoActual.getHoraEntregada().before(pedidoActual.getHoraSolicitada()))
                 return false;
+            difTiempo += (diffNueva / 6000) - (diffAntigua / 6000)  ;
             pedidoAnterior = pedidoActual;
         }
         listaPedido.remove(indicePedido);
-        difTiempo -= ( pedido.getHoraEntregada().getTime() - pedido.getHoraSolicitada().getTime()) / 6000  ;
+        int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
+        if (diff < 0 ) System.out.println("Negativo");
+        difTiempo -= diff / 6000  ;
         return true;
     }
         
