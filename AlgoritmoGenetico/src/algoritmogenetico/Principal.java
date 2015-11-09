@@ -29,6 +29,9 @@ public class Principal {
         genetica.Cromosoma solucion = algoritmo.empieza();
         //solucion.calculaCosto();
         
+        System.out.println("--- Mejor Cromosoma ----");
+        solucion.imprimir();
+        /*
         for(int i=0;i<solucion.getCadena().size();i++){
             
              for(int j=0;j<solucion.getCadena().get(i).getListaPedido().size();j++){
@@ -37,6 +40,7 @@ public class Principal {
              System.out.println();
         }
         System.out.println();
+        */
         //System.out.println(solucion.costo);
     }
 }

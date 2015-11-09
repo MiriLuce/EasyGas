@@ -47,7 +47,7 @@ public class AlgoritmoGenetico {
     public Cromosoma empieza(){
 
         int cant = 0;
-        while(cant < 5){
+        while(cant < 10){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
@@ -56,6 +56,7 @@ public class AlgoritmoGenetico {
             eliminaAberraciones();
             cant++;
         }
+        
         return mejorCromosoma;
     }
     
@@ -78,6 +79,7 @@ public class AlgoritmoGenetico {
                 cantActual++;
             }
         }
+        
     }
     
     //me quedo con un porcentaje mejor de la poblacion
@@ -87,12 +89,12 @@ public class AlgoritmoGenetico {
         
         int poblacionFinal = (int) (Constantes.cantPoblacion * Constantes.probSeleccion);
         // como estan ordenados remuevo los ultimos ya que son los peores
-        for (int i = 1; i <= poblacionFinal; i++) {
-            poblacion.remove(poblacion.size() - 1);
+        for (int i = poblacionFinal; i < poblacion.size(); i++) {
+            poblacion.remove(i);
         }
         
         if (mejorCromosoma.getCosto()==-1 || poblacion.get(0).getCosto() < mejorCromosoma.getCosto()) {
-            mejorCromosoma = poblacion.get(0);
+            mejorCromosoma = new Cromosoma(poblacion.get(0));
             cantRepiteMejor = 0; 
         }
         else if(poblacion.get(0).getCosto() == mejorCromosoma.getCosto())
@@ -117,32 +119,16 @@ public class AlgoritmoGenetico {
 
     //mezcla las rutas de los camiones
     private void emparejaPoblacion(){
-        /*
-        int[] cantPedidosPoblacion = new int [poblacion.size()];
-        for (int i= 0; i< poblacion.size(); i++){
-            cantPedidosPoblacion[i] = 0;
-            for (int j= 0; j< poblacion.get(i).getCadena().size(); j++)
-                cantPedidosPoblacion[i] += poblacion.get(i).getCadena().get(j).getListaPedido().size();
-        }
-        */
         int indAux = 0;
         int cantAux = poblacion.size() - 1;
         boolean seguirEmparejando = true;
-
+        //System.out.println("Empareja");
         while (seguirEmparejando) {
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
             if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));
             if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1));
-            
-            /*
-            int cantPedidosHijo1 = 0, cantPedidosHijo2 = 0;
-            for (int i= 0; i< hijos.get(0).getCadena().size(); i++)
-                cantPedidosHijo1 += hijos.get(0).getCadena().get(i).getListaPedido().size();
-            
-            for (int i= 0; i< hijos.get(1).getCadena().size(); i++)
-                cantPedidosHijo2 += hijos.get(1).getCadena().get(i).getListaPedido().size();
-            */
+            //System.out.println(indAux);
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;
             } else indAux += 2;
@@ -156,83 +142,30 @@ public class AlgoritmoGenetico {
         Cromosoma hijo2 = new Cromosoma(crom2);        
         int cantHijo1 = hijo1.getCadena().size();
         int cantHijo2 = hijo2.getCadena().size();
-        //String[] arrRutas;
-        crom1.imprimir();
-        crom2.imprimir();
-        int cantPedidosHijoA = 0, cantPedidosHijoD = 0;
         
-        boolean verificar1 = true, verificar2 = true;
         int cant = cantHijo1 < cantHijo2 ? cantHijo1 : cantHijo2;
         for (int i = 0; i < cant; i++) {
             int par = i%2;
             if(par == 0){ 
-                /*
-                cantPedidosHijoA = 0;
-                for (int k= 0; k< hijo1.getCadena().size(); k++)
-                    cantPedidosHijoA += hijo1.getCadena().get(k).getListaPedido().size();
-                if (cantPedidosHijoA != pedidos.size()) hijo1.setAberracion(true);
-                else */
-                    hijo1.agregarRuta(hijo2.getCadena().get(i));                
-                /*
-                cantPedidosHijoD = 0;
-                for (int k= 0; k< hijo1.getCadena().size(); k++)
-                    cantPedidosHijoD += hijo1.getCadena().get(k).getListaPedido().size();
-                
-                if (cantPedidosHijoA != cantPedidosHijoD) {
-                    //System.out.println("error");
-                    hijo1.setAberracion(true);
-                }*/
-                if (hijo1.isAberracion()) break;
-                //hijo1.imprimir();
-                /*
-                arrRutas = new String[hijo1.getCadena().size()];
-                for (int k= 0; k< hijo1.getCadena().size(); k++){
-                    arrRutas[k] = "";
-                    for (int j= 0; j< hijo1.getCadena().get(k).getListaPedido().size(); j++)
-                        arrRutas[k] = arrRutas[k] + "-" + hijo1.getCadena().get(k).getListaPedido().get(j).getIdPedido();
-                }
-                */
+                hijo1.agregarRuta(hijo2.getCadena().get(i));                
+                if (hijo1.isAberracion()) break; 
             }
             else{ 
-                /*cantPedidosHijoA = 0;
-                for (int k= 0; k< hijo1.getCadena().size(); k++)
-                    cantPedidosHijoA += hijo1.getCadena().get(k).getListaPedido().size();
-                            
-                if (cantPedidosHijoA != pedidos.size()) hijo2.setAberracion(true);
-                else*/
-                    hijo2.agregarRuta(hijo1.getCadena().get(i));                
-                /*
-                cantPedidosHijoD = 0;
-                for (int k= 0; k< hijo2.getCadena().size(); k++)
-                    cantPedidosHijoD += hijo2.getCadena().get(k).getListaPedido().size();
-                
-                if (cantPedidosHijoA != cantPedidosHijoD){
-                    System.out.println("error");
-                    hijo2.setAberracion(true);
-                }*/
+                hijo2.agregarRuta(hijo1.getCadena().get(i));               
                 if (hijo2.isAberracion()) break;
-                //hijo2.imprimir();
-                /*
-                arrRutas = new String[hijo1.getCadena().size()];
-                for (int k= 0; k< hijo1.getCadena().size(); k++){
-                    arrRutas[k] = "";
-                    for (int j= 0; j< hijo1.getCadena().get(k).getListaPedido().size(); j++)
-                        arrRutas[k] = arrRutas[k] + "-" + hijo1.getCadena().get(k).getListaPedido().get(j).getIdPedido();
-                }*/
-            }           
-            //arrRutas=arrRutas;
+            }   
+            
+            // Se puede cambiar la cantidad de rutas
+            cantHijo1 = hijo1.getCadena().size();
+            cantHijo2 = hijo2.getCadena().size();
+            cant = cantHijo1 < cantHijo2 ? cantHijo1 : cantHijo2;
         }
         
-        /*while(verificar1){
-            if(hijo1.getCadena().get(0).getListaPedido().isEmpty()){
-                verificar1 = false;
-            }
-        }*/
-        hijo1.condensarCromosoma();
-        hijo2.condensarCromosoma();
+        if (!hijo1.isAberracion()) hijo1.condensarCromosoma();
+        if (!hijo2.isAberracion()) hijo2.condensarCromosoma();
         hijos.add(hijo1);
         hijos.add(hijo2);
-
+        
         return hijos;
     }
 
@@ -247,7 +180,7 @@ public class AlgoritmoGenetico {
         int tam = poblacion.size();
         int prob = (int) (Constantes.probMutacion * tam);
         for (int i = 0; i < tam; i++) {
-            int r = generaNumRandom(0, tam);
+            int r = generaNumRandom(0, tam - 1);
 
             if (i != 0 && r <= prob) { 
                 poblacion.get(r).mutar();

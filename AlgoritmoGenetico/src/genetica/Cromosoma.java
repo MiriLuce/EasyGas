@@ -23,9 +23,11 @@ public class Cromosoma {
     private ArrayList<Ruta> cadena; 
     private double costo;
     private boolean aberracion;
-
+    
     private int distanciaTotal; // en metros
     private int cantTiempoTotal; // en minutos
+    private int difTiempoTotal; // en minutos
+    
     private double cantGLPTotal;    
     private double cantDieselTotal;
     private double sumatoriaTEntrega; // preguntar a Chucky q es esto
@@ -263,16 +265,9 @@ public class Cromosoma {
     }
     
     public void agregarRuta(Ruta ruta){
-        /*
-        int cantPedidosHijo = 0;
-        for (int i= 0; i< cadena.size(); i++)
-                cantPedidosHijo += cadena.get(i).getListaPedido().size();
-        if(cantPedidosHijoA != cantPedidosHijo){
-            //System.out.println("error");
-        }*/
-        this.imprimir();
-        System.out.println("Ruta: ");
-        ruta.imprimir();
+        
+        //ruta.imprimir();
+        //this.imprimir();
         Ruta tmpRuta = new Ruta(ruta);
         ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
         int cantPedidoRuta = listaRuta.size();
@@ -281,20 +276,10 @@ public class Cromosoma {
         int indiceCadenaRuta = 0, indicePedidos, indicePedRuta;
         boolean verificar = false;
         int exito;
-        /*
-        String[] arrRutas = new String[cadena.size()];
-        for (int i= 0; i< cadena.size(); i++){
-            arrRutas[i] = "";
-            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
-                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
-        }
-        String pedEliminar = "" ;
-        for (int i= 0; i< cantPedidoRuta; i++){
-            pedEliminar = pedEliminar +"-" + listaRuta.get(i).getIdPedido();
-        }
-        */
         // Se eliminan todos los pedidos de las rutas
         while(indiceCadenaRuta < cantCadena){
+            if(this.cadena.get(indiceCadenaRuta) == null)
+                System.out.println("Error");
             cantPedidos = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
             indicePedidos = 0;
             
@@ -302,6 +287,7 @@ public class Cromosoma {
                 indicePedRuta = 0;
                 
                 while(indicePedRuta <cantPedidoRuta){
+                    //System.out.println("-------- inicio: ");
                     exito = quitarPedido(indiceCadenaRuta, indicePedidos, 
                             this.cadena.get(indiceCadenaRuta).getListaPedido().get(indicePedidos).getIdPedido(),
                             listaRuta.get(indicePedRuta).getIdPedido());
@@ -318,39 +304,24 @@ public class Cromosoma {
                     else if (exito == -1) aberracion = true;  
                     indicePedRuta++;
                     if(verificar) break; // se elimino el pedido
+                    //System.out.println("-------- fin: ");
                 }
                 indicePedidos++;
                 if(aberracion || cantPedidoRuta == 0) break;                
             }
             indiceCadenaRuta++;
-            if(aberracion  || cantPedidoRuta == 0) break;           
-            /*for (int i= 0; i< cadena.size(); i++){
-            arrRutas[i] = "";
-            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
-                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
-            }*/
+            if(aberracion  || cantPedidoRuta == 0) break;     
         }       
-        this.cadena.add(tmpRuta);      
-        this.imprimir();
-        /*for (int i= 0; i< cadena.size(); i++){
-            arrRutas[i] = "";
-            for (int j= 0; j< cadena.get(i).getListaPedido().size(); j++)
-                arrRutas[i] = arrRutas[i] + "-" + cadena.get(i).getListaPedido().get(j).getIdPedido();
-        }*/
-        //this.cadena = (ArrayList<Ruta>)this.cadena.clone();
-        /*
-        cantPedidosHijo=0;
-        for (int i= 0; i< cadena.size(); i++)
-                cantPedidosHijo += cadena.get(i).getListaPedido().size();
-        */
+        this.cadena.add(tmpRuta);
     }
     
     private int  quitarPedido(int indiceRuta, int indicePedido, int idPedido, int idEliminar){
         
-        if (idPedido ==  idEliminar){
+        if (idPedido ==  idEliminar){//System.out.println("-------- quitarPedido: ");
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
             if (verificar){ // true: se quito con exito
                 // Si la ruta queda vacia se elimina
+                
                 if(this.cadena.get(indiceRuta).getListaPedido().isEmpty())
                     this.cadena.remove(indiceRuta);
                 return 1; // 1: exito
@@ -362,17 +333,20 @@ public class Cromosoma {
 
     public void condensarCromosoma(){
         
-        
         ArrayList<Ruta> listaRutas = new ArrayList<Ruta>();
         Ruta rutaEscogida = null;
         int cantRutas = cadena.size();
         boolean verificar = false;
+        difTiempoTotal = 0;
+        double difCantGLP = 0;
         
         for(int i = 0; i < cantRutas; i++){
             rutaEscogida = cadena.get(i);
             verificar = rutaEscogida.cerrarRuta();
             if (verificar){  
+                difTiempoTotal += rutaEscogida.getDifTiempo();
                 distanciaTotal += rutaEscogida.getDistancia();
+                difCantGLP += rutaEscogida.getCamion().getTipoCamion().getCapacidadGLP() - rutaEscogida.getCantGLP();
                 cantGLPTotal += rutaEscogida.getCantGLP();
                 cantDieselTotal += rutaEscogida.getCantDiesel();
                 cantTiempoTotal += rutaEscogida.getDistancia() / Constantes.velCamion;
@@ -380,14 +354,15 @@ public class Cromosoma {
             }
         }
         // q es cada parametro para calcular costo
-        costo += ((cantGLPTotal * distanciaTotal) / (1 )); //FO
-        
+        costo = ((difTiempoTotal * difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
+        //if (difCantGLP < 0) System.out.println("Negativo");
         cadena = listaRutas;
     }
     
     public void imprimir() {
         System.out.println("--------------------------------------------------");
-        System.out.println("Costo: " + costo);
+        System.out.println("Costo: " + costo + " Cantidad: " + cadena.size());
+        
         for (int i= 0; i< cadena.size(); i++){
             System.out.print("Nro Ruta: " + i);
             cadena.get(i).imprimir();
