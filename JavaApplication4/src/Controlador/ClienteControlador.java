@@ -194,7 +194,37 @@ public class ClienteControlador {
 
         return lista;
     }
-    /*
+    
+    public String GuardarCliente(Cliente cli){
+    
+        String mensaje = "Se guardaron los cambios exitosamente";
+        
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null;          
+
+        try{            
+            tx = EasyGas.sesion.beginTransaction();   
+            EasyGas.sesion.saveOrUpdate(cli);
+            tx.commit();
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error en la conexion");
+            if (tx != null) {
+                tx.rollback();
+            }
+        }       
+        finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }      
+                
+        return mensaje;
+    }
+    
     public String EliminarCliente(int codigo){
         
         String mensaje = "Se ha eliminado el registro exitosamente";
@@ -223,5 +253,5 @@ public class ClienteControlador {
         }
         return mensaje;
     }
-    */
+    
 }

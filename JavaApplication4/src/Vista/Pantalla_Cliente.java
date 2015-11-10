@@ -104,22 +104,22 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+           // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
         
     }
@@ -686,7 +686,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
-        /*int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar el registro");
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar el registro");
         if (confirmacion== 0){
             String strCodigo = txtCodigo.getText();
             int codigo = Integer.parseInt(strCodigo);
@@ -700,7 +700,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
             RefrescarTabla(null); 
             DatosEditables(true);
             BotonesEditables(true);
-        }*/
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
