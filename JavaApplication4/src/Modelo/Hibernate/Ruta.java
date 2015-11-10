@@ -1,9 +1,11 @@
 package Modelo.Hibernate;
-// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
+// Generated 10/11/2015 08:33:55 AM by Hibernate Tools 4.3.1
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,22 +23,28 @@ public class Ruta  implements java.io.Serializable {
      private Date horaLlegada;
      private int cantGlp;
      private int cantDiesel;
-     private Set aristas = new HashSet(0);
+     private int distancia;
+     private int diffTiempo;
+     private List<Arista> aristas = new ArrayList<Arista>();
      private Set accidentes = new HashSet(0);
 
     public Ruta() {
     }
 
 	
-    public Ruta(Camion camion, Empleado empleadoByIdConductor, Date fechaEntrega, Date horaSalida, int cantGlp, int cantDiesel) {
+    public Ruta(Camion camion, Empleado empleadoByIdConductor, Date fechaEntrega, Date horaSalida, int cantGlp, int cantDiesel, int distancia, int diffTiempo) {
         this.camion = camion;
         this.empleadoByIdConductor = empleadoByIdConductor;
         this.fechaEntrega = fechaEntrega;
         this.horaSalida = horaSalida;
         this.cantGlp = cantGlp;
         this.cantDiesel = cantDiesel;
+        this.distancia = distancia;
+        this.diffTiempo = diffTiempo;
     }
-    public Ruta(Camion camion, Empleado empleadoByIdCopiloto, Empleado empleadoByIdConductor, Date fechaEntrega, Date horaSalida, Date horaLlegada, int cantGlp, int cantDiesel, Set aristas, Set accidentes) {
+    public Ruta(Camion camion, Empleado empleadoByIdCopiloto, Empleado empleadoByIdConductor, 
+            Date fechaEntrega, Date horaSalida, Date horaLlegada, int cantGlp, int cantDiesel, 
+            int distancia, int diffTiempo, List<Arista> aristas, Set accidentes) {
        this.camion = camion;
        this.empleadoByIdCopiloto = empleadoByIdCopiloto;
        this.empleadoByIdConductor = empleadoByIdConductor;
@@ -45,6 +53,8 @@ public class Ruta  implements java.io.Serializable {
        this.horaLlegada = horaLlegada;
        this.cantGlp = cantGlp;
        this.cantDiesel = cantDiesel;
+       this.distancia = distancia;
+       this.diffTiempo = diffTiempo;
        this.aristas = aristas;
        this.accidentes = accidentes;
     }
@@ -112,11 +122,25 @@ public class Ruta  implements java.io.Serializable {
     public void setCantDiesel(int cantDiesel) {
         this.cantDiesel = cantDiesel;
     }
-    public Set getAristas() {
+    public int getDistancia() {
+        return this.distancia;
+    }
+    
+    public void setDistancia(int distancia) {
+        this.distancia = distancia;
+    }
+    public int getDiffTiempo() {
+        return this.diffTiempo;
+    }
+    
+    public void setDiffTiempo(int diffTiempo) {
+        this.diffTiempo = diffTiempo;
+    }
+    public List<Arista> getAristas() {
         return this.aristas;
     }
     
-    public void setAristas(Set aristas) {
+    public void setAristas(List<Arista> aristas) {
         this.aristas = aristas;
     }
     public Set getAccidentes() {

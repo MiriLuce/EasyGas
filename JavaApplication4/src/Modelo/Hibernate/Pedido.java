@@ -1,5 +1,5 @@
 package Modelo.Hibernate;
-// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
+// Generated 10/11/2015 08:33:55 AM by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
@@ -53,6 +53,14 @@ public class Pedido  implements java.io.Serializable {
        this.estado = estado;
     }
    
+    public Integer getPosX() {
+        return this.cliente.getNodo().getCoordX();
+    }
+    
+    public Integer getPosY() {
+        return this.cliente.getNodo().getCoordY();
+    }
+    
     public Integer getIdPedido() {
         return this.idPedido;
     }

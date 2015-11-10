@@ -38,10 +38,11 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     private CamionControlador camionControlador = new CamionControlador();
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     //private List<TipoCamion> listaTipoCamion = null;
+    private boolean verificar ;
     
     public Pantalla_Camion() {
         initComponents();
-        
+        verificar = false;
         RefrescarCmbCamion(); 
         //LimpiarDatos();
     }
@@ -51,11 +52,11 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         cmbCamionTipo.removeAllItems();
         cmbCamionBuscarTipo.removeAllItems();
         cmbCamionBuscarTipo.addItem("Todos");*/
-        List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
+        //List<TipoCamion> listaTipoCamion = tpCamionControlador.ListarTipoCamion();
         List<TipoCamion> lista = tpCamionControlador.ListarTipoCamion();
         for (TipoCamion tp : lista) {
-            cmbCamionTipo.addItem(tp);
-            cmbCamionBuscarTipo.addItem(tp);
+            cmbCamionTipo.addItem(tp.getNombre());
+            cmbCamionBuscarTipo.addItem(tp.getNombre());
         }
     }
     
@@ -613,7 +614,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCamionNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCamionNuevoActionPerformed
-        RefrescarCmbCamion();
+        //RefrescarCmbCamion();
         LimpiarDatos();
         txtCamionPlaca.setEnabled(true);
         cmbCamionTipo.setEnabled(true);

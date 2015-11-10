@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 02/11/2015 06:39:49 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 10/11/2015 08:33:56 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="Modelo.Hibernate.Ruta" table="RUTA" catalog="inf226ga" optimistic-lock="version">
         <id name="idRuta" type="java.lang.Integer">
@@ -31,6 +31,12 @@
         </property>
         <property name="cantDiesel" type="int">
             <column name="CantDiesel" not-null="true" />
+        </property>
+        <property name="distancia" type="int">
+            <column name="distancia" not-null="true" />
+        </property>
+        <property name="diffTiempo" type="int">
+            <column name="diffTiempo" not-null="true" />
         </property>
         <set name="aristas" table="ARISTA" inverse="true" lazy="true" fetch="select">
             <key>

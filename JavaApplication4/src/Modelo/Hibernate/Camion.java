@@ -1,9 +1,11 @@
 package Modelo.Hibernate;
-// Generated 02/11/2015 06:39:48 PM by Hibernate Tools 4.3.1
+// Generated 10/11/2015 08:33:55 AM by Hibernate Tools 4.3.1
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,9 +19,10 @@ public class Camion  implements java.io.Serializable {
      private String placa;
      private Date fechaRegistro;
      private String estado;
-     private Set mantenimientos = new HashSet(0);
-     private Set rutas = new HashSet(0);
-     private Set disponibilidads = new HashSet(0);
+     private List<Mantenimiento> mantenimientos = new ArrayList<Mantenimiento>();
+     private List<Ruta> rutas = new ArrayList<Ruta>();
+     private List<Disponibilidad> disponibilidads = new ArrayList<Disponibilidad>();
+	 
 
     public Camion() {
     }
@@ -31,7 +34,8 @@ public class Camion  implements java.io.Serializable {
         this.fechaRegistro = fechaRegistro;
         this.estado = estado;
     }
-    public Camion(TipoCamion tipoCamion, String placa, Date fechaRegistro, String estado, Set mantenimientos, Set rutas, Set disponibilidads) {
+    public Camion(TipoCamion tipoCamion, String placa, Date fechaRegistro, String estado, 
+            List<Mantenimiento> mantenimientos, List<Ruta> rutas, List<Disponibilidad> disponibilidads) {
        this.tipoCamion = tipoCamion;
        this.placa = placa;
        this.fechaRegistro = fechaRegistro;
@@ -76,32 +80,30 @@ public class Camion  implements java.io.Serializable {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    public Set getMantenimientos() {
+    
+    public List getMantenimientos() {
         return this.mantenimientos;
     }
     
-    public void setMantenimientos(Set mantenimientos) {
+    public void setMantenimientos(ArrayList mantenimientos) {
         this.mantenimientos = mantenimientos;
     }
-    public Set getRutas() {
+    public List getRutas() {
         return this.rutas;
     }
     
-    public void setRutas(Set rutas) {
+    public void setRutas(ArrayList rutas) {
         this.rutas = rutas;
     }
-    public Set getDisponibilidads() {
+    public List getDisponibilidads() {
         return this.disponibilidads;
     }
     
-    public void setDisponibilidads(Set disponibilidads) {
+    public void setDisponibilidads(ArrayList disponibilidads) {
         this.disponibilidads = disponibilidads;
     }
 
-    @Override
-    public String toString(){
-        return placa;
-    }
+
 
 
 }
