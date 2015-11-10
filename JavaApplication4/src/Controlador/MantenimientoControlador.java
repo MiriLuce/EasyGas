@@ -217,7 +217,7 @@ public class MantenimientoControlador {
     //Esta funcion ira temporalmente aqui para evitar merges
     //Debe ir a CamionControlador
     
-    public List<Camion> BuscarCamionPorTipo(int idTipoCamion){
+    public List<Camion> BuscarCamionPorTipo(String nombre){
         List<Camion> listaCamion = null;
        if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();
@@ -226,10 +226,10 @@ public class MantenimientoControlador {
         Transaction tx = null;
         try {
             tx = EasyGas.sesion.beginTransaction();
-            String consulta = "select * from CAMION where";
-            consulta += " idTipoCamion = :idTipoCamion";             
+            String consulta = "select * from CAMION inner join TIPO_CAMION on CAMION.idTipoCamion = TIPO_CAMION.idTipoCamion where";
+            consulta += " TIPO_CAMION.Nombre = :nombre";             
              SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);            
-            query.setParameter("idTipoCamion", idTipoCamion);
+            query.setParameter("nombre", nombre);
             query.addEntity(Camion.class);
             listaCamion = query.list();
             for(Camion cam : listaCamion){

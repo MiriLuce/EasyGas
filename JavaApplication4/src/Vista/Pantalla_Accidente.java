@@ -16,6 +16,7 @@ import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.Ruta;
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Calendar;
@@ -52,7 +53,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         List<Camion> lista = camControlador.ListarCamion();
         for(Camion cam : lista){
             if((cam.getEstado().compareTo("En curso")==0) || (cam.getEstado().compareTo("De regreso")==0)){
-                cmbPlaca.addItem(cam);
+                cmbPlaca.addItem(cam.getPlaca());
             }
             
         }
@@ -188,6 +189,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         jScrollPane6 = new javax.swing.JScrollPane();
         tablaAccidente = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
 
         panelAccidente.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -463,6 +465,11 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                 txtConductorBuscarActionPerformed(evt);
             }
         });
+        txtConductorBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtConductorBuscarKeyTyped(evt);
+            }
+        });
 
         jLabel52.setText("Placa:");
 
@@ -533,6 +540,15 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             }
         });
 
+        btnLimpiar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_borrar.png"))); // NOI18N
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
         jPanel19Layout.setHorizontalGroup(
@@ -550,6 +566,8 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel19Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
         );
@@ -563,7 +581,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
                     .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLimpiar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -606,9 +626,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
             .addGap(0, 700, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 4, Short.MAX_VALUE)
+                    .addGap(0, 6, Short.MAX_VALUE)
                     .addComponent(panelAccidente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 4, Short.MAX_VALUE)))
+                    .addGap(0, 6, Short.MAX_VALUE)))
         );
 
         pack();
@@ -769,25 +789,21 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
     private void dateDesdePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateDesdePropertyChange
         // TODO add your handling code here:
-        if (evt.getSource() == dateDesde) {
-            if (dateHasta.getDate() != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateDesde.getDate());
-                cal.add(Calendar.MINUTE, 60*24);
-                dateHasta.setMinSelectableDate(cal.getTime());
-            }
+        if (evt.getSource() == dateDesde && dateHasta.getDate() != null && dateDesde.getDate() != null) {            
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateDesde.getDate());
+            cal.add(Calendar.MINUTE, 60*24);
+            dateHasta.setMinSelectableDate(cal.getTime());            
         }
     }//GEN-LAST:event_dateDesdePropertyChange
 
     private void dateHastaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dateHastaPropertyChange
         // TODO add your handling code here:
-        if (evt.getSource() == dateHasta) {
-            if (dateDesde.getDate() != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateHasta.getDate());
-                cal.add(Calendar.MINUTE, 60*24);
-                dateDesde.setMaxSelectableDate(cal.getTime());
-            }
+        if (evt.getSource() == dateHasta && dateDesde.getDate() != null && dateHasta.getDate() != null) {            
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateHasta.getDate());
+            cal.add(Calendar.MINUTE, 60*24);
+            dateDesde.setMaxSelectableDate(cal.getTime());            
         }
     }//GEN-LAST:event_dateHastaPropertyChange
 
@@ -800,6 +816,25 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtObservacionKeyTyped
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        dateDesde.setCalendar(null);
+        dateHasta.setCalendar(null);
+        formatPlaca.setText("");
+        txtConductorBuscar.setText("");
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void txtConductorBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtConductorBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtConductorBuscar.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtConductorBuscarKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -807,6 +842,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox cmbEstado;
     private javax.swing.JComboBox cmbPlaca;

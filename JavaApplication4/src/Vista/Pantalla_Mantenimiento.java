@@ -59,9 +59,9 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
     //Llenado de cmb Tipo Camion
     private void llenaCmbTipoCamion(){
         List<TipoCamion> lista = tpCamionControlador.ListarTipoCamion();
-        for (TipoCamion tp : lista) {
-            cmbTipoCamion.addItem(tp);
-            cmbTipoCamionBuscar.addItem(tp);
+        for (TipoCamion tp : lista) {            
+            cmbTipoCamion.addItem(tp.getNombre());
+            cmbTipoCamionBuscar.addItem(tp.getNombre());
         }
        
     }
@@ -69,9 +69,8 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
     //Llenado de cmb Placas
     
     private void llenaCmbPlaca(){        
-        TipoCamion tpc = (TipoCamion)cmbTipoCamion.getSelectedItem();
-        int id = tpc.getIdTipoCamion();
-        List<Camion> listaCamion = mantenControlador.BuscarCamionPorTipo(id);
+        String tpc = (String) cmbTipoCamion.getSelectedItem();        
+        List<Camion> listaCamion = mantenControlador.BuscarCamionPorTipo(tpc);
         //List<Camion> listaCamion = camionControlador.ListarCamion();
         cmbPlaca.removeAllItems();
         for (int i = 0; i < listaCamion.size(); i++) {
@@ -81,9 +80,8 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
     
     private void llenaCmbPlacaBuscar(){
         if(cmbTipoCamionBuscar.getSelectedIndex()!=0){
-            TipoCamion tpc = (TipoCamion)cmbTipoCamionBuscar.getSelectedItem();
-            int id = tpc.getIdTipoCamion();
-            List<Camion> listaCamion = mantenControlador.BuscarCamionPorTipo(id);
+            String tpc = (String)cmbTipoCamionBuscar.getSelectedItem();            
+            List<Camion> listaCamion = mantenControlador.BuscarCamionPorTipo(tpc);
             cmbPlacaBuscar.removeAllItems();
             cmbPlacaBuscar.addItem("Todos");
             for (int i = 0; i < listaCamion.size(); i++) {
@@ -249,6 +247,7 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         jScrollPane7 = new javax.swing.JScrollPane();
         tablaMantenimiento = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
 
         panelMantenimiento.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -590,6 +589,15 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
             }
         });
 
+        btnLimpiar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_borrar.png"))); // NOI18N
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel24Layout = new javax.swing.GroupLayout(jPanel24);
         jPanel24.setLayout(jPanel24Layout);
         jPanel24Layout.setHorizontalGroup(
@@ -604,7 +612,10 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
                             .addGap(18, 18, 18)
                             .addComponent(jPanel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 698, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnBuscar)))
+                        .addGroup(jPanel24Layout.createSequentialGroup()
+                            .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnBuscar))))
                 .addGap(20, 28, Short.MAX_VALUE))
         );
         jPanel24Layout.setVerticalGroup(
@@ -617,7 +628,9 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
                     .addComponent(jPanel25, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
                     .addComponent(jPanel26, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(btnBuscar)
+                .addGroup(jPanel24Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnLimpiar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -660,9 +673,9 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
             .addGap(0, 708, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 4, Short.MAX_VALUE)
+                    .addGap(0, 6, Short.MAX_VALUE)
                     .addComponent(panelMantenimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 4, Short.MAX_VALUE)))
+                    .addGap(0, 6, Short.MAX_VALUE)))
         );
 
         pack();
@@ -672,8 +685,9 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         int id = Integer.parseInt(stringId);
         Mantenimiento man = mantenControlador.BuscarMantenimientoPorCodigo(id);
         txtCodigo.setText("" + man.getIdMantenimiento());
-        cmbTipoCamion.setSelectedItem(man.getCamion().getTipoCamion());
-        cmbPlaca.setSelectedItem(man.getCamion());
+        cmbTipoCamion.setSelectedItem(man.getCamion().getTipoCamion().getNombre());
+        llenaCmbPlaca();
+        cmbPlaca.setSelectedItem(man.getCamion().getPlaca());
         dateFecha.setDate(man.getFecha());
         txtHora.setText(formatoHora.format(man.getHora()));        
         spinTurnos.setValue(man.getCantTurnos());
@@ -762,7 +776,7 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
-        llenaCmbTipoCamion();
+        cmbTipoCamion.setSelectedIndex(0);
         llenaCmbPlaca();
         txtCodigo.setText("");
         dateFecha.setCalendar(null);        
@@ -895,6 +909,14 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
         }*/
     }//GEN-LAST:event_spinTurnosKeyTyped
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        dateDesde.setCalendar(null);
+        dateHasta.setCalendar(null);
+        cmbPlacaBuscar.setSelectedIndex(0);
+        cmbTipoCamionBuscar.setSelectedIndex(0);
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
@@ -902,6 +924,7 @@ public class Pantalla_Mantenimiento extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JComboBox cmbEstado;
     private javax.swing.JComboBox cmbPlaca;
