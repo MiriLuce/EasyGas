@@ -51,19 +51,12 @@ public class PedidoControlador {
             query.addEntity(Pedido.class);
             List aux = query.list();
 
-//            for (Iterator i = aux.iterator(); i.hasNext();) {
-//                Pedido p = (Pedido) i.next();
-//                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-//                p.setCliente(c);
-//                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-//                p.getCliente().setNodo(n);
-//                lista.add(p);
-//            }
-            
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Pedido p = (Pedido) i.next();
-                Hibernate.initialize(p.getCliente());
-                Hibernate.initialize(p.getCliente().getNodo());
+                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
+                p.setCliente(c);
+                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
+                p.getCliente().setNodo(n);
                 lista.add(p);
             }
             
@@ -141,67 +134,6 @@ public class PedidoControlador {
             }
         }
 
-        /*
-         if (!EasyGas.sesion.isOpen()) {
-         EasyGas.sesion = EasyGas.sesFact.openSession();
-         }
-
-         Transaction tx = null;
-
-         String sql = "SELECT * FROM PEDIDO WHERE 1";
-
-         if (Double.parseDouble(vol.getValue().toString()) > 0) {
-         sql = sql + " AND CantGLP <= :cantglp";
-         }
-         if (plazo.getSelectedIndex() > 0) {
-         sql = sql + " AND Plazo = :plazo";
-         }
-         if (estado.getSelectedIndex() > 0) {
-         sql = sql + " AND Estado = :estado";
-         }
-
-         try {
-         tx = EasyGas.sesion.beginTransaction();
-
-         //query SQL
-         SQLQuery query = EasyGas.sesion.createSQLQuery(sql);
-         query.addEntity(Pedido.class);
-
-         if (Double.parseDouble(vol.getValue().toString()) > 0) {
-         query.setParameter("cantglp", Double.valueOf(vol.getValue().toString()));
-         }
-         if (plazo.getSelectedIndex() > 0) {
-         int plazoAux = SacaSiguienteNumeroEnString(plazo.getSelectedItem().toString());
-         query.setParameter("plazo", plazoAux);
-         }
-         if (estado.getSelectedIndex() > 0) {
-         query.setParameter("estado", estado.getSelectedItem().toString());
-         }
-
-         List aux = query.list();
-
-         tx.commit();
-
-         for (Iterator i = aux.iterator(); i.hasNext();) {
-         Pedido p = (Pedido) i.next();
-         Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-         p.setCliente(c);
-         Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-         p.getCliente().setNodo(n);
-         lista.add(p);
-         }
-
-         } catch (Exception e) {
-         JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
-         if (tx != null) {
-         tx.rollback();
-         }
-         } finally {
-         if (EasyGas.sesion.isOpen()) {
-         EasyGas.sesion.close();
-         }
-         }
-         */
         return lista;
     }
 
@@ -224,24 +156,17 @@ public class PedidoControlador {
             query.addEntity(Pedido.class);
             query.setParameter("idpedido", pedidoId);
             List aux = query.list();
-
-            for (Iterator i = aux.iterator(); i.hasNext();) {
-                Pedido p = (Pedido) i.next();
-                Hibernate.initialize(p.getCliente());
-                Hibernate.initialize(p.getCliente().getNodo());
-                lista.add(p);
-            }
             
             tx.commit();
 
-//            for (Iterator i = aux.iterator(); i.hasNext();) {
-//                Pedido p = (Pedido) i.next();
-//                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-//                p.setCliente(c);
-//                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-//                p.getCliente().setNodo(n);
-//                lista.add(p);
-//            }
+            for (Iterator i = aux.iterator(); i.hasNext();) {
+                Pedido p = (Pedido) i.next();
+                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
+                p.setCliente(c);
+                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
+                p.getCliente().setNodo(n);
+                lista.add(p);
+            }
             
 
         } catch (Exception e) {
@@ -356,10 +281,12 @@ public class PedidoControlador {
         }
     }
 
-    public static void CargaPedidosArchivo(String rutaArchivo) {
+    public static ArrayList<Pedido> CargaPedidosArchivo(String rutaArchivo) {
         BufferedReader br = null;
         String linea = "";
         String cvsDiv = ",";
+        
+        ArrayList<Pedido> lista = new ArrayList<Pedido>();
 
         try {
 
@@ -391,7 +318,9 @@ public class PedidoControlador {
 
                 Pedido ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
 
-                GuardarPedido(ped);
+                lista.add(ped);
+                
+                //GuardarPedido(ped);
             }
 
         } catch (FileNotFoundException e) {
@@ -406,5 +335,7 @@ public class PedidoControlador {
                 }
             }
         }
+        
+        return lista;
     }
 }

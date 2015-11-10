@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Luis/Documents/NetBeansProjects/EasyGas02/EasyGas/JavaApplication4/src/Controlador/ClienteControlador.java</file>
-            <file>file:/C:/Users/Luis/Documents/NetBeansProjects/EasyGas02/EasyGas/JavaApplication4/src/Vista/Pantalla_Mantenimiento.java</file>
-            <file>file:/C:/Users/Luis/Documents/NetBeansProjects/EasyGas02/EasyGas/JavaApplication4/src/Controlador/MantenimientoControlador.java</file>
-            <file>file:/C:/Users/Luis/Documents/NetBeansProjects/EasyGas02/EasyGas/JavaApplication4/src/Vista/Pantalla_Cliente.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Vista/Pantalla_Simulacion.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Mapa/Mapa.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Mapa/Camara.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Modelo/Constantes/EasyGas.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Mapa/Ciudades/CiudadXYZ.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Mapa/Tejas/Teja.java</file>
+            <file>file:/D:/NetBeansProjects/Github%20Clones/EasyGas/JavaApplication4/src/Util/HibernateUtil.java</file>
         </group>
     </open-files>
 </project-private>

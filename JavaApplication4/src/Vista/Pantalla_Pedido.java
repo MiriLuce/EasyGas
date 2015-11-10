@@ -61,7 +61,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         nPedEditBoton = new javax.swing.JButton();
         nPedGuardBoton = new javax.swing.JButton();
         nPedCancelBoton = new javax.swing.JButton();
-        nPedCargaBoton = new javax.swing.JButton();
         jPanel40 = new javax.swing.JPanel();
         label18 = new java.awt.Label();
         jPanel41 = new javax.swing.JPanel();
@@ -270,15 +269,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             }
         });
 
-        nPedCargaBoton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        nPedCargaBoton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_editar.png"))); // NOI18N
-        nPedCargaBoton.setText("Cargar");
-        nPedCargaBoton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nPedCargaBotonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel37Layout = new javax.swing.GroupLayout(jPanel37);
         jPanel37.setLayout(jPanel37Layout);
         jPanel37Layout.setHorizontalGroup(
@@ -286,13 +276,11 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             .addGroup(jPanel37Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel38, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                    .addComponent(jPanel38, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                     .addComponent(jPanel39, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel37Layout.createSequentialGroup()
                         .addComponent(label17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nPedCargaBoton)
-                        .addGap(18, 18, 18)
                         .addComponent(nPedNuevBoton)))
                 .addContainerGap())
             .addGroup(jPanel37Layout.createSequentialGroup()
@@ -313,15 +301,13 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             .addGroup(jPanel37Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(nPedNuevBoton)
-                        .addComponent(nPedCargaBoton))
+                    .addComponent(nPedNuevBoton)
                     .addComponent(label17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel38, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nPedElimBoton)
                     .addComponent(nPedEditBoton))
@@ -329,7 +315,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nPedGuardBoton)
                     .addComponent(nPedCancelBoton))
-                .addContainerGap(254, Short.MAX_VALUE))
+                .addContainerGap(262, Short.MAX_VALUE))
         );
 
         jPanel40.setBackground(new java.awt.Color(240, 240, 225));
@@ -381,7 +367,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                     .addComponent(jLabel92)
                     .addComponent(jLabel91)
                     .addComponent(jLabel93))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bPedNombText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bPedTipoDocComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -403,7 +389,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                 .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bPedNroDocText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel93))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jPanel42.setBackground(new java.awt.Color(240, 240, 225));
@@ -445,7 +431,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                     .addComponent(bPedHastaFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel94)
                     .addComponent(bPedDesdeFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         bPedBuscBoton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -522,7 +508,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                     .addComponent(jLabel99)
                     .addComponent(jLabel98)
                     .addComponent(jLabel100))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bPedEstadoComboBox, 0, 180, Short.MAX_VALUE)
                     .addComponent(bPedPlazoComboBox, 0, 180, Short.MAX_VALUE)
@@ -571,13 +557,13 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel41, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                        .addComponent(jPanel41, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel44, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12))
                     .addGroup(jPanel40Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel42, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE))
+                        .addComponent(jPanel42, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel40Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(bPedLimpiarBoton)
@@ -830,22 +816,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
         this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_bPedTablaMouseClicked
 
-    private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed
-        File archivo = GeneralControlador.obtenerArchivo();
-
-        if (archivo != null) {
-            nPedCargaBoton.setEnabled(false);
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            PedidoControlador.CargaPedidosArchivo(archivo.getAbsolutePath());
-            this.setCursor(Cursor.getDefaultCursor());
-            JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
-            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            listaTotalPedidos = PedidoControlador.ListarPedidos();
-            PedidoControlador.ActualizaTablaPedidos(listaTotalPedidos, bPedTabla);
-            this.setCursor(Cursor.getDefaultCursor());
-        }
-    }//GEN-LAST:event_nPedCargaBotonActionPerformed
-
     private void nPedNroDocTextKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nPedNroDocTextKeyTyped
         char car = evt.getKeyChar();
 
@@ -1016,7 +986,6 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
     private java.awt.Label label18;
     private javax.swing.JButton nPedBuscCliBoton;
     private javax.swing.JButton nPedCancelBoton;
-    private javax.swing.JButton nPedCargaBoton;
     private javax.swing.JComboBox nPedDirComboBox;
     private javax.swing.JButton nPedEditBoton;
     private javax.swing.JButton nPedElimBoton;

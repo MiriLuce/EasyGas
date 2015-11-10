@@ -5,21 +5,27 @@
  */
 package Vista;
 
+import Controlador.GeneralControlador;
+import Controlador.PedidoControlador;
+import Mapa.Mapa;
+import java.awt.Cursor;
+import java.io.File;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author alulab14
  */
-public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
+public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
-    /**
-     * Creates new form InternalFrameSimulacion
-     */
+    
     public Pantalla_Simulacion() {
         initComponents();
         
         this.btnIniciar.setEnabled(false);
         this.btnDetener.setEnabled(false);
         this.btnGrabar.setEnabled(false);
+        
     }
 
     /**
@@ -48,9 +54,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         tblResultados = new javax.swing.JTable();
         btnExportar = new javax.swing.JButton();
         btnGrabar = new javax.swing.JButton();
-        jPanel60 = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
-        btnIniciar2 = new javax.swing.JButton();
+        nPedCargaBoton = new javax.swing.JButton();
+        panelMapa = new javax.swing.JPanel();
 
         panelSimulacion.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -193,7 +198,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     .addComponent(btnIniciar)
                     .addComponent(btnDetener))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -215,6 +220,15 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             }
         });
 
+        nPedCargaBoton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        nPedCargaBoton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_editar.png"))); // NOI18N
+        nPedCargaBoton.setText("Cargar Pedidos");
+        nPedCargaBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nPedCargaBotonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel56Layout = new javax.swing.GroupLayout(jPanel56);
         jPanel56.setLayout(jPanel56Layout);
         jPanel56Layout.setHorizontalGroup(
@@ -224,7 +238,10 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     .addGroup(jPanel56Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel56Layout.createSequentialGroup()
+                                .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                                .addComponent(nPedCargaBoton))
                             .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel56Layout.createSequentialGroup()
@@ -232,7 +249,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                         .addComponent(btnExportar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGrabar)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -241,8 +258,10 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         jPanel56Layout.setVerticalGroup(
             jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel56Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(label23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(label23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nPedCargaBoton))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -256,28 +275,20 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        jPanel60.setBackground(new java.awt.Color(240, 240, 225));
-        jPanel60.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel60.setPreferredSize(new java.awt.Dimension(750, 620));
-        jPanel60.setRequestFocusEnabled(false);
+        panelMapa.setBackground(new java.awt.Color(240, 240, 225));
+        panelMapa.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelMapa.setPreferredSize(new java.awt.Dimension(750, 620));
+        panelMapa.setRequestFocusEnabled(false);
 
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_claqueta.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel60Layout = new javax.swing.GroupLayout(jPanel60);
-        jPanel60.setLayout(jPanel60Layout);
-        jPanel60Layout.setHorizontalGroup(
-            jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel60Layout.createSequentialGroup()
-                .addGap(274, 274, 274)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+        javax.swing.GroupLayout panelMapaLayout = new javax.swing.GroupLayout(panelMapa);
+        panelMapa.setLayout(panelMapaLayout);
+        panelMapaLayout.setHorizontalGroup(
+            panelMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 746, Short.MAX_VALUE)
         );
-        jPanel60Layout.setVerticalGroup(
-            jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel60Layout.createSequentialGroup()
-                .addGap(146, 146, 146)
-                .addComponent(jButton7)
-                .addContainerGap(261, Short.MAX_VALUE))
+        panelMapaLayout.setVerticalGroup(
+            panelMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 616, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout panelSimulacionLayout = new javax.swing.GroupLayout(panelSimulacion);
@@ -288,7 +299,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGap(40, 40, 40)
                 .addComponent(jPanel56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
-                .addComponent(jPanel60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(64, Short.MAX_VALUE))
         );
         panelSimulacionLayout.setVerticalGroup(
@@ -300,13 +311,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                         .addComponent(jPanel56, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelSimulacionLayout.createSequentialGroup()
                         .addGap(53, 53, 53)
-                        .addComponent(jPanel60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(panelMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(86, Short.MAX_VALUE))
         );
-
-        btnIniciar2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnIniciar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_calcular.png"))); // NOI18N
-        btnIniciar2.setText("Calcular");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -318,24 +325,14 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(btnIniciar2)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 763, Short.MAX_VALUE)
+            .addGap(0, 767, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(btnIniciar2)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
@@ -352,7 +349,11 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         this.btnIniciar.setEnabled(false);
         this.btnGrabar.setEnabled(false);
         this.btnExportar.setEnabled(false);
+        
         //pintar
+        Mapa mapa = new Mapa("Ciudad XYZ",800,800);
+        mapa.Empieza();
+        
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
@@ -391,6 +392,18 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         //algortimo
     }//GEN-LAST:event_btnCalcularActionPerformed
 
+    private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed
+        File archivo = GeneralControlador.obtenerArchivo();
+
+        if (archivo != null) {
+            nPedCargaBoton.setEnabled(false);
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            PedidoControlador.CargaPedidosArchivo(archivo.getAbsolutePath());
+            this.setCursor(Cursor.getDefaultCursor());
+            JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
+        }
+    }//GEN-LAST:event_nPedCargaBotonActionPerformed
+
    
 
 
@@ -400,19 +413,18 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnIniciar;
-    private javax.swing.JButton btnIniciar2;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel125;
     private javax.swing.JLabel jLabel126;
     private javax.swing.JLabel jLabel127;
     private javax.swing.JPanel jPanel56;
     private javax.swing.JPanel jPanel57;
     private javax.swing.JPanel jPanel59;
-    private javax.swing.JPanel jPanel60;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JSpinner jSpinner5;
     private javax.swing.JTextField jTextField59;
     private java.awt.Label label23;
+    private javax.swing.JButton nPedCargaBoton;
+    private javax.swing.JPanel panelMapa;
     private javax.swing.JPanel panelSimulacion;
     private javax.swing.JTable tblResultados;
     // End of variables declaration//GEN-END:variables

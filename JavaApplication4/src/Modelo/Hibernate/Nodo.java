@@ -28,6 +28,7 @@ public class Nodo  implements java.io.Serializable {
         this.coordX = coordX;
         this.coordY = coordY;
     }
+    
     public Nodo(int coordX, int coordY, String habilitado, Set clientes, Set accidentes, Set aristasForIdOrigen, Set aristasForIdDestino) {
        this.coordX = coordX;
        this.coordY = coordY;
