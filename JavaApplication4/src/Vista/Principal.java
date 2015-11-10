@@ -35,6 +35,7 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Simulacion ventanaSimulacion=null;
     private Pantalla_Ruta ventanaRuta=null;
     private Pantalla_Perfil ventanaPerfil=null;
+    private Pantalla_Cliente ventanaCliente=null;
 
     public Principal() {
         
@@ -73,6 +74,7 @@ public class Principal extends javax.swing.JFrame {
         mantCamionCargaMasiva = new javax.swing.JMenuItem();
         mantMantenimiento = new javax.swing.JMenuItem();
         menuReparto = new javax.swing.JMenu();
+        mantCliente = new javax.swing.JMenuItem();
         mantPedido = new javax.swing.JMenuItem();
         mantAccidente = new javax.swing.JMenuItem();
         mantRuta = new javax.swing.JMenuItem();
@@ -201,6 +203,15 @@ public class Principal extends javax.swing.JFrame {
 
         menuReparto.setText("Reparto");
 
+        mantCliente.setText("Cliente");
+        mantCliente.setToolTipText("");
+        mantCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mantClienteActionPerformed(evt);
+            }
+        });
+        menuReparto.add(mantCliente);
+
         mantPedido.setText("Pedido");
         mantPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -274,6 +285,7 @@ public class Principal extends javax.swing.JFrame {
         ventanaSimulacion=null;
         ventanaRuta=null;
         ventanaPerfil=null;
+        ventanaCliente=null;
     }
 
     private void mantTipoCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantTipoCamionActionPerformed
@@ -470,6 +482,23 @@ public class Principal extends javax.swing.JFrame {
         ventanaPerfil.setVisible(true);
     }//GEN-LAST:event_nombreUsuarioMouseClicked
 
+    private void mantClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantClienteActionPerformed
+        // TODO add your handling code here:
+        ActualizaVentanas();
+        
+        if (ventanaCliente == null) {
+            ventanaCliente = new Pantalla_Cliente();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaCliente);
+            try {
+                ventanaCliente.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaCliente.setVisible(true);
+    }//GEN-LAST:event_mantClienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JLabel jLabel1;
@@ -478,6 +507,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mantAccidente;
     private javax.swing.JMenuItem mantCamion;
     private javax.swing.JMenuItem mantCamionCargaMasiva;
+    private javax.swing.JMenuItem mantCliente;
     private javax.swing.JMenuItem mantEmpleado;
     private javax.swing.JMenuItem mantMantenimiento;
     private javax.swing.JMenuItem mantPedido;
