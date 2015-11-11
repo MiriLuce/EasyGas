@@ -6,7 +6,9 @@
 package Vista;
 
 import Controlador.ClienteControlador;
+import Controlador.NodoControlador;
 import Modelo.Hibernate.Cliente;
+import Modelo.Hibernate.Nodo;
 import java.awt.Cursor;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
@@ -14,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
@@ -29,8 +32,11 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
      */
     
     private ClienteControlador clienteControlador = new ClienteControlador();
+    private NodoControlador nodControlador = new NodoControlador();
     private ClienteModelo cliModelo = new ClienteModelo();
     private EventoTabla eventoTabla= new EventoTabla();
+    private int idNodo = 0;
+    
     public Pantalla_Cliente() {
         initComponents();
         tablaCliente.setModel(cliModelo);
@@ -224,10 +230,15 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
         jLabel83.setText("Nombre Completo:");
 
         txtNombreComp.setEnabled(false);
+        txtNombreComp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreCompKeyTyped(evt);
+            }
+        });
 
         jLabel101.setText("Estado:");
 
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione", "Registrado" }));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Registrado" }));
         cmbEstado.setEnabled(false);
 
         javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
@@ -404,8 +415,6 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        label19.getAccessibleContext().setAccessibleName("Clientes");
-
         jPanel19.setBackground(new java.awt.Color(240, 240, 225));
         jPanel19.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel19.setPreferredSize(new java.awt.Dimension(750, 620));
@@ -487,6 +496,12 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
         });
 
         jLabel84.setText("Nombre Completo:");
+
+        txtNombreCompBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreCompBuscarKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
@@ -600,8 +615,6 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        label10.getAccessibleContext().setAccessibleName("Buscar Cliente");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -618,7 +631,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
+                    .addComponent(jPanel19, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 47, Short.MAX_VALUE)))
@@ -655,6 +668,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
         cmbEstado.setSelectedItem(cli.getEstado());
         spinX.setValue(cli.getNodo().getCoordX());
         spinY.setValue(cli.getNodo().getCoordY());
+        idNodo = cli.getNodo().getIdNodo();
     }
     
     private void DatosEditables(boolean valor){
@@ -672,14 +686,18 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
         btnCancelar.setEnabled(valor);
         btnGuardar.setEnabled(valor);
     }
-    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
-        
+    private void LimpiarValores(){
         txtCodigo.setText("");
         cmbTipoDocumento.setSelectedIndex(0);
         txtNumeroDoc.setText("");
         txtNombreComp.setText("");
         cmbEstado.setSelectedIndex(0);
+        spinX.setValue(0);
+        spinY.setValue(0);
+    }
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        // TODO add your handling code here:
+        LimpiarValores();
         DatosEditables(true);
         BotonesEditables(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
@@ -692,11 +710,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
             int codigo = Integer.parseInt(strCodigo);
             String mensaje = clienteControlador.EliminarCliente(codigo);
             JOptionPane.showMessageDialog(null, mensaje);
-            txtCodigo.setText("");
-            cmbTipoDocumento.setSelectedIndex(0);
-            txtNumeroDoc.setText("");
-            txtNombreComp.setText("");
-            cmbEstado.setSelectedIndex(0);
+            LimpiarValores();
             RefrescarTabla(null); 
             DatosEditables(true);
             BotonesEditables(true);
@@ -707,7 +721,11 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que no desea guardar los cambios");
         if (confirmacion== 0){
-            VerDatos(txtCodigo.getText());
+            if(txtCodigo.getText().equals("")){
+                LimpiarValores();
+            }else{
+                VerDatos(txtCodigo.getText());
+            }            
             DatosEditables(false);
             BotonesEditables(false);
             cmbEstado.setEnabled(false);
@@ -715,57 +733,52 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        /*int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios");
-        if (confirmacion== 0){
-            Empleado e= null;
-            String mensaje="";
-            if (!(txtCodigo.getText().compareTo("")==0)){
-                // es actualizacion
-                e=empleadoControlador.obtenerEmpleadoPorCodigo(Integer.parseInt(txtCodigo.getText()));
-            }
-            if(!((mensaje=validar(txtDNI.getText(),"DNI",8,8,"d")).compareTo("")== 0)) {
-                JOptionPane.showMessageDialog(null,mensaje);
-                return;
-            }
-            else {
-                if ( ((txtCodigo.getText().compareTo("")==0) || !(e.getDni().compareTo(txtDNI.getText())==0)) && empleadoControlador.existeDNI(txtDNI.getText()) ){
-
-                    //if (empleadoControlador.existeDNI(txtDNI.getText())) {
-                        mensaje="Este DNI ya ha sido registrado";
-                        JOptionPane.showMessageDialog(null,mensaje);
-                        return;
-                    }
-
-                }
-                if(!((mensaje=validar(txtNombre.getText(),"Nombre",2,20,"s")).compareTo("")== 0)) {
-                    JOptionPane.showMessageDialog(null,mensaje);
-                    return;
-                }
-                if(!((mensaje=validar(txtApellidoPat.getText(),"Apellido Pat",4,20,"s")).compareTo("")== 0)) {
-                    JOptionPane.showMessageDialog(null,mensaje);
-                    return;
-                }
-
-                if(!((mensaje=validar(txtApellidoMat.getText(),"Apellido Mat",4,20,"s")).compareTo("")== 0)) {
-                    JOptionPane.showMessageDialog(null,mensaje);
-                    return;
-                }
-
-                if((cmbPuesto.getSelectedIndex()== 0)) {
-                    mensaje="Seleccione un puesto";
-                    JOptionPane.showMessageDialog(null,mensaje);
-                    return;
-                }
-                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                mensaje=empleadoControlador.guardarEmpleado(txtNombre.getText(),txtApellidoPat.getText(),txtApellidoMat.getText()
-                    ,txtDNI.getText(),cmbPuesto.getSelectedItem().toString(),cmbTurno.getSelectedIndex()+1,txtCodigo.getText());
-                JOptionPane.showMessageDialog(null,mensaje);
-
-                List<Empleado> lista = empleadoControlador.listarEmpleado();
-                empleadoControlador.actualizaTablaEmpleados(lista,this.tblEmpleado);
-                this.setCursor(Cursor.getDefaultCursor());
-            }
-*/
+        if (txtNumeroDoc.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(null, "El campo N° Documento está vacío");
+            return;
+        } else if (cmbTipoDocumento.getSelectedIndex() == 0 && txtNumeroDoc.getText().length() != 8) {
+            JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
+            return;
+        } else if (cmbTipoDocumento.getSelectedIndex() == 1 && txtNumeroDoc.getText().length() != 11) {
+            JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
+            return;
+        }
+        if(txtNombreComp.getText().equalsIgnoreCase("")){
+            JOptionPane.showMessageDialog(null, "Ingrese un nombre");
+            return;
+        }
+        
+        Cliente cli = new Cliente();
+        String strCodigo = txtCodigo.getText();
+        Nodo nod = new Nodo();
+        int x = (int)spinX.getValue();
+        int y = (int)spinY.getValue();
+        nod.setCoordX(x);
+        nod.setCoordY(y);
+        nod.setHabilitado("SI");
+        cli.setNodo(nod);
+        cli.setEstado(cmbEstado.getSelectedItem().toString());
+        cli.setFechaRegistro(new Date());
+        cli.setNombres(txtNombreComp.getText());
+        cli.setTipoDocumento(cmbTipoDocumento.getSelectedItem().toString());
+        cli.setNroDocumento(txtNumeroDoc.getText());
+        
+        if(!strCodigo.equals("")){
+            cli.setIdCliente(Integer.parseInt(strCodigo));
+            cli.getNodo().setIdNodo(idNodo);
+        }else{//Nuevo
+            nodControlador.GuardarNodo(nod);
+        }
+        
+        int confirmacion = JOptionPane.showConfirmDialog(null, "Seguro que desea guardar los cambios?");
+        if(confirmacion==0){            
+            String mensaje = clienteControlador.GuardarCliente(cli);
+            JOptionPane.showMessageDialog(null, mensaje);
+            RefrescarTabla(null);
+            DatosEditables(false);
+            BotonesEditables(false);
+            cmbEstado.setEnabled(false);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -822,15 +835,25 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        /*DatosEditables(false);
+       if(txtNumeroDocBuscar.getText().length() > 0){
+            if (cmbTipoDocumentoBuscar.getSelectedIndex() == 0 && txtNumeroDocBuscar.getText().length() != 8) {
+                JOptionPane.showMessageDialog(null, "Número de DNI debe tener 8 dígitos");
+                return;
+            } else if (cmbTipoDocumentoBuscar.getSelectedIndex() == 1 && txtNumeroDocBuscar.getText().length() != 11) {
+                JOptionPane.showMessageDialog(null, "Número RUC debe tener 11 dígitos");
+                return;
+            }   
+       }
+        
+        DatosEditables(false);
         BotonesEditables(false);
         
         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        List<Accidente> lista = accControlador.BuscarAccidente(dateDesde.getDate(),dateHasta.getDate(),formatPlaca.getText(), txtConductorBuscar.getText());
+        List<Cliente> lista = clienteControlador.BuscarCliente(dateDesde.getDate(), dateHasta.getDate(), txtNumeroDocBuscar.getText(),txtNombreCompBuscar.getText());
         
         RefrescarTabla(lista);
         this.setCursor(Cursor.getDefaultCursor());
-                */
+                
     }//GEN-LAST:event_btnBuscarActionPerformed
 
         
@@ -849,7 +872,42 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
 
     private void txtNumeroDocBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumeroDocBuscarKeyTyped
         // TODO add your handling code here:
+        char car = evt.getKeyChar();
+
+        if (cmbTipoDocumentoBuscar.getSelectedIndex() == 0 && txtNumeroDocBuscar.getText().length() > 7) {
+            evt.consume();
+        }
+
+        if (cmbTipoDocumentoBuscar.getSelectedIndex() == 1 && txtNumeroDocBuscar.getText().length() > 10) {
+            evt.consume();
+        }
+
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtNumeroDocBuscarKeyTyped
+
+    private void txtNombreCompKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreCompKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreComp.getText().length() > 30) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car != ' ')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreCompKeyTyped
+
+    private void txtNombreCompBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreCompBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreCompBuscar.getText().length() > 30) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')  && (car != ' ')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreCompBuscarKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

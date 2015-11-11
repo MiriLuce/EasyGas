@@ -1,4 +1,4 @@
-/*
+   /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,6 +7,7 @@ package Controlador;
 
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -252,6 +253,74 @@ public class ClienteControlador {
             }
         }
         return mensaje;
+    }
+    
+    public List<Cliente> BuscarCliente(Date dtFechaDesde,Date dtFechaHasta,String nroDoc,String nombre){
+        List<Cliente> lista = null;
+        
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String fechaDesde=dtFechaDesde==null?"":myFormat.format(dtFechaDesde);
+        String fechaHasta=dtFechaHasta==null?"":myFormat.format(dtFechaHasta);
+        
+        String consulta = "select CLIENTE.* FROM CLIENTE where 1";
+                
+        if((fechaDesde.compareTo("")==0) && (fechaHasta.compareTo("")==0) && (nroDoc.compareTo("")==0) && (nombre.compareTo("")==0)){
+            lista = this.ListarClientes();
+            return lista;
+        }else{
+            if (!(fechaDesde.compareTo("")==0) ) {                
+                consulta += " and  CLIENTE.FechaRegistro >= :fechaDesde";
+            }
+            if(!(fechaHasta.compareTo("")==0)) {
+                consulta += " and  CLIENTE.FechaRegistro <= :fechaHasta";
+            }          
+            if(!(nroDoc.compareTo("")==0)){
+                consulta += " and CLIENTE.NroDocumento = :nroDoc";
+            }
+            if(!(nombre.compareTo("")==0)){
+                consulta += " and EMPLEADO.Nombres like %:nombre%";
+            }
+        }
+        
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null;
+        
+        try {
+            tx = EasyGas.sesion.beginTransaction(); 
+            
+            SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
+            query.addEntity(Cliente.class);
+            if (!(fechaDesde.compareTo("")==0) ) {                
+                query.setParameter("fechaDesde",fechaDesde);
+            }
+            if(!(fechaHasta.compareTo("")==0)) {                
+                query.setParameter("fechaHasta",fechaHasta);           
+            }          
+            if(!(nroDoc.compareTo("")==0)){
+                query.setParameter("nroDoc",nroDoc);
+            }
+            if(!(nombre.compareTo("")==0)){
+                query.setParameter("nombre",nombre);
+            }
+            lista = query.list();
+            for(Cliente cli: lista){
+                Hibernate.initialize(cli.getNodo());
+            }
+            tx.commit();            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No hay un cliente con estos datos");
+            if (tx != null) {
+                tx.rollback();
+            }
+        }finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+        return lista;
     }
     
 }
