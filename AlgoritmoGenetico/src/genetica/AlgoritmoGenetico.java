@@ -73,7 +73,7 @@ public class AlgoritmoGenetico {
             // cerrar cromosoma con 
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
-            //cromosoma.imprimir();
+            cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
@@ -126,8 +126,8 @@ public class AlgoritmoGenetico {
         while (seguirEmparejando) {
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
-            if (!hijos.get(0).isAberracion()){ poblacion.add(hijos.get(0)); hijos.get(0).imprimir();}
-            if (!hijos.get(1).isAberracion()) { poblacion.add(hijos.get(1)); hijos.get(1).imprimir();}
+            if (!hijos.get(0).isAberracion()){ poblacion.add(hijos.get(0)); } //hijos.get(0).imprimir();}
+            if (!hijos.get(1).isAberracion()) { poblacion.add(hijos.get(1));} // hijos.get(1).imprimir();}
             //System.out.println(indAux);
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;
@@ -177,18 +177,25 @@ public class AlgoritmoGenetico {
     
     //cambia puntos de entrega entre cada ruta por cromosoma
     private void mutaPoblacion() {
-        int tam = poblacion.size();
-        int prob = (int) (Constantes.probMutacion * tam);
-        for (int i = 0; i < tam; i++) {
-            int r = generaNumRandom(0, tam - 1);
+        int cantPoblacion = poblacion.size();
+        int prob = (int) (Constantes.probMutacion * cantPoblacion);
+        
+        for (int i = 0; i < cantPoblacion; i++) {
+            int indice = generaNumRandom(0, cantPoblacion - 1);
 
-            if (i != 0 && r <= prob) { 
-                poblacion.get(r).mutar();
+            if (i != 0 && indice <= prob) { 
+                //poblacion.get(indice).mutar();
+                if (poblacion.get(indice).isAberracion()){
+                    poblacion.remove(indice);
+                    cantPoblacion--;
+                    i--;
+                }                
+                /*
                 int cantPedido = 0, cantCad = poblacion.get(r).getCadena().size();
                 for (int k = 0; k< cantCad; k++)
                     cantPedido += poblacion.get(r).getCadena().get(k).getListaPedido().size();
                 if (cantPedido != pedidos.size()) poblacion.get(r).setAberracion(true);
-                                
+                */
             }
         }
     }

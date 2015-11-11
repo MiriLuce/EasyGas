@@ -268,39 +268,43 @@ public class Cromosoma {
         
         Ruta tmpRuta = new Ruta(ruta);
         ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        int cantCadenaRuta = this.cadena.size(), cantCadenaPedido;
         int cantPedidoRuta = listaRuta.size();
-        int cantCadena = this.cadena.size(), cantPedidos;
-        
-        int indiceCadenaRuta = 0, indicePedidos, indicePedRuta;
+        int indiceCadenaRuta = 0, indiceCadenaPedido, indicePedidoRuta;
         boolean verificar = false;
         int exito;
+        
         // Se eliminan todos los pedidos de las rutas
-        while(indiceCadenaRuta < cantCadena){
-            cantPedidos = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
-            indicePedidos = 0;
+        while(indiceCadenaRuta < cantCadenaRuta){
+            cantCadenaPedido = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
+            indiceCadenaPedido = 0;
             
-            while(indicePedidos < cantPedidos){ 
-                indicePedRuta = 0;
+            while(indiceCadenaPedido < cantCadenaPedido){ 
+                indicePedidoRuta = 0;
+                verificar = false;
                 
-                while(indicePedRuta <cantPedidoRuta){
-                    exito = quitarPedido(indiceCadenaRuta, indicePedidos, 
-                            this.cadena.get(indiceCadenaRuta).getListaPedido().get(indicePedidos).getIdPedido(),
-                            listaRuta.get(indicePedRuta).getIdPedido());
+                while(indicePedidoRuta <cantPedidoRuta){
+                    exito = quitarPedido(indiceCadenaRuta, indiceCadenaPedido, 
+                            this.cadena.get(indiceCadenaRuta).getListaPedido().get(indiceCadenaPedido).getIdPedido(),
+                            listaRuta.get(indicePedidoRuta).getIdPedido());
                     
-                    if (exito == 1) {
-                        // verificar si se elimino una ruta de la cadena
-                        if (this.cadena.size() != cantCadena) cantCadena--;
-                        if (indicePedidos != cantPedidos -1) indicePedidos--;
+                    if (exito == -1) aberracion = true; 
+                    else if (exito == 1) {
+                        // Si la ruta queda vacia se elimina
+                        if(this.cadena.get(indiceCadenaRuta).getListaPedido().isEmpty()){
+                            this.cadena.remove(indiceCadenaRuta);
+                            cantCadenaRuta--;
+                        }
+                        if (indiceCadenaPedido < cantCadenaPedido -1) indiceCadenaPedido--;
                         verificar = true;
-                        cantPedidos--;
+                        cantCadenaPedido--;
                         cantPedidoRuta--;
-                        listaRuta.remove(indicePedRuta);   
+                        listaRuta.remove(indicePedidoRuta);   
                     }
-                    else if (exito == -1) aberracion = true;  
-                    indicePedRuta++;
-                    if(verificar) break; // se elimino el pedido
+                    indicePedidoRuta++;
+                    if(verificar) break; // se elimino el pedido, ya no se compara con los demas
                 }
-                indicePedidos++;
+                indiceCadenaPedido++;
                 if(aberracion || cantPedidoRuta == 0) break;                
             }
             indiceCadenaRuta++;
@@ -309,17 +313,11 @@ public class Cromosoma {
         this.cadena.add(tmpRuta);
     }
     
-    private int  quitarPedido(int indiceRuta, int indicePedido, int idPedido, int idEliminar){
+    private int  quitarPedido(int indiceRuta, int indicePedido, int idPedidoOriginal, int idPedidoEliminar){
         
-        if (idPedido ==  idEliminar){
+        if (idPedidoOriginal ==  idPedidoEliminar){
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
-            if (verificar){ // true: se quito con exito
-                // Si la ruta queda vacia se elimina
-                
-                if(this.cadena.get(indiceRuta).getListaPedido().isEmpty())
-                    this.cadena.remove(indiceRuta);
-                return 1; // 1: exito
-            }
+            if (verificar) return 1; // 1: se quito con exito
             else return -1; // -1: es una aberracion
         }
         else return 0; // 0: no paso nada
@@ -348,7 +346,7 @@ public class Cromosoma {
             }
         }
         // q es cada parametro para calcular costo
-        costo = ((difTiempoTotal * difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
+        costo = ((  difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
         cadena = listaRutas;
     }
@@ -356,10 +354,12 @@ public class Cromosoma {
     public void imprimir() {
         System.out.println("--------------------------------------------------");
         System.out.println("Costo: " + costo + " Cantidad: " + cadena.size());
+        
         for (int i= 0; i< cadena.size(); i++){
             System.out.print("Nro Ruta: " + i);
             cadena.get(i).imprimir();
         }
+        
     }
     
     public void mutar() {
@@ -374,7 +374,7 @@ public class Cromosoma {
             Ruta r1 = cadena.get(n1);
             Ruta r2 = cadena.get(n2);
             this.agregarRuta(r1);
-            this.agregarRuta(r2);
+            //this.agregarRuta(r2);
             //this.agregarRuta(e1);
             //this.asignarPedidos(e2);
         }
