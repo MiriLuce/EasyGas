@@ -53,10 +53,12 @@ public class PedidoControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Pedido p = (Pedido) i.next();
-                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
-                p.setCliente(c);
-                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
-                p.getCliente().setNodo(n);
+//                Cliente c = ClienteControlador.BuscaClienteId(p.getCliente().getIdCliente());
+                Hibernate.initialize(p.getCliente());
+//                p.setCliente(c);
+//                Nodo n = NodoControlador.BuscaNodoId(p.getCliente().getNodo().getIdNodo());
+                Hibernate.initialize(p.getCliente().getNodo());
+//                p.getCliente().setNodo(n);
                 lista.add(p);
             }
             
