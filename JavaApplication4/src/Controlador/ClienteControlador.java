@@ -41,6 +41,8 @@ public class ClienteControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Cliente c = (Cliente) i.next();
+               // Integer ix = c.getNodo().getIdNodo();
+               // Nodo n = NodoControlador.BuscaNodoId(ix);
                 Hibernate.initialize(c.getNodo());
                 lista.add(c);
             }
@@ -82,7 +84,8 @@ public class ClienteControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Cliente c = (Cliente) i.next();
-                Hibernate.initialize(c.getNodo());
+                Integer ix = c.getNodo().getIdNodo();
+                Nodo n = NodoControlador.BuscaNodoId(ix);
                 lista.add(c);
             }
 
@@ -123,7 +126,8 @@ public class ClienteControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Cliente c = (Cliente) i.next();
-                Hibernate.initialize(c.getNodo());
+                Integer ix = c.getNodo().getIdNodo();
+                Nodo n = NodoControlador.BuscaNodoId(ix);
                 lista.add(c);
             }
 

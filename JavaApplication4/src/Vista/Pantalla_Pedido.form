@@ -97,7 +97,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jPanel38" alignment="1" pref="455" max="32767" attributes="0"/>
+                          <Component id="jPanel38" alignment="1" pref="459" max="32767" attributes="0"/>
                           <Component id="jPanel39" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="label17" max="-2" attributes="0"/>
@@ -156,7 +156,7 @@
             <Component class="java.awt.Label" name="label17">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Default Cursor"/>
+                  <Color id="Cursor Por defecto"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="24" style="1"/>
@@ -502,14 +502,14 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel41" pref="382" max="32767" attributes="0"/>
+                              <Component id="jPanel41" pref="386" max="32767" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jPanel44" min="-2" pref="344" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel42" pref="756" max="32767" attributes="0"/>
+                              <Component id="jPanel42" pref="760" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -550,7 +550,7 @@
             <Component class="java.awt.Label" name="label18">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Default Cursor"/>
+                  <Color id="Cursor Por defecto"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="24" style="1"/>
@@ -589,7 +589,7 @@
                               <Component id="jLabel91" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel93" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="40" max="32767" attributes="0"/>
+                          <EmptySpace pref="63" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="bPedNombText" alignment="1" min="-2" pref="200" max="-2" attributes="0"/>
                               <Component id="bPedTipoDocComboBox" alignment="1" min="-2" pref="200" max="-2" attributes="0"/>
@@ -617,7 +617,7 @@
                               <Component id="bPedNroDocText" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel93" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="33" max="32767" attributes="0"/>
+                          <EmptySpace pref="41" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -706,7 +706,7 @@
                               <Component id="jLabel94" min="-2" max="-2" attributes="0"/>
                               <Component id="bPedDesdeFecha" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="19" max="32767" attributes="0"/>
+                          <EmptySpace pref="23" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -834,7 +834,7 @@
                               <Component id="jLabel98" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel100" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="24" max="32767" attributes="0"/>
+                          <EmptySpace pref="40" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="bPedEstadoComboBox" pref="180" max="32767" attributes="0"/>
                               <Component id="bPedPlazoComboBox" alignment="0" pref="180" max="32767" attributes="0"/>
@@ -931,7 +931,7 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Recursos/img_cancelar.png"/>
+                  <Image iconType="3" name="/Recursos/img_borrar.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Limpiar"/>
               </Properties>
