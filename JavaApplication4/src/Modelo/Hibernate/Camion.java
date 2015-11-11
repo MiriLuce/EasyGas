@@ -85,21 +85,21 @@ public class Camion  implements java.io.Serializable {
         return this.mantenimientos;
     }
     
-    public void setMantenimientos(ArrayList mantenimientos) {
+    public void setMantenimientos(List<Mantenimiento> mantenimientos) {
         this.mantenimientos = mantenimientos;
     }
     public List getRutas() {
         return this.rutas;
     }
     
-    public void setRutas(ArrayList rutas) {
+    public void setRutas(List<Ruta> rutas) {
         this.rutas = rutas;
     }
     public List getDisponibilidads() {
         return this.disponibilidads;
     }
     
-    public void setDisponibilidads(ArrayList disponibilidads) {
+    public void setDisponibilidads(List<Disponibilidad> disponibilidads) {
         this.disponibilidads = disponibilidads;
     }
 

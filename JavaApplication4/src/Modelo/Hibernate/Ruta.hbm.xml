@@ -38,16 +38,18 @@
         <property name="diffTiempo" type="int">
             <column name="diffTiempo" not-null="true" />
         </property>
-        <set name="aristas" table="ARISTA" inverse="true" lazy="true" fetch="select">
+        <list name="aristas" table="ARISTA">
             <key>
                 <column name="idRuta" not-null="true" />
             </key>
-            <one-to-many class="Modelo.Hibernate.Arista" />
-        </set>
+             <index column="type"></index>  
+            <element column="arista" type="Modelo.Hibernate.Arista" />
+        </list>
         <set name="accidentes" table="ACCIDENTE" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="idRuta" />
             </key>
+            
             <one-to-many class="Modelo.Hibernate.Accidente" />
         </set>
     </class>

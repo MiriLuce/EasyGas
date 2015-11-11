@@ -20,23 +20,30 @@
         <property name="estado" type="string">
             <column name="Estado" length="20" not-null="true" />
         </property>
-        <set name="mantenimientos" table="MANTENIMIENTO" inverse="true" lazy="true" fetch="select">
+ 
+
+        <list name="mantenimientos" table="MANTENIMIENTO" >
             <key>
                 <column name="idCamion" not-null="true" />
             </key>
-            <one-to-many class="Modelo.Hibernate.Mantenimiento" />
-        </set>
-        <set name="rutas" table="RUTA" inverse="true" lazy="true" fetch="select">
+             <index column="type"></index>  
+            <element column="mantenimiento" type="Modelo.Hibernate.Mantenimiento" />
+        </list>
+        
+        <list name="rutas" table="RUTA" >
             <key>
                 <column name="idCamion" not-null="true" />
             </key>
-            <one-to-many class="Modelo.Hibernate.Ruta" />
-        </set>
-        <set name="disponibilidads" table="DISPONIBILIDAD" inverse="true" lazy="true" fetch="select">
+            <index column="type"></index> 
+            <element column="ruta"  type="Modelo.Hibernate.Ruta" />
+        </list>
+        
+        <list name="disponibilidads" table="DISPONIBILIDAD">
             <key>
                 <column name="idCamion" not-null="true" />
             </key>
-            <one-to-many class="Modelo.Hibernate.Disponibilidad" />
-        </set>
+            <index column="type"></index> 
+            <element column="disponibilidad"  type="Modelo.Hibernate.Disponibilidad" />
+        </list>
     </class>
 </hibernate-mapping>
