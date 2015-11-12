@@ -352,8 +352,9 @@ public class Cromosoma {
     }
     
     public void imprimir() {
+        //double tmpCosto = Math.R(costo, 2);
         System.out.println("--------------------------------------------------");
-        System.out.println("Costo: " + costo + " Cantidad: " + cadena.size());
+        System.out.println("Costo: " +  costo + " Cantidad: " + cadena.size());
         
         for (int i= 0; i< cadena.size(); i++){
             System.out.print("Nro Ruta: " + i);
