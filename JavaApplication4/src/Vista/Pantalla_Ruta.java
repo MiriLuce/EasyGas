@@ -620,10 +620,10 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 String fecha = formato.format(new Date());
                 //System.out.println(fecha);
                 // cambio el parametro por fechas y se acabo,  yupii
-                params.put("placaEleg   ida",txtPlaca.getText() );
+                params.put("idRuta",this.txtCodigo.getText() );
                 String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
-                params.put("reportTitle", "Lista de camiones"); params.put("author", nombre ); params.put("startDate", fecha);
-                
+                params.put("reportTitle", "Itinerario de la Ruta N°" + txtCodigo.getText() ); params.put("author", nombre ); params.put("startDate", fecha);
+                params.put("reportSubTitle", "Camión: " + this.txtPlaca.getText() + "- Conductor: " + this.txtConductor.getText() );
                 JasperReport jasperReport =
                     JasperCompileManager.compileReport(reportSource);
 

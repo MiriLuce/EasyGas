@@ -7,7 +7,7 @@
 	<parameter name="reportTitle" class="java.lang.String"/>
 	<parameter name="author" class="java.lang.String"/>
 	<parameter name="startDate" class="java.lang.String"/>
-        <parameter name="NombreCliente" class="java.lang.String"/>
+	<parameter name="NombreCliente" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP Volumen FROM PEDIDO INNER JOIN CLIENTE ON CLIENTE.idCliente=PEDIDO.idCliente WHERE CLIENTE.NroDocumento = $P{numeroDocumento}]]>
 	</queryString>
@@ -28,7 +28,7 @@
 				<textFieldExpression><![CDATA["Generado por: " + $P{author}                          + ", el " + $P{startDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="22" y="37" width="446" height="26"/>
+				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="36" y="39" width="446" height="26"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
@@ -36,45 +36,75 @@
 			</textField>
 			<image>
 				<reportElement uuid="8aa2fdff-ca39-4a62-8ded-eea4465f0c4d" x="472" y="0" width="83" height="102"/>
-				<imageExpression><![CDATA["C:\\Users\\Mariella\\Documents\\NetBeansProjects\\EasyGasProyecto\\AlgoritmoGenetico\\NuevoClone\\EasyGas\\JavaApplication4\\src\\Recursos\\logo_proyecto.png"]]></imageExpression>
+				<imageExpression><![CDATA["logo_proyecto.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<rectangle>
-				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="96" y="0" width="150" height="25" forecolor="#66CC00"/>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="362" y="0" width="119" height="25" forecolor="#66CC00"/>
 			</rectangle>
 			<rectangle>
-				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="0" y="0" width="96" height="25" forecolor="#66CC00"/>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="243" y="0" width="119" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="172" y="0" width="71" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="81" y="0" width="91" height="25" forecolor="#66CC00"/>
 			</rectangle>
 			<staticText>
-				<reportElement uuid="eba50870-fe85-4af4-9908-ca6e06e972e1" x="5" y="5" width="91" height="15"/>
+				<reportElement uuid="eba50870-fe85-4af4-9908-ca6e06e972e1" x="81" y="5" width="91" height="15"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[idPedido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="96" y="5" width="150" height="15"/>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="172" y="5" width="71" height="15"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Volumen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="243" y="5" width="119" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Solicitada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="363" y="5" width="119" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Entrega]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="130" splitType="Stretch">
 			<textField>
-				<reportElement uuid="90434cd4-3f96-4477-81e1-6bbf38457882" x="5" y="0" width="91" height="15"/>
+				<reportElement uuid="90434cd4-3f96-4477-81e1-6bbf38457882" x="81" y="0" width="91" height="15"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{idPedido}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="96" y="0" width="150" height="15"/>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="172" y="0" width="71" height="15"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{Volumen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="243" y="0" width="119" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FechaSolicitada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="362" y="0" width="119" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FechaEntrega}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

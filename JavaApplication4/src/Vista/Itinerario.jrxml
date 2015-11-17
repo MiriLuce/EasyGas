@@ -3,39 +3,87 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="placaElegida" class="java.lang.String"/>
+	<parameter name="idRuta" class="java.lang.String"/>
 	<parameter name="reportTitle" class="java.lang.String"/>
+	<parameter name="reportSubTitle" class="java.lang.String"/>
 	<parameter name="author" class="java.lang.String"/>
 	<parameter name="startDate" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT idCamion ,Placa FROM CAMION WHERE Placa = $P{placaElegida}]]>
+		<![CDATA[SELECT ARISTA.HoraInicio horaInicio, ARISTA.HoraFin horaFin, 
+CASE WHEN ORIGEN.idNodo = ARISTA.idOrigen
+AND ORIGEN.coordX =100
+AND ORIGEN.coordY =100
+THEN  'Central'
+ELSE CONCAT(  '(', ORIGEN.coordX,  ',', ORIGEN.coordY,  ')' ) 
+END direccionOrigen, 
+CASE WHEN DESTINO.idNodo = ARISTA.idDestino
+AND DESTINO.coordX =100
+AND DESTINO.coordY =100
+THEN  'Central'
+ELSE CONCAT(  '(', DESTINO.coordX,  ',', DESTINO.coordY,  ')' ) 
+END direccionDestino,
+CASE WHEN CLIENTE.idCliente is NULL THEN '' ELSE CLIENTE.Nombres END cliente,
+CASE WHEN PEDIDO.idPedido is NULL THEN '' ELSE PEDIDO.cantGLP END cantGLP
+FROM ARISTA
+INNER JOIN RUTA ON RUTA.idRuta = ARISTA.idRuta
+INNER JOIN NODO ORIGEN ON ORIGEN.idNodo = ARISTA.idOrigen
+LEFT JOIN PEDIDO ON ARISTA.idPedido = PEDIDO.idPedido
+AND IFNULL( ARISTA.idPedido,  '' ) = IFNULL( PEDIDO.idPedido,  '' ) 
+INNER JOIN NODO DESTINO ON DESTINO.idNodo = ARISTA.idDestino
+LEFT JOIN CLIENTE ON CLIENTE.idCliente = PEDIDO.idCliente
+AND IFNULL( PEDIDO.idCliente,  '' ) = IFNULL( CLIENTE.idCliente,  '' ) 
+WHERE RUTA.idRuta= $P{idRuta}
+ORDER BY 1]]>
 	</queryString>
-	<field name="idCamion" class="java.lang.Integer"/>
-	<field name="Placa" class="java.lang.String"/>
+	<field name="horaInicio" class="java.lang.String"/>
+	<field name="horaFin" class="java.lang.String"/>
+	<field name="direccionOrigen" class="java.lang.String"/>
+	<field name="direccionDestino" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="cantGLP" class="java.lang.String"/>
 	<title>
-		<band height="107" splitType="Stretch">
+		<band height="147" splitType="Stretch">
 			<textField>
-				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="0" y="27" width="500" height="40"/>
+				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="0" y="10" width="500" height="40"/>
 				<textElement textAlignment="Center">
 					<font size="24" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{reportTitle}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8502bfe2-cd21-4185-bfa3-6e4b7e05a20b" x="0" y="77" width="500" height="20"/>
+				<reportElement uuid="8502bfe2-cd21-4185-bfa3-6e4b7e05a20b" x="0" y="87" width="500" height="20"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA["Generado por: " + $P{author}                          + ", el " + $P{startDate}]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement uuid="68bdda73-43e4-4a98-a6ad-c528ca259a12" x="468" y="0" width="87" height="97"/>
-				<imageExpression><![CDATA["C:\\Users\\Mariella\\Documents\\NetBeansProjects\\EasyGasProyecto\\AlgoritmoGenetico\\NuevoClone\\EasyGas\\JavaApplication4\\src\\Recursos\\logo_proyecto.png"]]></imageExpression>
+				<imageExpression><![CDATA["logo_proyecto.png"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="24" y="50" width="444" height="25"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportSubTitle}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="30" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<rectangle>
-				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="96" y="0" width="150" height="25" forecolor="#66CC00"/>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="484" y="0" width="71" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="392" y="0" width="92" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="288" y="0" width="104" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="200" y="0" width="88" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="96" y="0" width="104" height="25" forecolor="#66CC00"/>
 			</rectangle>
 			<rectangle>
 				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="0" y="0" width="96" height="25" forecolor="#66CC00"/>
@@ -45,28 +93,76 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[idCamion]]></text>
+				<text><![CDATA[Hora Inicio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="96" y="5" width="150" height="15"/>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="96" y="5" width="104" height="15"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Placa]]></text>
+				<text><![CDATA[Hora Fin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="200" y="5" width="88" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección Origen]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="288" y="5" width="104" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección Destino]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="392" y="5" width="92" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="484" y="5" width="71" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GLP]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="130" splitType="Stretch">
+		<band height="30" >
 			<textField>
 				<reportElement uuid="90434cd4-3f96-4477-81e1-6bbf38457882" x="5" y="0" width="91" height="15"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{idCamion}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{horaInicio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="96" y="0" width="150" height="15"/>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="96" y="0" width="104" height="15"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{Placa}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{horaFin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="200" y="0" width="88" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{direccionOrigen}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="288" y="0" width="104" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{direccionDestino}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="392" y="0" width="92" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="484" y="0" width="71" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantGLP}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -8,7 +8,7 @@
 	<parameter name="author" class="java.lang.String"/>
 	<parameter name="startDate" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT idCamion ,Placa FROM CAMION WHERE Placa = $P{placaElegida}]]>
+		<![CDATA[SELECT idCamion ,Placa FROM CAMION]]>
 	</queryString>
 	<field name="idCamion" class="java.lang.Integer"/>
 	<field name="Placa" class="java.lang.String"/>
