@@ -36,7 +36,9 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Ruta ventanaRuta=null;
     private Pantalla_Perfil ventanaPerfil=null;
     private Pantalla_Cliente ventanaCliente=null;
+
     private Pantalla_PedidosPorCliente ventanaPedidosPorCliente=null;
+    private Pantalla_ClienteCarga ventanaClienteCarga = null;
 
     public Principal() {
         
@@ -76,6 +78,7 @@ public class Principal extends javax.swing.JFrame {
         mantMantenimiento = new javax.swing.JMenuItem();
         menuReparto = new javax.swing.JMenu();
         mantCliente = new javax.swing.JMenuItem();
+        mantClienteCargaMasiva = new javax.swing.JMenuItem();
         mantPedido = new javax.swing.JMenuItem();
         mantAccidente = new javax.swing.JMenuItem();
         mantRuta = new javax.swing.JMenuItem();
@@ -215,6 +218,14 @@ public class Principal extends javax.swing.JFrame {
         });
         menuReparto.add(mantCliente);
 
+        mantClienteCargaMasiva.setText("Cliente Carga");
+        mantClienteCargaMasiva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mantClienteCargaMasivaActionPerformed(evt);
+            }
+        });
+        menuReparto.add(mantClienteCargaMasiva);
+
         mantPedido.setText("Pedido");
         mantPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,6 +313,8 @@ public class Principal extends javax.swing.JFrame {
         ventanaPerfil=null;
         ventanaCliente=null;
          ventanaPedidosPorCliente=null;
+        ventanaClienteCarga=null;
+
     }
 
     private void mantTipoCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantTipoCamionActionPerformed
@@ -515,6 +528,7 @@ public class Principal extends javax.swing.JFrame {
         ventanaCliente.setVisible(true);
     }//GEN-LAST:event_mantClienteActionPerformed
 
+
     private void mantPedidosPorClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantPedidosPorClienteActionPerformed
         // TODO add your handling code here:
                 ActualizaVentanas();
@@ -532,6 +546,23 @@ public class Principal extends javax.swing.JFrame {
         ventanaPedidosPorCliente.setVisible(true);
     }//GEN-LAST:event_mantPedidosPorClienteActionPerformed
 
+    private void mantClienteCargaMasivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantClienteCargaMasivaActionPerformed
+        // TODO add your handling code here:
+        ActualizaVentanas();
+        
+        if (ventanaClienteCarga == null) {
+            ventanaClienteCarga = new Pantalla_ClienteCarga();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaClienteCarga);
+            try {
+                ventanaClienteCarga.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaClienteCarga.setVisible(true);
+    }//GEN-LAST:event_mantClienteCargaMasivaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JLabel jLabel1;
@@ -541,6 +572,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mantCamion;
     private javax.swing.JMenuItem mantCamionCargaMasiva;
     private javax.swing.JMenuItem mantCliente;
+    private javax.swing.JMenuItem mantClienteCargaMasiva;
     private javax.swing.JMenuItem mantEmpleado;
     private javax.swing.JMenuItem mantMantenimiento;
     private javax.swing.JMenuItem mantPedido;
