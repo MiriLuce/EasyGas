@@ -33,7 +33,7 @@
             <column name="Estado" length="20" not-null="true" />
         </property>
         <many-to-one name="pedido" class="Modelo.Hibernate.Pedido" fetch="select">
-            <column name="idPedido" />
+            <column name="idPedido"  not-null="true"/>
         </many-to-one>
     </class>
 </hibernate-mapping>
