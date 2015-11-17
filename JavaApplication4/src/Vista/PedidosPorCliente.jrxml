@@ -9,10 +9,12 @@
 	<parameter name="startDate" class="java.lang.String"/>
 	<parameter name="NombreCliente" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP Volumen FROM PEDIDO INNER JOIN CLIENTE ON CLIENTE.idCliente=PEDIDO.idCliente WHERE CLIENTE.NroDocumento = $P{numeroDocumento}]]>
+		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP,HoraSolicitada FechaSolicitada,FechaEntrega Volumen FROM PEDIDO INNER JOIN CLIENTE ON CLIENTE.idCliente=PEDIDO.idCliente WHERE CLIENTE.NroDocumento = $P{numeroDocumento}]]>
 	</queryString>
 	<field name="idPedido" class="java.lang.Integer"/>
 	<field name="Volumen" class="java.lang.Float"/>
+	<field name="FechaSolicitada" class="java.lang.String"/>
+	<field name="FechaEntrega" class="java.lang.String"/>
 	<title>
 		<band height="107" splitType="Stretch">
 			<textField>

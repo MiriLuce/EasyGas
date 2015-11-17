@@ -14,7 +14,7 @@
         <property name="fechaRegistro" type="date">
             <column name="FechaRegistro" length="10" not-null="true" />
         </property>
-        <property name="fechaEntrega" type="date">
+        <property name="fechaEntrega" type="timestamp">
             <column name="FechaEntrega" length="10" />
         </property>
         <property name="horaSolicitada" type="timestamp">
