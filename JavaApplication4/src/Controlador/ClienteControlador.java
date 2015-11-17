@@ -7,8 +7,15 @@ package Controlador;
 
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.*;
+import Controlador.NodoControlador;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.hibernate.*;
@@ -84,8 +91,9 @@ public class ClienteControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Cliente c = (Cliente) i.next();
-                Integer ix = c.getNodo().getIdNodo();
-                Nodo n = NodoControlador.BuscaNodoId(ix);
+                /*Integer ix = c.getNodo().getIdNodo();
+                Nodo n = NodoControlador.BuscaNodoId(ix);*/
+                Hibernate.initialize(c.getNodo());
                 lista.add(c);
             }
 
@@ -126,8 +134,9 @@ public class ClienteControlador {
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
                 Cliente c = (Cliente) i.next();
-                Integer ix = c.getNodo().getIdNodo();
-                Nodo n = NodoControlador.BuscaNodoId(ix);
+                /*Integer ix = c.getNodo().getIdNodo();
+                Nodo n = NodoControlador.BuscaNodoId(ix);*/
+                Hibernate.initialize(c.getNodo());
                 lista.add(c);
             }
 
@@ -325,6 +334,90 @@ public class ClienteControlador {
             }
         }
         return lista;
+    }
+    
+    private int ValidarNumeroDoc(String nroDoc, String tipoDoc){
+        int verifica = 1;
+        int longitud = nroDoc.length();
+        if(tipoDoc.compareTo("DNI")==0 && longitud!=8){
+            verifica=0;            
+        }else if(tipoDoc.compareTo("RUC")==0 && longitud!=11){
+            verifica=0;
+        }else{
+            verifica = 1;
+        }
+        return verifica;
+    }
+    
+    private int ValidarNodo(int posX, int posY){
+        int verifica =1;
+        if(posX>300 && posY>200){
+            verifica = 0;
+        }
+        return verifica;
+    }
+    
+    public void CargaMasiva(String nombreArchivo, int[] datos, List<Cliente> listaCliente) throws FileNotFoundException{       
+       
+        int verifica = 0;
+        datos[0]= 0 ;
+        datos[1] = 0;
+        String cadena = null;
+        
+        FileReader f = new FileReader(nombreArchivo);
+        BufferedReader b = new BufferedReader(f);
+        try {            
+            while((cadena = b.readLine())!=null) {
+                 
+                verifica = 0;
+                String[] cadenaArr = cadena.split(" ");
+                ArrayList<Cliente> arrCli = BuscaClienteNroDoc(cadenaArr[0]);                
+                Cliente c = new Cliente();
+                
+                if (arrCli.size()==0){
+                    int verificaPlaca = ValidarNumeroDoc(cadenaArr[0],cadenaArr[1]);
+                    if (verificaPlaca==1){
+                        int posX = Integer.parseInt(cadenaArr[2]);
+                        int posY = Integer.parseInt(cadenaArr[3]);
+                        int verificaNodo = ValidarNodo(posX,posY);
+                        if (verificaNodo==1){
+                            Nodo nod = new Nodo();
+                            nod.setCoordX(posX);
+                            nod.setCoordY(posY);
+                            nod.setHabilitado("SI");
+                            
+                            NodoControlador nodControlador = new NodoControlador();
+                            nodControlador.GuardarNodo(nod);
+                            
+                            c.setNodo(nod);
+                            c.setFechaRegistro(new Date());
+                            c.setNroDocumento(cadenaArr[0]);
+                            c.setTipoDocumento(cadenaArr[1]);
+                            String nombre = "";
+                            for(int i = 4; i<cadenaArr.length;i++){
+                                if(i!=4){
+                                    nombre += " ";
+                                }
+                                nombre += cadenaArr[i];
+                            }
+                            c.setNombres(nombre);
+                            c.setEstado("Registrado");
+                            GuardarCliente(c);
+                            verifica = 1;
+                        }
+                    }  
+                }
+                if (verifica == 1){ 
+                    datos[1]++;
+                    listaCliente.add(c);
+                }
+                else datos[0]++;
+            }
+            b.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
+            Logger.getLogger(CamionControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }                
     }
     
 }
