@@ -36,6 +36,7 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Ruta ventanaRuta=null;
     private Pantalla_Perfil ventanaPerfil=null;
     private Pantalla_Cliente ventanaCliente=null;
+    private Pantalla_PedidosPorCliente ventanaPedidosPorCliente=null;
 
     public Principal() {
         
@@ -80,6 +81,8 @@ public class Principal extends javax.swing.JFrame {
         mantRuta = new javax.swing.JMenuItem();
         mantSimulacion = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
+        menuReporte = new javax.swing.JMenu();
+        mantPedidosPorCliente = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setFocusCycleRoot(false);
@@ -249,6 +252,18 @@ public class Principal extends javax.swing.JFrame {
         menuAyuda.setText("Ayuda");
         jMenuBar.add(menuAyuda);
 
+        menuReporte.setText("Reporte");
+
+        mantPedidosPorCliente.setText("Pedidos Por Cliente");
+        mantPedidosPorCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mantPedidosPorClienteActionPerformed(evt);
+            }
+        });
+        menuReporte.add(mantPedidosPorCliente);
+
+        jMenuBar.add(menuReporte);
+
         setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -286,6 +301,7 @@ public class Principal extends javax.swing.JFrame {
         ventanaRuta=null;
         ventanaPerfil=null;
         ventanaCliente=null;
+         ventanaPedidosPorCliente=null;
     }
 
     private void mantTipoCamionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantTipoCamionActionPerformed
@@ -499,6 +515,23 @@ public class Principal extends javax.swing.JFrame {
         ventanaCliente.setVisible(true);
     }//GEN-LAST:event_mantClienteActionPerformed
 
+    private void mantPedidosPorClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantPedidosPorClienteActionPerformed
+        // TODO add your handling code here:
+                ActualizaVentanas();
+        
+        if (ventanaPedidosPorCliente == null) {
+            ventanaPedidosPorCliente = new Pantalla_PedidosPorCliente();
+            this.jPanel1.removeAll();
+            this.jPanel1.add(ventanaPedidosPorCliente);
+            try {
+                ventanaPedidosPorCliente.setMaximum(rootPaneCheckingEnabled);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        ventanaPedidosPorCliente.setVisible(true);
+    }//GEN-LAST:event_mantPedidosPorClienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JLabel jLabel1;
@@ -511,6 +544,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mantEmpleado;
     private javax.swing.JMenuItem mantMantenimiento;
     private javax.swing.JMenuItem mantPedido;
+    private javax.swing.JMenuItem mantPedidosPorCliente;
     private javax.swing.JMenuItem mantRuta;
     private javax.swing.JMenuItem mantSimulacion;
     private javax.swing.JMenuItem mantTipoCamion;
@@ -519,6 +553,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu menuLogistica;
     private javax.swing.JMenu menuPlanilla;
     private javax.swing.JMenu menuReparto;
+    private javax.swing.JMenu menuReporte;
     public javax.swing.JLabel nombreUsuario;
     private javax.swing.JPanel pnlSesion;
     // End of variables declaration//GEN-END:variables

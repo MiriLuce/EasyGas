@@ -7,13 +7,27 @@ package Vista;
 
 import Controlador.RutaControlador;
 import Controlador.TipoCamionControlador;
+import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Empleado;
 import Modelo.Hibernate.Ruta;
 import Modelo.Hibernate.TipoCamion;
 import java.awt.Cursor;
+import java.io.File;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
 
 /**
  *
@@ -239,8 +253,13 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         );
 
         btnVisualizar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnVisualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_buscar.png"))); // NOI18N
+        btnVisualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_generar.png"))); // NOI18N
         btnVisualizar.setText("Visualizar");
+        btnVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVisualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel56Layout = new javax.swing.GroupLayout(jPanel56);
         jPanel56.setLayout(jPanel56Layout);
@@ -579,6 +598,52 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         cmbTipoCamion.setSelectedIndex(0);
         txtPlacaBuscar.setText("");
     }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
+        // TODO add your handling code here:
+         String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
+     
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+       
+        try
+            {   
+                if (!EasyGas.sesion.isOpen()) {
+                    EasyGas.sesion = EasyGas.sesFact.openSession();
+                }
+                Connection conn = null;
+                SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
+                    ConnectionProvider cp = sfi.getConnectionProvider();
+                    conn = cp.getConnection();
+                SimpleDateFormat formato = 
+                    new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es","ES"));
+                String fecha = formato.format(new Date());
+                //System.out.println(fecha);
+                // cambio el parametro por fechas y se acabo,  yupii
+                params.put("placaEleg   ida",txtPlaca.getText() );
+                String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
+                params.put("reportTitle", "Lista de camiones"); params.put("author", nombre ); params.put("startDate", fecha);
+                
+                JasperReport jasperReport =
+                    JasperCompileManager.compileReport(reportSource);
+
+                JasperPrint jasperPrint =
+                    JasperFillManager.fillReport(
+                        jasperReport, params,conn);
+ 
+                JasperViewer.viewReport(jasperPrint);
+            }
+
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+            finally{
+                if (EasyGas.sesion.isOpen()){
+                    EasyGas.sesion.close();
+                }
+            }
+    }//GEN-LAST:event_btnVisualizarActionPerformed
 
     
          

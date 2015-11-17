@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HelloReportWorld" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="003a4571-3fcb-47b8-909f-f0f05176d4c6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="placaElegida" class="java.lang.String"/>
+	<parameter name="reportTitle" class="java.lang.String"/>
+	<parameter name="author" class="java.lang.String"/>
+	<parameter name="startDate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT idCamion ,Placa FROM CAMION WHERE Placa = $P{placaElegida}]]>
+	</queryString>
+	<field name="idCamion" class="java.lang.Integer"/>
+	<field name="Placa" class="java.lang.String"/>
+	<title>
+		<band height="107" splitType="Stretch">
+			<textField>
+				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="0" y="27" width="500" height="40"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{reportTitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8502bfe2-cd21-4185-bfa3-6e4b7e05a20b" x="0" y="77" width="500" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["Generado por: " + $P{author}                          + ", el " + $P{startDate}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement uuid="68bdda73-43e4-4a98-a6ad-c528ca259a12" x="468" y="0" width="87" height="97"/>
+				<imageExpression><![CDATA["C:\\Users\\Mariella\\Documents\\NetBeansProjects\\EasyGasProyecto\\AlgoritmoGenetico\\NuevoClone\\EasyGas\\JavaApplication4\\src\\Recursos\\logo_proyecto.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="96" y="0" width="150" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ddf4f8e8-210f-4c47-9b50-f34e8b7fafba" x="0" y="0" width="96" height="25" forecolor="#66CC00"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="eba50870-fe85-4af4-9908-ca6e06e972e1" x="5" y="5" width="91" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[idCamion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7268af39-ae32-489c-9e99-5f197d6fcfaf" x="96" y="5" width="150" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Placa]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="130" splitType="Stretch">
+			<textField>
+				<reportElement uuid="90434cd4-3f96-4477-81e1-6bbf38457882" x="5" y="0" width="91" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{idCamion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7d79d9f-ba41-4f33-929f-0542a3291678" x="96" y="0" width="150" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Placa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

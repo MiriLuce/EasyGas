@@ -119,6 +119,21 @@
             <Property name="text" type="java.lang.String" value="Ayuda"/>
           </Properties>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="menuReporte">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Reporte"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="mantPedidosPorCliente">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Pedidos Por Cliente"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mantPedidosPorClienteActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>
