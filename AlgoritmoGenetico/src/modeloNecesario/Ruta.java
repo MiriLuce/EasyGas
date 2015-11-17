@@ -155,10 +155,21 @@ public class Ruta {
             } 
             // Hay barreras en el camino
             else {
-                // da la distancia que se tiene q mover en la coordenada x
-                // para pasar la barrera
-                //int menorBloque = calculaMenorY(xi, yi, yf); 
-                //return (menorBloque * 2) + dy;
+                int menorBloque = mapa.calculaMenorY(xi, yi, yf);
+                modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(xi + menorBloque, yi);
+                modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(xf + menorBloque, yf);
+                
+                modeloCompleto.Nodo nodoIni = yi<yf? nodoA: nodoB;
+                modeloCompleto.Nodo nodoFin = yi<yf? nodoB: nodoA;
+                
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(Math.abs(menorBloque), inicio, nodoIni);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, nodoIni, nodoFin);
+                modeloCompleto.Arista arista3 = new modeloCompleto.Arista(Math.abs(menorBloque), nodoFin, fin);
+                
+                camino.add(arista1);
+                camino.add(arista2);
+                camino.add(arista3);
+                
                 return camino;
             }
         }
@@ -173,10 +184,21 @@ public class Ruta {
             } 
             // Hay barreras en el camino
             else {
-                // da la distancia que se tiene q mover en la coordenada x
-                // para pasar la barrera
-                //int menorBloque = calculaMenorX(yi, xi, xf);
-                //return (menorBloque * 2) + dx;
+                int menorBloque = mapa.calculaMenorX(yi, xi, xf);
+                modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(xi, yi + menorBloque);
+                modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(xf, yf + menorBloque);
+                
+                modeloCompleto.Nodo nodoIni = xi<xf? nodoA: nodoB;
+                modeloCompleto.Nodo nodoFin = xi<xf? nodoB: nodoA;
+                
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(Math.abs(menorBloque), inicio, nodoIni);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, nodoIni, nodoFin);
+                modeloCompleto.Arista arista3 = new modeloCompleto.Arista(Math.abs(menorBloque), nodoFin, fin);
+                
+                camino.add(arista1);
+                camino.add(arista2);
+                camino.add(arista3);
+                
                 return camino;
             }
         }
@@ -186,13 +208,16 @@ public class Ruta {
             
             // No hay barreras en el camino directo (L)
             int aux1X = xf, aux1Y = yi, aux2X = xi, aux2Y = yf;
-            
+             modeloCompleto.Nodo aux1, aux2;
+             
             boolean verficarAux1x = mapa.hayBarrerasX(yi, xi, aux1X);
             boolean verficarAux1y = mapa.hayBarrerasY(xf, yf, aux1Y);
-            if (verficarAux1x && verficarAux1y){
-                modeloCompleto.Nodo aux = new modeloCompleto.Nodo(aux1X, aux1Y);
-                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dx, inicio, aux);
-                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, aux, fin);
+            aux1 = new modeloCompleto.Nodo(aux1X, aux1Y);
+            aux2 = new modeloCompleto.Nodo(aux2X, aux2Y);
+            
+            if (!verficarAux1x && !verficarAux1y){
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dx, inicio, aux1);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, aux1, fin);
                 camino.add(arista1);
                 camino.add(arista2);
                 return camino;
@@ -200,16 +225,112 @@ public class Ruta {
             
             boolean verficarAux2x = mapa.hayBarrerasX(yf, xf, aux2X);
             boolean verficarAux2y = mapa.hayBarrerasY(xi, yi, aux2Y);
-            if (verficarAux2x && verficarAux2y){
-                modeloCompleto.Nodo aux = new modeloCompleto.Nodo(aux2X, aux2Y);
-                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dy, inicio, aux);
-                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, aux, fin);
+            if (!verficarAux2x && !verficarAux2y){
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dy, inicio, aux2);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, aux2, fin);
                 camino.add(arista1);
                 camino.add(arista2);
                 return camino;
             }
-             
+           
             // Hay barreras en el camino directo (L)
+            int auxIniX = xi < xf ? xi: xf;
+            int auxFinX = xi < xf ? xf: xi;
+            int auxIniY = yi < yf ? yi: yf;
+            int auxFinY = yi < yf ? yf: yi;
+            
+            // Para el primer camino, que solo tiene barrera en el 2do tramo
+            if(!verficarAux1x){
+                int menorBloque =  mapa.calculaMenorY(aux1.getCoordX(), aux1.getCoordY(), yf);
+                // si tiene menor recorrido
+                if(auxIniX < xf + menorBloque && xf + menorBloque < auxFinX){
+                    
+                    modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(aux1.getCoordX()+ menorBloque, yi);
+                    modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(aux1.getCoordX()+ menorBloque, yf);
+                    
+                    modeloCompleto.Arista arista1 = new modeloCompleto.Arista(
+                            Math.abs(aux1.getCoordX()+ menorBloque - auxIniX), inicio, nodoA);
+                    modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, nodoA, nodoB);
+                    modeloCompleto.Arista arista3 = new modeloCompleto.Arista(
+                            Math.abs(auxFinX- (aux1.getCoordX()+ menorBloque) ), nodoB, fin);
+                    camino.add(arista1);
+                    camino.add(arista2);
+                    camino.add(arista3);
+
+                    return camino;
+                }      
+                else;
+            }
+            
+            // Para el primer camino, que solo tiene barrera en el 1er tramo
+            if(!verficarAux1y){
+                int menorBloque =  mapa.calculaMenorX(aux1.getCoordY(), xi, aux1.getCoordX());
+                // si tiene menor recorrido
+                if(auxIniY < yi + menorBloque && yi + menorBloque < auxFinY){
+                    
+                    modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(xi, aux1.getCoordY() + menorBloque);
+                    modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(xf, aux1.getCoordY() + menorBloque);
+                    
+                    modeloCompleto.Arista arista1 = new modeloCompleto.Arista(
+                            Math.abs(aux1.getCoordY()+ menorBloque - auxIniY), inicio, nodoA);
+                    modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, nodoA, nodoB);
+                    modeloCompleto.Arista arista3 = new modeloCompleto.Arista(
+                            Math.abs(auxFinY - (aux1.getCoordY()+ menorBloque) ), nodoB, fin);
+                    
+                    camino.add(arista1);
+                    camino.add(arista2);
+                    camino.add(arista3);
+
+                    return camino;
+                }      
+                else;
+            }
+            
+            // Para el segundo camino, que solo tiene barrera en el 2do tramo
+            if(!verficarAux2y){
+                int menorBloque =  mapa.calculaMenorX(aux2.getCoordY(), aux2.getCoordX(), xf);
+                // si tiene menor recorrido
+                if(auxIniY < yf + menorBloque && yf + menorBloque < auxFinY){
+                    
+                    modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(xi, yf + menorBloque);
+                    modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(xf, yf + menorBloque);
+                    
+                    modeloCompleto.Arista arista1 = new modeloCompleto.Arista(
+                            Math.abs(aux2.getCoordY()+ menorBloque - auxIniY), inicio, nodoA);
+                    modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, nodoA, nodoB);
+                    modeloCompleto.Arista arista3 = new modeloCompleto.Arista(
+                            Math.abs(auxFinY - (aux2.getCoordY()+ menorBloque) ), nodoB, fin);
+                    
+                    camino.add(arista1);
+                    camino.add(arista2);
+                    camino.add(arista3);
+
+                    return camino;
+                }      
+                else;
+            }
+            // Para el segundo camino, que solo tiene barrera en el 1er tramo
+            if(!verficarAux2x){
+                int menorBloque =  mapa.calculaMenorY(aux2.getCoordX(), yi, aux2.getCoordY());
+                // si tiene menor recorrido
+                if(auxIniX < xi + menorBloque && xi + menorBloque < auxFinX){
+                    
+                    modeloCompleto.Nodo nodoA = new modeloCompleto.Nodo(aux2.getCoordX()+ menorBloque, yi);
+                    modeloCompleto.Nodo nodoB = new modeloCompleto.Nodo(aux2.getCoordX()+ menorBloque, yf);
+                    
+                    modeloCompleto.Arista arista1 = new modeloCompleto.Arista(
+                            Math.abs(aux2.getCoordX()+ menorBloque - auxIniX), inicio, nodoA);
+                    modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, nodoA, nodoB);
+                    modeloCompleto.Arista arista3 = new modeloCompleto.Arista(
+                            Math.abs(auxFinX - (aux2.getCoordX()+ menorBloque) ), nodoB, fin);
+                    camino.add(arista1);
+                    camino.add(arista2);
+                    camino.add(arista3);
+
+                    return camino;
+                }      
+                else;
+            }
         }
         return camino;
     }
@@ -221,12 +342,18 @@ public class Ruta {
         modeloCompleto.Ruta nuevaRuta = new modeloCompleto.Ruta();
         modeloCompleto.Nodo inicio, fin;
         
+        inicio = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
+        fin = new modeloCompleto.Nodo(listaPedido.get(0).getPosX(), listaPedido.get(0).getPosY());
+        ArrayList<modeloCompleto.Arista> tramo = buscarCamino(inicio, fin);
+        for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));   
+        
         for(int i= 0; i< cantPedido; i++){
-            if (i == 0){
+            /*if (i == 0){
                 inicio = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
                 fin = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
             }
-            else if ( i == cantPedido -1 ){
+            else */
+            if ( i == cantPedido -1 ){
                 inicio = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
                 fin = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
             }
@@ -234,7 +361,8 @@ public class Ruta {
                 inicio = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
                 fin = new modeloCompleto.Nodo(listaPedido.get(i+1).getPosX(), listaPedido.get(i+1).getPosY());
             }
-            ArrayList<modeloCompleto.Arista> tramo = buscarCamino(inicio, fin);
+            tramo.clear();
+            tramo = buscarCamino(inicio, fin);
             for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));
         }
         
@@ -338,7 +466,7 @@ public class Ruta {
             dispon.setHoraFin(llegada);
         }
         else {
-            System.out.println("no esta"); 
+            //System.out.println("no esta"); 
             //this.imprimir();
         }
     } 

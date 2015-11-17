@@ -8,6 +8,7 @@ package algoritmogenetico;
 import modeloNecesario.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,8 +33,8 @@ public class Constantes {
     public static int posCentralX = 100;
     public static int posCentralY = 100;
 
-    public static Mapa obtenMapa() throws FileNotFoundException {
-        Mapa mapa = new Mapa(200, 300);
+    public static Mapa obtenMapa() throws FileNotFoundException, IOException {
+        Mapa mapa = new Mapa(201, 301);
         return mapa;
     }
 

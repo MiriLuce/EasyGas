@@ -62,7 +62,7 @@ public class Cromosoma {
         sumatoriaTEntrega = crom.getSumatoriaTEntrega();
     }
     
-    public void guardarEnMapa(){
+    public List<modeloCompleto.Ruta> guardarEnMapa(){
         
         int cantCadena = cadena.size();
         List<modeloCompleto.Ruta> nuevaRutas = new ArrayList<modeloCompleto.Ruta>();
@@ -71,6 +71,7 @@ public class Cromosoma {
             modeloCompleto.Ruta nuevaRuta = cadena.get(i).guardarEnMapa();
             nuevaRutas.add(nuevaRuta);
         }
+        return nuevaRutas;
     }
     
     private int generaNumRandom(int min, int max) {

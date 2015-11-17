@@ -8,8 +8,10 @@ package algoritmogenetico;
 import modeloNecesario.*;
 import genetica.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,7 +22,7 @@ public class Principal {
     public static ArrayList<Camion> lstCamiones;
     public static ArrayList<Pedido> lstPedidos;
 
-    public static void main(String[] args) throws FileNotFoundException, ParseException {
+    public static void main(String[] args) throws FileNotFoundException, ParseException, IOException {
         
         Constantes.leeDataset(2);
         Mapa mapa = Constantes.obtenMapa();
@@ -29,8 +31,22 @@ public class Principal {
         genetica.Cromosoma solucion = algoritmo.empieza();
         //solucion.calculaCosto();
         
-        System.out.println("--- Mejor Cromosoma ----");
-        //solucion.imprimir();
+        System.out.println("-------- Mejor Cromosoma --------");
+        solucion.imprimir();
+        
+        System.out.println("------------- Camino ------------");
+        List<modeloCompleto.Ruta> ruta = solucion.guardarEnMapa();
+        
+        for(int i=0; i< ruta.size(); i++){
+            System.out.println("------------- Ruta N° " + i + " ------------");
+            for(int j=0; j < ruta.get(i).getAristaList().size(); j++){
+                System.out.print("Distancia: " + ruta.get(i).getAristaList().get(j).getDistancia());
+                System.out.print("  Origen: (" + ruta.get(i).getAristaList().get(j).getIdOrigen().getCoordX());
+                System.out.print(", " + ruta.get(i).getAristaList().get(j).getIdOrigen().getCoordY() + ")  ");
+                System.out.print("Destino: (" + ruta.get(i).getAristaList().get(j).getIdDestino().getCoordX());
+                System.out.println(", " + ruta.get(i).getAristaList().get(j).getIdDestino().getCoordY() + ")  ");
+            }
+        }
         /*
         for(int i=0;i<solucion.getCadena().size();i++){
             
