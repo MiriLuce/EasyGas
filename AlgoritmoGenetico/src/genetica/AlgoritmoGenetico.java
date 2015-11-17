@@ -73,13 +73,13 @@ public class AlgoritmoGenetico {
             // cerrar cromosoma con 
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
-            cromosoma.imprimir();
+            //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
+            //cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
             }
-        }
-        
+        }        
     }
     
     //me quedo con un porcentaje mejor de la poblacion

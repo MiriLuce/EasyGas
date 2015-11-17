@@ -98,7 +98,7 @@ public class Mapa {
 
     }
 
-    private boolean hayBarrerasY(int x, int yi, int yf) {
+    public boolean hayBarrerasY(int x, int yi, int yf) {
         int i;
         if (yf > yi) {
             for (i = yi + 1; i < yf; i++) {
@@ -116,7 +116,7 @@ public class Mapa {
         return false;
     }
 
-    private boolean hayBarrerasX(int y, int xi, int xf) {
+    public boolean hayBarrerasX(int y, int xi, int xf) {
         int i;
         if (xf > xi) {
             for (i = xi + 1; i < xf; i++) {

@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import modeloNecesario.*;
 
@@ -20,20 +21,22 @@ import modeloNecesario.*;
  */
 public class Cromosoma {
     
+    private ArrayList<Camion> listaCamiones;
     private ArrayList<Ruta> cadena; 
     private double costo;
     private boolean aberracion;
     
-    private int distanciaTotal; // en metros
+    private int distanciaTotal; // en km
     private int cantTiempoTotal; // en minutos
     private int difTiempoTotal; // en minutos
     
-    private double cantGLPTotal;    
-    private double cantDieselTotal;
+    private double cantGLPTotal;    // toneladas
+    private double cantDieselTotal;  // galones
     private double sumatoriaTEntrega; // preguntar a Chucky q es esto
 
     public Cromosoma(){
         cadena = new ArrayList<Ruta>();
+        listaCamiones  = new ArrayList<Camion>();
         costo = 0;
         aberracion = false;      
         distanciaTotal = 0;
@@ -60,22 +63,13 @@ public class Cromosoma {
     }
     
     public void guardarEnMapa(){
+        
         int cantCadena = cadena.size();
+        List<modeloCompleto.Ruta> nuevaRutas = new ArrayList<modeloCompleto.Ruta>();
+        
         for(int i= 0; i< cantCadena; i++){
-            ArrayList<Arista> camino = new ArrayList();
-            Ruta ruta =cadena.get(i);
-            for(int j=0; j< ruta.getListaPedido().size(); j++){
-                Arista tramo = new Arista();
-                Nodo inicio, fin;
-                if(j == 0){
-                    inicio = new Nodo(Constantes.posCentralX, Constantes.posCentralY, true);
-                    fin = new Nodo(ruta.getListaPedido().get(i).getPosX(), 
-                            ruta.getListaPedido().get(i).getPosY(), true);
-                }
-                else if(j == ruta.getListaPedido().size()-1){
-                    
-                }
-            }
+            modeloCompleto.Ruta nuevaRuta = cadena.get(i).guardarEnMapa();
+            nuevaRutas.add(nuevaRuta);
         }
     }
     
@@ -147,8 +141,12 @@ public class Cromosoma {
     
     public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
     
-        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
-        ArrayList<Camion> listaCamiones = (ArrayList<Camion>) camiones.clone();        
+        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
+        int cantCamiones = camiones.size();
+        for(int i= 0; i<cantCamiones; i++){
+            Camion c = new Camion(camiones.get(i).getTipoCamion(), camiones.get(i).getEstado());
+            listaCamiones.add(c);
+        }        
         int indicePedidoAleatorio, indiceRutaAleatoria;
         int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
         Pedido pedidoAleatorio;  
@@ -178,14 +176,15 @@ public class Cromosoma {
                     listaEscogido[indiceRutaAleatoria] = 1;
 
                     rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                    estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
                 }
             }
             if(!estaAsignado){ // Crear una nueva ruta
                 rutaAleatoria = new Ruta();
-                rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                if(estaAsignado){ // no hay disponibilidad en los camiones
                 cadena.add(rutaAleatoria);
-                cantRutas++;
+                cantRutas++;}
             }            
             
             listaPedidos.remove(indicePedidoAleatorio);
@@ -354,10 +353,18 @@ public class Cromosoma {
     public void imprimir() {
         //double tmpCosto = Math.R(costo, 2);
         System.out.println("--------------------------------------------------");
-        System.out.println("Costo: " +  costo + " Cantidad: " + cadena.size());
+        System.out.format("Consto %.3f\n", costo);
+        System.out.println("Cantidad de Rutas: " + cadena.size());
+        
+        int cantPedidos = 0;
+        for (int i= 0; i< cadena.size(); i++)
+            cantPedidos += cadena.get(i).getListaPedido().size();
+        
+        System.out.println("Cantidad de Pedidos: " + cantPedidos);
+        System.out.println();
         
         for (int i= 0; i< cadena.size(); i++){
-            System.out.print("Nro Ruta: " + i);
+            System.out.format ("Nro Ruta: %2d\n", i);
             cadena.get(i).imprimir();
         }
         

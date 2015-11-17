@@ -71,6 +71,11 @@ public class Nodo implements Serializable {
         this.coordX = coordX;
         this.coordY = coordY;
     }
+    
+    public Nodo(int coordX, int coordY) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+    }
 
     public Integer getIdNodo() {
         return idNodo;

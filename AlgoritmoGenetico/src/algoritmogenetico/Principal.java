@@ -22,7 +22,7 @@ public class Principal {
 
     public static void main(String[] args) throws FileNotFoundException, ParseException {
         
-        Constantes.leeDataset(20);
+        Constantes.leeDataset(2);
         Mapa mapa = Constantes.obtenMapa();
         
         genetica.AlgoritmoGenetico algoritmo = new genetica.AlgoritmoGenetico(lstCamiones, lstPedidos, 1, mapa);

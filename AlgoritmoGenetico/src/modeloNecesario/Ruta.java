@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -64,24 +65,153 @@ public class Ruta {
    
     public void imprimir(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        System.out.print(" GLP: " + cantGLP);
-        System.out.println(" Distancia: " + distancia + " Cantidad: " + listaPedido.size());
-        System.out.println("Salida: " + sdf.format(salida) + " Llegada: " + sdf.format(llegada));
-            
+        System.out.print("Tara: " + camion.getTipoCamion().getTara());
+        System.out.print("  CapGLP: " + camion.getTipoCamion().getCapacidadGLP());
+        System.out.println("  CapDiesel: " + camion.getTipoCamion().getCapacidadDiesel());
+        
+        System.out.print("Distancia: " + distancia + " Cantidad: " + listaPedido.size());
+        System.out.format("  CantGLP:  %.3f", cantGLP);
+        System.out.format("  CantDiesel %.3f\n", cantDiesel);
+        
+        System.out.println("Salida: " + sdf.format(salida) + "  Llegada: " + sdf.format(llegada));
+        
+        
+        int cantDispon = camion.getListaDisponibilidad().size();
+        Disponibilidad dispon = null;
+        boolean verificar = false;
+        
+        for(int i= 0; i< cantDispon; i++){
+            dispon = camion.getListaDisponibilidad().get(i);
+            if(dispon.getHoraInicio().equals(salida) && dispon.getHoraFin().equals(llegada)){
+                verificar = true;
+                break;
+            }
+        }
+        System.out.println("Disponibilidad de camion: " + verificar);
+        System.out.println("Salida: " + sdf.format(dispon.getHoraInicio()) + "  Llegada: " +
+                sdf.format(dispon.getHoraFin()));
+        System.out.println();
+        
         for (int j= 0; j< listaPedido.size(); j++){
-            System.out.print( " -> " + listaPedido.get(j).getIdPedido());
-            System.out.print(" X: " + listaPedido.get(j).getPosX());
-            System.out.print(" Y: " + listaPedido.get(j).getPosY());
-            System.out.print(" S: " + sdf.format(listaPedido.get(j).getHoraSolicitada()));
+            //System.out.print( " -> " + listaPedido.get(j).getIdPedido());
+            System.out.format ("-> Pedido N° %03d",  listaPedido.get(j).getIdPedido());
+            System.out.format("  X: %03d", listaPedido.get(j).getPosX());
+            System.out.format("  Y: %03d\n", listaPedido.get(j).getPosY());
+            System.out.print("   S: " + sdf.format(listaPedido.get(j).getHoraSolicitada()));
             System.out.print(" E: " + sdf.format(listaPedido.get(j).getHoraEntregada()));
             System.out.println();
         }
         System.out.println();
     }
     
-    private Date obtenerTiempo(int distanciaPedido, Date inicio, int accion ){
+    public ArrayList<modeloCompleto.Arista> buscarCamino(modeloCompleto.Nodo inicio, modeloCompleto.Nodo fin){
         
-        double tiempo = distanciaPedido / Constantes.velCamion; // en horas
+        ArrayList<modeloCompleto.Arista> camino = new ArrayList();
+        int xi =  inicio.getCoordX(), yi = inicio.getCoordY();
+        int xf = fin.getCoordX(), yf = fin.getCoordY();
+        int dx = Math.abs(xf - xi); //diferencia de puntos X
+        int dy = Math.abs(yf - yi); //diferencia de puntos Y
+        
+        // Caso 1: esta en la misma coordenada x
+        if (xi == xf && yi != yf) { 
+            // No hay barreras en el camino
+            if (!mapa.hayBarrerasY(xi, yi, yf)) {
+                modeloCompleto.Arista arista = new modeloCompleto.Arista(dy, inicio, fin);
+                camino.add(arista);
+                return camino;
+            } 
+            // Hay barreras en el camino
+            else {
+                // da la distancia que se tiene q mover en la coordenada x
+                // para pasar la barrera
+                //int menorBloque = calculaMenorY(xi, yi, yf); 
+                //return (menorBloque * 2) + dy;
+                return camino;
+            }
+        }
+        
+        // Caso 2: esta en la misma coordenada y
+        if (yi == yf && xi != xf) { 
+            // No hay barreras en el camino
+            if (!mapa.hayBarrerasX(yi, xi, xf)) {
+                modeloCompleto.Arista arista = new modeloCompleto.Arista(dx, inicio, fin);
+                camino.add(arista);
+                return camino;
+            } 
+            // Hay barreras en el camino
+            else {
+                // da la distancia que se tiene q mover en la coordenada x
+                // para pasar la barrera
+                //int menorBloque = calculaMenorX(yi, xi, xf);
+                //return (menorBloque * 2) + dx;
+                return camino;
+            }
+        }
+        
+        // Caso 3: nodos no alineados
+        if (xi != xf && yi != yf) { 
+            
+            // No hay barreras en el camino directo (L)
+            int aux1X = xf, aux1Y = yi, aux2X = xi, aux2Y = yf;
+            
+            boolean verficarAux1x = mapa.hayBarrerasX(yi, xi, aux1X);
+            boolean verficarAux1y = mapa.hayBarrerasY(xf, yf, aux1Y);
+            if (verficarAux1x && verficarAux1y){
+                modeloCompleto.Nodo aux = new modeloCompleto.Nodo(aux1X, aux1Y);
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dx, inicio, aux);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dy, aux, fin);
+                camino.add(arista1);
+                camino.add(arista2);
+                return camino;
+            }
+            
+            boolean verficarAux2x = mapa.hayBarrerasX(yf, xf, aux2X);
+            boolean verficarAux2y = mapa.hayBarrerasY(xi, yi, aux2Y);
+            if (verficarAux2x && verficarAux2y){
+                modeloCompleto.Nodo aux = new modeloCompleto.Nodo(aux2X, aux2Y);
+                modeloCompleto.Arista arista1 = new modeloCompleto.Arista(dy, inicio, aux);
+                modeloCompleto.Arista arista2 = new modeloCompleto.Arista(dx, aux, fin);
+                camino.add(arista1);
+                camino.add(arista2);
+                return camino;
+            }
+             
+            // Hay barreras en el camino directo (L)
+        }
+        return camino;
+    }
+
+    public modeloCompleto.Ruta guardarEnMapa(){
+        
+        ArrayList<modeloCompleto.Arista> camino = new ArrayList();
+        int cantPedido = listaPedido.size();
+        modeloCompleto.Ruta nuevaRuta = new modeloCompleto.Ruta();
+        modeloCompleto.Nodo inicio, fin;
+        
+        for(int i= 0; i< cantPedido; i++){
+            if (i == 0){
+                inicio = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
+                fin = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+            }
+            else if ( i == cantPedido -1 ){
+                inicio = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+                fin = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
+            }
+            else {
+                inicio = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+                fin = new modeloCompleto.Nodo(listaPedido.get(i+1).getPosX(), listaPedido.get(i+1).getPosY());
+            }
+            ArrayList<modeloCompleto.Arista> tramo = buscarCamino(inicio, fin);
+            for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));
+        }
+        
+        nuevaRuta.setCantDiesel((int)cantDiesel);
+        nuevaRuta.setAristaList((List<modeloCompleto.Arista>)camino);
+        return nuevaRuta;
+    }
+    
+    private Date obtenerTiempo(int distanciaPedido, Date inicio, int accion ){
+        double tiempo = 1.0 * distanciaPedido / Constantes.velCamion; // en horas
         Calendar cal = Calendar.getInstance();
         cal.setTime(inicio);
         cal.add(Calendar.MILLISECOND, (int) (accion*tiempo * 3600000)); // 60min * 60 seg * 1000 miliseg
@@ -96,9 +226,11 @@ public class Ruta {
         for (int c = 0; c < cantCamiones; c++){
             camion = camiones.get(c);
             boolean verificar = true;
-            // camion.getEstado().compareTo("DISPONIBLE")== 0
+            
+            // Si tiene capcidad suficiente
             if (true || camion.getTipoCamion().getCapacidadGLP() >= cantGLP){
                 
+                // Si tiene disponibilidad suficiente
                 int cantDispon = camion.getListaDisponibilidad().size();
                 for(int i= 0; i< cantDispon; i++){
                     dispon = camion.getListaDisponibilidad().get(i);
@@ -121,9 +253,53 @@ public class Ruta {
         Disponibilidad disp = new Disponibilidad(camionEscogido);
         disp.setHoraInicio(salida);
         disp.setHoraFin(llegada);
+        //System.out.println("Camion ");
+        //if (camionEscogido==null )
+        //    System.out.println("Error");
+        if (camionEscogido== null) return null;
         camionEscogido.getListaDisponibilidad().add(disp);
         return camionEscogido; 
     }
+    
+    private boolean expandirDisponibilidad(Date inicio, Date fin){
+    
+        int cantDispon = camion.getListaDisponibilidad().size();
+        Disponibilidad dispon, actual = null;
+        boolean verificar = true;
+
+        for(int i= 0; i< cantDispon; i++){
+            dispon = camion.getListaDisponibilidad().get(i);
+            if (dispon.getHoraInicio().before(inicio) && dispon.getHoraFin().after(inicio)){
+                verificar = false;
+                break;
+            }
+            if (dispon.getHoraInicio().before(fin) && dispon.getHoraFin().after(fin)){
+                verificar = false;
+                break;
+            }
+            if(dispon.getHoraInicio().equals(salida) && dispon.getHoraFin().equals(llegada)){
+                actual = dispon;
+            }
+        }
+        if(verificar && actual!=null) actual.setHoraFin(fin);
+        return verificar;
+    }   
+    
+    private void reducirDisponibilidad(Date inicio, Date fin){
+    
+        int cantDispon = camion.getListaDisponibilidad().size();
+        Disponibilidad dispon = null;
+        
+        for(int i= 0; i< cantDispon; i++){
+            dispon = camion.getListaDisponibilidad().get(i);
+            if(dispon.getHoraInicio().equals(inicio) && dispon.getHoraFin().equals(fin))
+                break;
+        }
+        if(dispon!=null){ 
+            dispon.setHoraInicio(salida);
+            dispon.setHoraFin(llegada);
+        }
+    } 
     
     public boolean agregarPedido(ArrayList<Camion> camiones, Pedido pedido){
        
@@ -151,6 +327,7 @@ public class Ruta {
                 
                 // como no hay pedidos no hay camion asignado
                 camion = seleccionarCamion(camiones, pedido.getCantGLP(), salida, horaLlegada);
+                if (camion == null ) return false;
             }
             else{
                 Pedido ultimoPedido =  listaPedido.get(cantPedidoRuta-1);
@@ -167,11 +344,11 @@ public class Ruta {
 
                     distanciaPedido += (regreso - regresoUltimo);
                     int distanciaRuta = distancia + distanciaPedido;
-                    double pesoTotal = ( tp.getTara() + cantGLP + pedido.getCantGLP() ) * 310.79; // galones
-                    double cantDiesel = 0.05 *( (1.0 * pesoTotal)/ 52) * ( ( 1.0 * distanciaRuta )/ 1000 );  
+                    double pesoTotal = ( tp.getTara() + cantGLP + pedido.getCantGLP() ); // galones
+                    double cantDiesel = 0.05 *( (1.0 * pesoTotal)/ 52) *  distanciaRuta ; // galones y km  
 
                     if(cantDiesel <= tp.getCapacidadDiesel() ){
-                        estaAsignado = true;
+                        estaAsignado =  expandirDisponibilidad(llegada, horaLlegada);;
                     }
                 }                
             }
@@ -202,8 +379,8 @@ public class Ruta {
                 distancia  += regreso;
                 llegada = hora;
             }
-            double pesoTotal = camion.getTipoCamion().getTara() + cantGLP;
-            cantDiesel = 0.05 *( pesoTotal/ 52) * ( distancia / 1000 ); 
+            double pesoTotal = ( camion.getTipoCamion().getTara() + cantGLP ) ; // galones
+            cantDiesel = 0.05 *( pesoTotal / 52 * 1.0) * distancia ;  // galones y km
             return true;
         }
     }
@@ -234,6 +411,8 @@ public class Ruta {
         int posXAnt, posYAnt, posXPos, posYPos, dist = 0;
         boolean verificar = true;
         int entregaAntigua, entregaNueva;
+        Date finRuta = llegada, inicioRuta = salida;
+        
         // cuando el pedido primer pedido de la ruta
         if (indicePedido == 0){ 
             posXAnt = Constantes.posCentralX;
@@ -306,6 +485,7 @@ public class Ruta {
             //listaPedido.remove(indicePedido);
             //int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
             //difTiempo -= ( diff / 6000 );
+            reducirDisponibilidad(inicioRuta, finRuta);
             return true;
         }
         
@@ -334,6 +514,7 @@ public class Ruta {
         //int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
         //if (diff < 0 ) System.out.println("Negativo");
         //difTiempo -= diff / 6000  ;
+        reducirDisponibilidad(inicioRuta, finRuta);
         return true;
     }
         

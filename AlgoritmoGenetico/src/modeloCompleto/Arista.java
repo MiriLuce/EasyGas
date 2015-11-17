@@ -84,6 +84,12 @@ public class Arista implements Serializable {
         this.estado = estado;
     }
 
+    public Arista(int distancia, Nodo origen, Nodo destino) {
+        this.distancia = distancia;
+        this.idOrigen = origen;
+        this.idDestino = destino;
+    }
+    
     public Integer getIdArista() {
         return idArista;
     }
