@@ -54,7 +54,13 @@ public class Ruta {
     
     public Ruta(Ruta ruta){
         camion = ruta.getCamion();
-        listaPedido = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        listaPedido = new ArrayList<Pedido>();
+        for(int i=0; i< ruta.getListaPedido().size(); i++){
+            Pedido ped = new Pedido(ruta.getListaPedido().get(i));
+            listaPedido.add(ped);
+        }
+        
+        //listaPedido = (ArrayList<Pedido>) ruta.getListaPedido().clone();
         cantDiesel = ruta.getCantDiesel();
         cantGLP = ruta.getCantGLP();
         distancia = ruta.getDistancia();
@@ -63,6 +69,33 @@ public class Ruta {
         llegada = ruta.getLlegada();        
     }
    
+    public boolean verificar(){
+        if(listaPedido.size()!=0){
+        
+            // Primer pedido
+            Pedido pedAnt = listaPedido.get(0), pedPos;
+            int tramo = mapa.distanciaMinima(Constantes.posCentralX, Constantes.posCentralY,
+                    pedAnt.getPosX(), pedAnt.getPosY());
+            Date hora = obtenerTiempo(tramo, pedAnt.getHoraEntregada(), -1);
+            if(!salida.equals(hora)) return false;
+
+            for (int i= 1; i< listaPedido.size(); i++){
+                pedPos = listaPedido.get(i);
+                tramo = mapa.distanciaMinima(pedAnt.getPosX(), pedAnt.getPosY(),
+                    pedPos.getPosX(), pedPos.getPosY());
+                hora = obtenerTiempo(tramo, pedAnt.getHoraEntregada(), 1);
+                if(!pedPos.getHoraEntregada().equals(hora)) return false;
+                pedAnt = pedPos;
+            }
+            // Ultimo pedido
+            tramo = mapa.distanciaMinima(pedAnt.getPosX(), pedAnt.getPosY(),
+                Constantes.posCentralX, Constantes.posCentralY);
+            hora = obtenerTiempo(tramo, pedAnt.getHoraEntregada(), 1);
+            if(!llegada.equals(hora)) return false;
+        }
+        return true;
+    }
+    
     public void imprimir(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
         System.out.print("Tara: " + camion.getTipoCamion().getTara());
@@ -281,7 +314,8 @@ public class Ruta {
                 actual = dispon;
             }
         }
-        if(verificar && actual!=null) actual.setHoraFin(fin);
+        if(verificar) actual.setHoraFin(fin);
+        //else System.out.println("no añade"); 
         return verificar;
     }   
     
@@ -289,15 +323,23 @@ public class Ruta {
     
         int cantDispon = camion.getListaDisponibilidad().size();
         Disponibilidad dispon = null;
+        boolean verificar = false;
         
         for(int i= 0; i< cantDispon; i++){
             dispon = camion.getListaDisponibilidad().get(i);
-            if(dispon.getHoraInicio().equals(inicio) && dispon.getHoraFin().equals(fin))
+            if(dispon.getHoraInicio().equals(inicio) && dispon.getHoraFin().equals(fin)){
+                
+                verificar = true;
                 break;
+            }
         }
-        if(dispon!=null){ 
+        if(verificar){ 
             dispon.setHoraInicio(salida);
             dispon.setHoraFin(llegada);
+        }
+        else {
+            System.out.println("no esta"); 
+            //this.imprimir();
         }
     } 
     
@@ -377,7 +419,10 @@ public class Ruta {
             Date hora = obtenerTiempo(regreso,ultimoPedido.getHoraEntregada(), 1);
             if(llegada== null || llegada.compareTo(hora) != 0){
                 distancia  += regreso;
+                Date antLlegada = llegada;
                 llegada = hora;
+                reducirDisponibilidad(salida, antLlegada);                                
+                System.out.println("cerrar");
             }
             double pesoTotal = ( camion.getTipoCamion().getTara() + cantGLP ) ; // galones
             cantDiesel = 0.05 *( pesoTotal / 52 * 1.0) * distancia ;  // galones y km
@@ -400,7 +445,6 @@ public class Ruta {
     public boolean quitarPedido(int indicePedido){
         
         int cantPedidos = listaPedido.size(); 
-        
         // cuando el pedido es el unico en la ruta
         if (indicePedido == 0 && cantPedidos == 1){
             listaPedido.remove(indicePedido);
@@ -423,24 +467,11 @@ public class Ruta {
             entregaAntigua = (int)listaPedido.get(1).getHoraEntregada().getTime();
             
             dist = mapa.distanciaMinima(posXAnt, posYAnt, posXPos, posYPos);
-            salida = obtenerTiempo(dist, listaPedido.get(1).getHoraEntregada(), -1);
+            salida = obtenerTiempo(dist, listaPedido.get(1).getHoraSolicitada(), -1);
             listaPedido.get(1).setHoraEntregada(listaPedido.get(1).getHoraSolicitada());
             
             entregaNueva = (int)listaPedido.get(1).getHoraEntregada().getTime();
             difTiempo -= ( ( entregaAntigua - entregaNueva ) / 60000 )  ;
-            /*
-            //int diffAntigua, diffNueva;
-            int entregaAntigua = (int)listaPedido.get(1).getHoraEntregada().getTime();
-            //diffAntigua = (int)listaPedido.get(1).getHoraEntregada().getTime() - (int)listaPedido.get(1).getHoraSolicitada().getTime();
-            dist = mapa.distanciaMinima(posXAnt, posYAnt, posXPos, posYPos);
-            salida = obtenerTiempo(dist, listaPedido.get(1).getHoraSolicitada(), -1);
-            listaPedido.get(1).setHoraEntregada(listaPedido.get(1).getHoraSolicitada());
-            //diffNueva = (int)listaPedido.get(1).getHoraEntregada().getTime() - (int)listaPedido.get(1).getHoraSolicitada().getTime();
-            //difTiempo += (diffNueva / 6000) - (diffAntigua / 6000)  ;
-            int entregaNueva = (int)pedido.getHoraEntregada().getTime();
-            difTiempo += ( ( entregaAntigua - entregaNueva ) / 6000 )  ;
-            verificar = false;
-            */
         } 
         // cuando el pedido ultimo pedido de la ruta
         else if (indicePedido == cantPedidos -1){  
@@ -456,9 +487,9 @@ public class Ruta {
         // cuando el pedido esta en medio de la lista de la ruta
         else{
             posXAnt = listaPedido.get(indicePedido - 1).getPosX();
-            posYAnt = listaPedido.get(indicePedido - 1).getPosX();
+            posYAnt = listaPedido.get(indicePedido - 1).getPosY();
             posXPos = listaPedido.get(indicePedido + 1).getPosX();
-            posYPos = listaPedido.get(indicePedido + 1).getPosX();
+            posYPos = listaPedido.get(indicePedido + 1).getPosY();
             
             entregaAntigua = (int)listaPedido.get(indicePedido + 1).getHoraEntregada().getTime();
             
@@ -481,10 +512,6 @@ public class Ruta {
         cantPedidos--;
         
         if (!verificar){
-            //distancia += mapa.distanciaMinima(posXAnt, posYAnt, posXPos, posYPos);
-            //listaPedido.remove(indicePedido);
-            //int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
-            //difTiempo -= ( diff / 6000 );
             reducirDisponibilidad(inicioRuta, finRuta);
             return true;
         }
@@ -492,28 +519,26 @@ public class Ruta {
         // Calcular hora de entrega de cada pedido
         Pedido pedidoAnterior = listaPedido.get(indicePedido);
         Pedido pedidoActual = null;
-        //int diffAntigua, diffNueva;
         
         for(int i = indicePedido + 1 ; i < cantPedidos; i++){
             pedidoActual = listaPedido.get(i);
             int tramo = mapa.distanciaMinima(pedidoAnterior.getPosX(), pedidoAnterior.getPosY(),
                 pedidoActual.getPosX(), pedidoActual.getPosY());         
             
-            entregaAntigua = (int)pedidoActual.getHoraEntregada().getTime(); // - (int)pedidoActual.getHoraSolicitada().getTime();
+            entregaAntigua = (int)pedidoActual.getHoraEntregada().getTime(); 
             Date entregaActual = obtenerTiempo(tramo, pedidoAnterior.getHoraEntregada(), 1);
             if (entregaActual.before(pedidoActual.getHoraSolicitada()))
                 return false;
             
             listaPedido.get(i).setHoraEntregada(entregaActual);
-            entregaNueva = (int)pedidoActual.getHoraEntregada().getTime(); // - (int)pedidoActual.getHoraSolicitada().getTime();
-            
+            entregaNueva = (int)entregaActual.getTime(); 
             difTiempo -= ( ( entregaAntigua - entregaNueva ) / 6000 )  ;
             pedidoAnterior = pedidoActual;
         }
-        //listaPedido.remove(indicePedido);
-        //int diff = (int)pedido.getHoraEntregada().getTime() - (int)pedido.getHoraSolicitada().getTime();
-        //if (diff < 0 ) System.out.println("Negativo");
-        //difTiempo -= diff / 6000  ;
+        int tramo = mapa.distanciaMinima(pedidoAnterior.getPosX(), pedidoAnterior.getPosY(),
+                Constantes.posCentralX, Constantes.posCentralY); 
+        llegada = obtenerTiempo(tramo, pedidoAnterior.getHoraEntregada(), 1);
+        
         reducirDisponibilidad(inicioRuta, finRuta);
         return true;
     }

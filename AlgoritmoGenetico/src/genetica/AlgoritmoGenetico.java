@@ -51,8 +51,14 @@ public class AlgoritmoGenetico {
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
+            /*
+            for(int i=0; i< poblacion.size(); i++)
+                for(int j=0; j< poblacion.get(i).getCadena().size(); j++)
+                    if(!poblacion.get(i).getCadena().get(j).verificar())
+                        poblacion.get(i).getCadena().get(j).imprimir();
+            */
             eliminaAberraciones();
-            mutaPoblacion();
+            //mutaPoblacion();
             eliminaAberraciones();
             cant++;
         }
@@ -147,10 +153,14 @@ public class AlgoritmoGenetico {
         for (int i = 0; i < cant; i++) {
             int par = i%2;
             if(par == 0){ 
+                if(!hijo2.getCadena().get(i).verificar()) 
+                    System.out.println("Alerta");
                 hijo1.agregarRuta(hijo2.getCadena().get(i));                
                 if (hijo1.isAberracion()) break; 
             }
             else{ 
+                if(!hijo1.getCadena().get(i).verificar()) 
+                    System.out.println("Alerta");
                 hijo2.agregarRuta(hijo1.getCadena().get(i));               
                 if (hijo2.isAberracion()) break;
             }   

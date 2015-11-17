@@ -141,7 +141,13 @@ public class Cromosoma {
     
     public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
     
-        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
+        //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
+        ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
+        for(int i=0; i< pedidos.size(); i++){
+            Pedido ped = new Pedido(pedidos.get(i));
+            listaPedidos.add(ped);
+        }
+        
         int cantCamiones = camiones.size();
         for(int i= 0; i<cantCamiones; i++){
             Camion c = new Camion(camiones.get(i).getTipoCamion(), camiones.get(i).getEstado());
@@ -266,7 +272,13 @@ public class Cromosoma {
     public void agregarRuta(Ruta ruta){
         
         Ruta tmpRuta = new Ruta(ruta);
-        ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        //ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) tmpRuta.getListaPedido().clone();
+        ArrayList<Pedido> listaRuta = new ArrayList<Pedido>();
+        for(int i=0; i< tmpRuta.getListaPedido().size(); i++){
+            Pedido ped = new Pedido(tmpRuta.getListaPedido().get(i));
+            listaRuta.add(ped);
+        }
+        
         int cantCadenaRuta = this.cadena.size(), cantCadenaPedido;
         int cantPedidoRuta = listaRuta.size();
         int indiceCadenaRuta = 0, indiceCadenaPedido, indicePedidoRuta;
@@ -277,7 +289,9 @@ public class Cromosoma {
         while(indiceCadenaRuta < cantCadenaRuta){
             cantCadenaPedido = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
             indiceCadenaPedido = 0;
-            
+            //System.out.println("----- Ruta: " + indiceCadenaRuta );
+            //if(!this.cadena.get(indiceCadenaRuta).verificar())
+                //this.cadena.get(indiceCadenaRuta).imprimir();
             while(indiceCadenaPedido < cantCadenaPedido){ 
                 indicePedidoRuta = 0;
                 verificar = false;
@@ -315,8 +329,18 @@ public class Cromosoma {
     private int  quitarPedido(int indiceRuta, int indicePedido, int idPedidoOriginal, int idPedidoEliminar){
         
         if (idPedidoOriginal ==  idPedidoEliminar){
+            Ruta rut = new Ruta(this.cadena.get(indiceRuta));
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
-            if (verificar) return 1; // 1: se quito con exito
+            if (verificar) {
+                //System.out.println("------- Pedido N°: " + idPedidoOriginal);
+                //rut.imprimir();
+                if(!this.cadena.get(indiceRuta).verificar()) {
+                    System.out.println("--------- Error ------------");
+                    //rut.imprimir                    
+                }
+                //this.cadena.get(indiceRuta).imprimir();
+                return 1; // 1: se quito con exito            
+            }
             else return -1; // -1: es una aberracion
         }
         else return 0; // 0: no paso nada
@@ -334,6 +358,8 @@ public class Cromosoma {
         for(int i = 0; i < cantRutas; i++){
             rutaEscogida = cadena.get(i);
             verificar = rutaEscogida.cerrarRuta();
+            if(!rutaEscogida.verificar())
+                rutaEscogida.imprimir();
             if (verificar){  
                 difTiempoTotal += rutaEscogida.getDifTiempo();
                 distanciaTotal += rutaEscogida.getDistancia();

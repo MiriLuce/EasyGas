@@ -30,7 +30,7 @@ public class Principal {
         //solucion.calculaCosto();
         
         System.out.println("--- Mejor Cromosoma ----");
-        solucion.imprimir();
+        //solucion.imprimir();
         /*
         for(int i=0;i<solucion.getCadena().size();i++){
             

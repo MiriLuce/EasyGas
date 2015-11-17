@@ -107,7 +107,7 @@ public class Mapa {
                 }
             }
         } else if (yi > yf) {
-            for (i = yi + 1; i < yf; i++) {
+            for (i = yf + 1; i < yi; i++) {
                 if (mapa[i][x] == 0) {
                     return true;
                 }
@@ -125,7 +125,7 @@ public class Mapa {
                 }
             }
         } else if (xi > xf) {
-            for (i = xi + 1; i < xf; i++) {
+            for (i = xf + 1; i < xi; i++) {
                 if (mapa[y][i] == 0) {
                     return true;
                 }

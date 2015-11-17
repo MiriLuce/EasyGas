@@ -24,6 +24,15 @@ public class Pedido {
     
     public Pedido(){}
     
+    public Pedido(Pedido ped){
+        this.idPedido = ped.idPedido;
+        this.cantGLP = ped.cantGLP;
+        this.tienePrioridad = ped.tienePrioridad;
+        this.horaEntregada = ped.horaEntregada;
+        this.horaSolicitada = ped.horaSolicitada;
+        this.cliente = ped.cliente;
+    }
+    
     public Pedido(int idPedido,int nuevoX, int nuevoY, double nuevaCant, Date nuevaHora, boolean priori){
         this.idPedido=idPedido;
         
