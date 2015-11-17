@@ -32,5 +32,8 @@
         <property name="estado" type="string">
             <column name="Estado" length="20" not-null="true" />
         </property>
+        <many-to-one name="pedido" class="Modelo.Hibernate.Pedido" fetch="select">
+            <column name="idPedido" />
+        </many-to-one>
     </class>
 </hibernate-mapping>

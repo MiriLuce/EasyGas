@@ -36,7 +36,6 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_Ruta ventanaRuta=null;
     private Pantalla_Perfil ventanaPerfil=null;
     private Pantalla_Cliente ventanaCliente=null;
-
     private Pantalla_PedidosPorCliente ventanaPedidosPorCliente=null;
     private Pantalla_ClienteCarga ventanaClienteCarga = null;
 
@@ -527,7 +526,6 @@ public class Principal extends javax.swing.JFrame {
         }
         ventanaCliente.setVisible(true);
     }//GEN-LAST:event_mantClienteActionPerformed
-
 
     private void mantPedidosPorClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mantPedidosPorClienteActionPerformed
         // TODO add your handling code here:
