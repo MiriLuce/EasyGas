@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://quilla.lab.inf.pucp.edu.pe:3306/inf226ga?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">inf226gausr</property>
+    <property name="hibernate.connection.password">b35setFQRnhP7AEC</property>
+    <mapping resource="algoritmogenetico/Turno.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Cliente.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Arista.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Empleado.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Accidente.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Pedido.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Nodo.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Camion.hbm.xml"/>
+    <mapping resource="algoritmogenetico/TipoCamion.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Disponibilidad.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Mantenimiento.hbm.xml"/>
+    <mapping resource="algoritmogenetico/Ruta.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

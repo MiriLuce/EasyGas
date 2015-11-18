@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="inf226ga"/>
+  <table-filter match-name="TURNO"/>
+  <table-filter match-name="MANTENIMIENTO"/>
+  <table-filter match-name="NODO"/>
+  <table-filter match-name="ACCIDENTE"/>
+  <table-filter match-name="ARISTA"/>
+  <table-filter match-name="CLIENTE"/>
+  <table-filter match-name="PEDIDO"/>
+  <table-filter match-name="TIPO_CAMION"/>
+  <table-filter match-name="CAMION"/>
+  <table-filter match-name="DISPONIBILIDAD"/>
+  <table-filter match-name="EMPLEADO"/>
+  <table-filter match-name="RUTA"/>
+</hibernate-reverse-engineering>
