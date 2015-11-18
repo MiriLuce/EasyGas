@@ -47,12 +47,18 @@ public class AlgoritmoGenetico {
     public Cromosoma empieza(){
 
         int cant = 0;
-        while(cant < 10){
+        while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
+            /*
+            for(int i=0; i< poblacion.size(); i++)
+                for(int j=0; j< poblacion.get(i).getCadena().size(); j++)
+                    if(!poblacion.get(i).getCadena().get(j).verificar())
+                        poblacion.get(i).getCadena().get(j).imprimir();
+            */
             eliminaAberraciones();
-            mutaPoblacion();
+            //mutaPoblacion();
             eliminaAberraciones();
             cant++;
         }
@@ -73,13 +79,13 @@ public class AlgoritmoGenetico {
             // cerrar cromosoma con 
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
+            //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
             //cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
             }
-        }
-        
+        }        
     }
     
     //me quedo con un porcentaje mejor de la poblacion
@@ -126,8 +132,8 @@ public class AlgoritmoGenetico {
         while (seguirEmparejando) {
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
-            if (!hijos.get(0).isAberracion()){ poblacion.add(hijos.get(0)); hijos.get(0).imprimir();}
-            if (!hijos.get(1).isAberracion()) { poblacion.add(hijos.get(1)); hijos.get(1).imprimir();}
+            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));  //hijos.get(0).imprimir();}
+            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1)); // hijos.get(1).imprimir();}
             //System.out.println(indAux);
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;
@@ -184,7 +190,7 @@ public class AlgoritmoGenetico {
             int indice = generaNumRandom(0, cantPoblacion - 1);
 
             if (i != 0 && indice <= prob) { 
-                poblacion.get(indice).mutar();
+                //poblacion.get(indice).mutar();
                 if (poblacion.get(indice).isAberracion()){
                     poblacion.remove(indice);
                     cantPoblacion--;

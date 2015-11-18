@@ -5,7 +5,9 @@
  */
 package Algoritmo.Genetico;
 
-import Modelo.Hibernate.*;
+
+import Modelo.Hibernate.Camion;
+import Modelo.Hibernate.Pedido;
 import Algoritmo.Constantes.Constantes;
 import static Algoritmo.Genetico.AlgoritmoGenetico.camiones;
 import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
@@ -20,20 +22,22 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Cromosoma {
     
+    private ArrayList<Camion> listaCamiones;
     private ArrayList<Ruta> cadena; 
     private double costo;
     private boolean aberracion;
     
-    private int distanciaTotal; // en metros
+    private int distanciaTotal; // en km
     private int cantTiempoTotal; // en minutos
     private int difTiempoTotal; // en minutos
     
-    private double cantGLPTotal;    
-    private double cantDieselTotal;
+    private double cantGLPTotal;    // toneladas
+    private double cantDieselTotal;  // galones
     private double sumatoriaTEntrega; // preguntar a Chucky q es esto
 
     public Cromosoma(){
         cadena = new ArrayList<Ruta>();
+        listaCamiones  = new ArrayList<Camion>();
         costo = 0;
         aberracion = false;      
         distanciaTotal = 0;
@@ -59,57 +63,25 @@ public class Cromosoma {
         sumatoriaTEntrega = crom.getSumatoriaTEntrega();
     }
     
-    public void guardarEnMapa(){
+    public List<Modelo.Hibernate.Ruta> guardarEnMapa(){
+        
         int cantCadena = cadena.size();
-        Nodo central = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
+        List<Modelo.Hibernate.Ruta> nuevaRutas = new ArrayList<Modelo.Hibernate.Ruta>();
         
         for(int i= 0; i< cantCadena; i++){
-            List<Arista> camino = new ArrayList();
-            Ruta ruta =cadena.get(i);
-            
-            Modelo.Hibernate.Ruta nuevaRuta = new Modelo.Hibernate.Ruta();
-            nuevaRuta.setCantDiesel((int)ruta.getCantDiesel());
-            nuevaRuta.setCantGlp((int)ruta.getCantGLP());
-            nuevaRuta.setHoraLlegada(ruta.getLlegada());
-            nuevaRuta.setHoraSalida(ruta.getSalida());
-            
-            List<Arista> tramo = buscarCamino(central, ruta.getListaPedido().get(0).getCliente().getNodo());
-            for(int k= 0; k < tramo.size(); k++) camino.add(tramo.get(k));
-            
-            for(int j=0; j< ruta.getListaPedido().size(); j++){
-                tramo.clear();
-                if(j == ruta.getListaPedido().size()-1){
-                    tramo = buscarCamino(ruta.getListaPedido().get(j).getCliente().getNodo(), central);
-                }else {
-                    tramo = buscarCamino(ruta.getListaPedido().get(j).getCliente().getNodo(), 
-                                         ruta.getListaPedido().get(j+1).getCliente().getNodo());
-                }
-                for(int k= 0; k < tramo.size(); k++) camino.add(tramo.get(k));
-            }
+            Modelo.Hibernate.Ruta nuevaRuta = cadena.get(i).guardarEnMapa();
+            nuevaRutas.add(nuevaRuta);
         }
+        return nuevaRutas;
     }
-    
-    private List<Arista> buscarCamino(Nodo inicio, Nodo fin){
-         List<Arista> camino = new ArrayList();
-         int distancia = mapa.distanciaMinima(inicio.getCoordX(), inicio.getCoordY(),
-                    fin.getCoordX(), fin.getCoordY());
-         boolean verificar = false;
-         
-         while(verificar){
-              Arista tramo = new Arista();
-              camino.add(tramo);
-         }       
-         
-         return camino;
-    }
-    
+        
     private int generaNumRandom(int min, int max) {
 
         int numRandom = ThreadLocalRandom.current().nextInt(min, max + 1);
         return numRandom;
     }
     
-    // Crea las cadenas para el cromosoma : la lista de ruta vacia para la solucion
+     // Crea las cadenas para el cromosoma : la lista de ruta vacia para la solucion
     // Le asigna a cada ruta un camion al azar
     public void asignarCamiones() {
                 
@@ -171,8 +143,18 @@ public class Cromosoma {
     
     public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
     
-        ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
-        ArrayList<Camion> listaCamiones = (ArrayList<Camion>) camiones.clone();        
+        //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
+        ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
+        for(int i=0; i< pedidos.size(); i++){
+            Pedido ped = new Pedido(pedidos.get(i));
+            listaPedidos.add(ped);
+        }
+        
+        int cantCamiones = camiones.size();
+        for(int i= 0; i<cantCamiones; i++){
+            Camion c = new Camion(camiones.get(i).getTipoCamion(), camiones.get(i).getEstado());
+            listaCamiones.add(c);
+        }        
         int indicePedidoAleatorio, indiceRutaAleatoria;
         int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
         Pedido pedidoAleatorio;  
@@ -202,14 +184,15 @@ public class Cromosoma {
                     listaEscogido[indiceRutaAleatoria] = 1;
 
                     rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                    estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
                 }
             }
             if(!estaAsignado){ // Crear una nueva ruta
                 rutaAleatoria = new Ruta();
-                rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                if(estaAsignado){ // no hay disponibilidad en los camiones
                 cadena.add(rutaAleatoria);
-                cantRutas++;
+                cantRutas++;}
             }            
             
             listaPedidos.remove(indicePedidoAleatorio);
@@ -291,7 +274,13 @@ public class Cromosoma {
     public void agregarRuta(Ruta ruta){
         
         Ruta tmpRuta = new Ruta(ruta);
-        ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) ruta.getListaPedido().clone();
+        //ArrayList<Pedido> listaRuta = (ArrayList<Pedido>) tmpRuta.getListaPedido().clone();
+        ArrayList<Pedido> listaRuta = new ArrayList<Pedido>();
+        for(int i=0; i< tmpRuta.getListaPedido().size(); i++){
+            Pedido ped = new Pedido(tmpRuta.getListaPedido().get(i));
+            listaRuta.add(ped);
+        }
+        
         int cantCadenaRuta = this.cadena.size(), cantCadenaPedido;
         int cantPedidoRuta = listaRuta.size();
         int indiceCadenaRuta = 0, indiceCadenaPedido, indicePedidoRuta;
@@ -302,7 +291,9 @@ public class Cromosoma {
         while(indiceCadenaRuta < cantCadenaRuta){
             cantCadenaPedido = this.cadena.get(indiceCadenaRuta).getListaPedido().size();
             indiceCadenaPedido = 0;
-            
+            //System.out.println("----- Ruta: " + indiceCadenaRuta );
+            //if(!this.cadena.get(indiceCadenaRuta).verificar())
+                //this.cadena.get(indiceCadenaRuta).imprimir();
             while(indiceCadenaPedido < cantCadenaPedido){ 
                 indicePedidoRuta = 0;
                 verificar = false;
@@ -312,7 +303,7 @@ public class Cromosoma {
                             this.cadena.get(indiceCadenaRuta).getListaPedido().get(indiceCadenaPedido).getIdPedido(),
                             listaRuta.get(indicePedidoRuta).getIdPedido());
                     
-                    if (exito == -1) aberracion = true; 
+                    if (exito == -1){ aberracion = true; break; }
                     else if (exito == 1) {
                         // Si la ruta queda vacia se elimina
                         if(this.cadena.get(indiceCadenaRuta).getListaPedido().isEmpty()){
@@ -340,8 +331,12 @@ public class Cromosoma {
     private int  quitarPedido(int indiceRuta, int indicePedido, int idPedidoOriginal, int idPedidoEliminar){
         
         if (idPedidoOriginal ==  idPedidoEliminar){
+            Ruta rut = new Ruta(this.cadena.get(indiceRuta));
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
-            if (verificar) return 1; // 1: se quito con exito
+            if (verificar) {
+                
+                return 1; // 1: se quito con exito            
+            }
             else return -1; // -1: es una aberracion
         }
         else return 0; // 0: no paso nada
@@ -370,20 +365,29 @@ public class Cromosoma {
             }
         }
         // q es cada parametro para calcular costo
-        costo = ((difTiempoTotal * difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
+        costo = ((  difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
         cadena = listaRutas;
     }
     
     public void imprimir() {
+        //double tmpCosto = Math.R(costo, 2);
         System.out.println("--------------------------------------------------");
-        System.out.println("Costo: " + costo + " Cantidad: " + cadena.size());
-        if (cadena.size() > 10){
+        System.out.format("Consto %.3f\n", costo);
+        System.out.println("Cantidad de Rutas: " + cadena.size());
+        
+        int cantPedidos = 0;
+        for (int i= 0; i< cadena.size(); i++)
+            cantPedidos += cadena.get(i).getListaPedido().size();
+        
+        System.out.println("Cantidad de Pedidos: " + cantPedidos);
+        System.out.println();
+        
         for (int i= 0; i< cadena.size(); i++){
-            System.out.print("Nro Ruta: " + i);
+            System.out.format ("Nro Ruta: %2d\n", i);
             cadena.get(i).imprimir();
         }
-        }
+        
     }
     
     public void mutar() {
@@ -398,7 +402,7 @@ public class Cromosoma {
             Ruta r1 = cadena.get(n1);
             Ruta r2 = cadena.get(n2);
             this.agregarRuta(r1);
-            this.agregarRuta(r2);
+            //this.agregarRuta(r2);
             //this.agregarRuta(e1);
             //this.asignarPedidos(e2);
         }

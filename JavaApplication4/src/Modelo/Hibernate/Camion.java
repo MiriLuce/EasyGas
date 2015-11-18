@@ -27,6 +27,11 @@ public class Camion  implements java.io.Serializable {
     public Camion() {
     }
 
+    public Camion(TipoCamion tipoCamion, String estado){
+        this.disponibilidads = new ArrayList<Disponibilidad>(); 
+        this.tipoCamion = tipoCamion;
+        this.estado = estado;
+    }
 	
     public Camion(TipoCamion tipoCamion, String placa, Date fechaRegistro, String estado) {
         this.tipoCamion = tipoCamion;
