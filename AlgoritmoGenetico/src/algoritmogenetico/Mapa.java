@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -73,6 +74,14 @@ public class Mapa {
         cargaMapa();
     }
 
+    public void agregaBarrera(ArrayList<modeloCompleto.Nodo> barrera){
+        
+        int cantNodo = barrera.size();
+        for(int i = 0; i< cantNodo; i++){
+            
+        }       
+    }
+    
     private void hayBarreras(int xi, int yi, int xf, int yf) {
         boolean hayBarreraX1 = false;
         boolean hayBarreraX2 = false;

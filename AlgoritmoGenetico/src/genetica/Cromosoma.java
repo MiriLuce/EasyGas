@@ -302,7 +302,7 @@ public class Cromosoma {
                             this.cadena.get(indiceCadenaRuta).getListaPedido().get(indiceCadenaPedido).getIdPedido(),
                             listaRuta.get(indicePedidoRuta).getIdPedido());
                     
-                    if (exito == -1) aberracion = true; 
+                    if (exito == -1){ aberracion = true; break; }
                     else if (exito == 1) {
                         // Si la ruta queda vacia se elimina
                         if(this.cadena.get(indiceCadenaRuta).getListaPedido().isEmpty()){

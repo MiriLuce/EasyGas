@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class Constantes {
 
-    public static int cantPoblacion = 6; //debe ser 100 o multiplos de 100
+    public static int cantPoblacion = 50; //debe ser 100 o multiplos de 100
     public static double probSeleccion = 0.5; //no debe ser mayor a 0.5
     public static double probEmparejamiento = 0.75;
     public static double probMutacion = 0.05;

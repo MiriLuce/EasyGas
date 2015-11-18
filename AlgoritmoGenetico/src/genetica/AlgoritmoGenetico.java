@@ -47,7 +47,7 @@ public class AlgoritmoGenetico {
     public Cromosoma empieza(){
 
         int cant = 0;
-        while(cant < 10){
+        while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
@@ -132,8 +132,8 @@ public class AlgoritmoGenetico {
         while (seguirEmparejando) {
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
-            if (!hijos.get(0).isAberracion()){ poblacion.add(hijos.get(0)); } //hijos.get(0).imprimir();}
-            if (!hijos.get(1).isAberracion()) { poblacion.add(hijos.get(1));} // hijos.get(1).imprimir();}
+            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));  //hijos.get(0).imprimir();}
+            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1)); // hijos.get(1).imprimir();}
             //System.out.println(indAux);
             if (indAux == cantAux || indAux == (cantAux - 1)) {
                 seguirEmparejando = false;

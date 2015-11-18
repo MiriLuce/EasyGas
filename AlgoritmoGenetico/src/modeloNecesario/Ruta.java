@@ -108,7 +108,7 @@ public class Ruta {
         
         System.out.println("Salida: " + sdf.format(salida) + "  Llegada: " + sdf.format(llegada));
         
-        
+        /*
         int cantDispon = camion.getListaDisponibilidad().size();
         Disponibilidad dispon = null;
         boolean verificar = false;
@@ -120,11 +120,12 @@ public class Ruta {
                 break;
             }
         }
+        
         System.out.println("Disponibilidad de camion: " + verificar);
         System.out.println("Salida: " + sdf.format(dispon.getHoraInicio()) + "  Llegada: " +
                 sdf.format(dispon.getHoraFin()));
         System.out.println();
-        
+        */
         for (int j= 0; j< listaPedido.size(); j++){
             //System.out.print( " -> " + listaPedido.get(j).getIdPedido());
             System.out.format ("-> Pedido N° %03d",  listaPedido.get(j).getIdPedido());
