@@ -31,7 +31,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.apache.commons.digester.Digester; 
 import org.hibernate.Transaction;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 /**
  *
  * @author Mariella

@@ -17,19 +17,26 @@ public class Arista implements java.io.Serializable {
     private Date horaInicio;
     private Date horaFin;
     private String estado;
-
+    private Pedido pedido;
     private int direccion; //0=derecha,1=izquierda,2=abajo,3=arriba
 
     public Arista() {
     }
 
-    public Arista(Nodo nodoByIdOrigen, Nodo nodoByIdDestino, Ruta ruta, int distancia, int cantCuadras, String estado) {
+    public Arista(int distancia, Nodo nodoByIdOrigen, Nodo nodoByIdDestino) {
+        this.nodoByIdOrigen = nodoByIdOrigen;
+        this.nodoByIdDestino = nodoByIdDestino;
+        this.distancia = distancia;
+    }
+    
+    public Arista(Nodo nodoByIdOrigen, Nodo nodoByIdDestino, Ruta ruta, int distancia, int cantCuadras, String estado,Pedido pedido) {
         this.nodoByIdOrigen = nodoByIdOrigen;
         this.nodoByIdDestino = nodoByIdDestino;
         this.ruta = ruta;
         this.distancia = distancia;
         this.cantCuadras = cantCuadras;
         this.estado = estado;
+        this.pedido=pedido;
     }
 
     public Arista(Nodo nodoByIdOrigen, Nodo nodoByIdDestino, Ruta ruta, int distancia, int cantCuadras, Date horaInicio, Date horaFin, String estado) {
@@ -133,6 +140,20 @@ public class Arista implements java.io.Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    /**
+     * @return the pedido
+     */
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    /**
+     * @param pedido the pedido to set
+     */
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
 }
