@@ -10,6 +10,8 @@ import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Usuario;
 import Util.HibernateUtil;
 import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -31,7 +33,12 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
     UsuarioControlador usuarioControlador = new UsuarioControlador();
 
     public Pantalla_Inicio() {
+        
         initComponents();
+        java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Image img= kit.createImage(url);
+        this.setIconImage(img);
         this.setVisible(true);
     }
 

@@ -55,10 +55,6 @@ ORDER BY 1]]>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA["Generado por: " + $P{author}                          + ", el " + $P{startDate}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement uuid="68bdda73-43e4-4a98-a6ad-c528ca259a12" x="468" y="0" width="87" height="97"/>
-				<imageExpression><![CDATA["logo_proyecto.png"]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="24" y="50" width="444" height="25"/>
 				<textElement textAlignment="Center">

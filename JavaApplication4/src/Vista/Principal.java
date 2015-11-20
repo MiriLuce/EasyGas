@@ -9,11 +9,17 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.font.TextAttribute;
 import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -42,6 +48,10 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         
         initComponents();
+        java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Image img= kit.createImage(url);
+        this.setIconImage(img);
         this.setVisible(true);
         nombreUsuario.setCursor(new Cursor(Cursor.HAND_CURSOR));
         Font font = nombreUsuario.getFont();
@@ -50,6 +60,21 @@ public class Principal extends javax.swing.JFrame {
         nombreUsuario.setFont(font.deriveFont(attributes));
         
          
+    }
+    @Override
+    public void paintComponents(Graphics g){
+        
+        Image backgroundImg=null;
+        try {
+            super.paintComponents(g);            
+            backgroundImg=ImageIO.read(new File("recursos/logo_fondo.png"));
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        g.drawImage(backgroundImg, 0, 0, this.jPanel1);
     }
 
     /**
@@ -65,7 +90,6 @@ public class Principal extends javax.swing.JFrame {
         nombreUsuario = new javax.swing.JLabel();
         btnCerrarSesion = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         menuPlanilla = new javax.swing.JMenu();
         mantEmpleado = new javax.swing.JMenuItem();
@@ -131,23 +155,15 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(240, 240, 225));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/logo_fondo.png"))); // NOI18N
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(405, 405, 405)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 1300, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(118, 118, 118)
-                .addComponent(jLabel1)
-                .addContainerGap(659, Short.MAX_VALUE))
+            .addGap(0, 1152, Short.MAX_VALUE)
         );
 
         menuPlanilla.setText("Planilla");
@@ -298,7 +314,7 @@ public class Principal extends javax.swing.JFrame {
    
     private void ActualizaVentanas() {
        
-        jLabel1.setPreferredSize(new Dimension(0, 0));
+       // jLabel1.setPreferredSize(new Dimension(0, 0));
         ventanaTipoCamion = null;
         ventanaCamionCarga = null;
         ventanaCamion = null;
@@ -563,7 +579,6 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenuItem mantAccidente;

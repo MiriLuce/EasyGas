@@ -36,10 +36,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NombreCliente}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement uuid="8aa2fdff-ca39-4a62-8ded-eea4465f0c4d" x="472" y="0" width="83" height="102"/>
-				<imageExpression><![CDATA["logo_proyecto.png"]]></imageExpression>
-			</image>
+			
 		</band>
 	</title>
 	<columnHeader>
