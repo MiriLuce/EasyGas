@@ -5,12 +5,21 @@
  */
 package Vista;
 
+import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
 import Controlador.GeneralControlador;
 import Controlador.PedidoControlador;
+import Controlador.CamionControlador;
 import Mapa.Mapa;
 import java.awt.Cursor;
 import java.io.File;
 import javax.swing.JOptionPane;
+import Algoritmo.Genetico.Cromosoma;
+import Algoritmo.Genetico.AlgoritmoGenetico;
+import Modelo.Hibernate.Camion;
+import Modelo.Hibernate.Pedido;
+import Modelo.Hibernate.Ruta;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,14 +27,16 @@ import javax.swing.JOptionPane;
  */
 public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
+    //private CamionControlador camionControlador;
+    private Cromosoma solucion;
+    private List<Ruta> listaRuta;
     
     public Pantalla_Simulacion() {
         initComponents();
         
         this.btnIniciar.setEnabled(false);
         this.btnDetener.setEnabled(false);
-        this.btnGrabar.setEnabled(false);
-        
+        this.btnGrabar.setEnabled(false);        
     }
 
     /**
@@ -198,7 +209,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                     .addComponent(btnIniciar)
                     .addComponent(btnDetener))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -240,7 +251,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                         .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel56Layout.createSequentialGroup()
                                 .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                                 .addComponent(nPedCargaBoton))
                             .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -319,21 +330,15 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1300, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 767, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelSimulacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
@@ -350,8 +355,16 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         this.btnGrabar.setEnabled(false);
         this.btnExportar.setEnabled(false);
         
+        // obtener el camino de la solucion
+        int cantRutas = solucion.getCadena().size();
+        for(int i=0; i <cantRutas; i++){
+            Ruta ruta = solucion.getCadena().get(i).guardarEnMapa();
+            listaRuta.add(ruta);
+        }
+        
         //pintar
         Mapa mapa = new Mapa("Ciudad XYZ",800,800);
+        mapa.setRuta(listaRuta.get(0));
         mapa.Empieza();
         
     }//GEN-LAST:event_btnIniciarActionPerformed
@@ -388,8 +401,14 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        // TODO add your handling code here:
-        //algortimo
+        List<Pedido> lstPedidos = PedidoControlador.ListarPedidos();
+        List<Camion> lstCamiones = CamionControlador.ListarCamion();
+        AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList)lstCamiones, (ArrayList)lstPedidos, 1, mapa);
+        solucion = algoritmo.empieza();
+        
+        this.btnIniciar.setEnabled(true);
+        this.btnDetener.setEnabled(true);
+        this.btnGrabar.setEnabled(true);
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed

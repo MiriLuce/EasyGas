@@ -33,7 +33,7 @@ import org.hibernate.Transaction;
 
 public class CamionControlador{
     
-    public List<Camion> ListarCamion(){
+    public static List<Camion> ListarCamion(){
        
         List<Camion> lista = null;
         if (!EasyGas.sesion.isOpen()) {

@@ -48,12 +48,15 @@ public class Cromosoma {
     }
  
     public Cromosoma(Cromosoma crom){
+        
         int cantCadena = crom.cadena.size();
         cadena =  new ArrayList<Ruta>();
+        
         for(int i= 0; i< cantCadena; i++){
             Ruta ruta = new Ruta(crom.cadena.get(i));
             cadena.add(ruta);
         }
+        
         costo = crom.getCosto();
         aberracion = crom.isAberracion();      
         distanciaTotal = crom.getDistanciaTotal();

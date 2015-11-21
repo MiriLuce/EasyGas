@@ -25,8 +25,23 @@ public class Camion  implements java.io.Serializable {
 	 
 
     public Camion() {
+        this.tipoCamion = null;
+        this.estado = "";
+        this.disponibilidads = new ArrayList<Disponibilidad>(); 
     }
 
+    public Camion(Camion camion){
+        this.tipoCamion = camion.getTipoCamion();
+        this.estado = camion.getEstado();        
+        this.disponibilidads = new ArrayList<Disponibilidad>(); 
+        
+        int cantDispon = camion.getDisponibilidads().size();
+        for(int i =0; i < cantDispon; i++){
+            Disponibilidad dispon = new Disponibilidad((Disponibilidad) camion.getDisponibilidads().get(i));
+            disponibilidads.add(dispon);
+        }    
+    }
+    
     public Camion(TipoCamion tipoCamion, String estado){
         this.disponibilidads = new ArrayList<Disponibilidad>(); 
         this.tipoCamion = tipoCamion;

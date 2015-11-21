@@ -58,14 +58,16 @@ public class Ruta {
     }
     
     public Ruta(Ruta ruta){
-        camion = ruta.getCamion();
+        
+        camion = new Camion(ruta.getCamion());
+        
         listaPedido = new ArrayList<Pedido>();
-        for(int i=0; i< ruta.getListaPedido().size(); i++){
+        int cantPedido = ruta.getListaPedido().size(); 
+        for(int i=0; i< cantPedido; i++){
             Pedido ped = new Pedido(ruta.getListaPedido().get(i));
             listaPedido.add(ped);
-        }
+        } 
         
-        //listaPedido = (ArrayList<Pedido>) ruta.getListaPedido().clone();
         cantDiesel = ruta.getCantDiesel();
         cantGLP = ruta.getCantGLP();
         distancia = ruta.getDistancia();
@@ -102,35 +104,39 @@ public class Ruta {
     }
     
     public void imprimir(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-        System.out.print("Tara: " + camion.getTipoCamion().getTara());
-        System.out.print("  CapGLP: " + camion.getTipoCamion().getCapacidadGlp());
-        System.out.println("  CapDiesel: " + camion.getTipoCamion().getCapacidadDiesel());
         
-        System.out.print("Distancia: " + distancia + " Cantidad: " + listaPedido.size());
-        System.out.format("  CantGLP:  %.3f", cantGLP);
-        System.out.format("  CantDiesel %.3f\n", cantDiesel);
-        
-        System.out.println("Salida: " + sdf.format(salida) + "  Llegada: " + sdf.format(llegada));
-        
-        /*
-        int cantDispon = camion.getListaDisponibilidad().size();
+        int cantDispon = camion.getDisponibilidads().size();
         Disponibilidad dispon = null;
         boolean verificar = false;
         
         for(int i= 0; i< cantDispon; i++){
-            dispon = camion.getListaDisponibilidad().get(i);
+            dispon = (Disponibilidad) camion.getDisponibilidads().get(i);
             if(dispon.getHoraInicio().equals(salida) && dispon.getHoraFin().equals(llegada)){
                 verificar = true;
                 break;
             }
         }
         
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+        System.out.println("Camion " + camion.getEstado());
+
+        System.out.print("  Tara: " + camion.getTipoCamion().getTara());
+        System.out.print("  CapGLP: " + camion.getTipoCamion().getCapacidadGlp());
+        System.out.println("  CapDiesel: " + camion.getTipoCamion().getCapacidadDiesel());
+
+        System.out.print("Distancia: " + distancia + " Cantidad: " + listaPedido.size());
+        System.out.format("  CantGLP:  %.3f", cantGLP);
+        System.out.format("  CantDiesel %.3f\n", cantDiesel);
+
+        System.out.println("Salida: " + sdf.format(salida) + "  Llegada: " + sdf.format(llegada));
+
         System.out.println("Disponibilidad de camion: " + verificar);
-        System.out.println("Salida: " + sdf.format(dispon.getHoraInicio()) + "  Llegada: " +
-                sdf.format(dispon.getHoraFin()));
+
+        if (dispon != null)
+            System.out.println("Salida: " + sdf.format(dispon.getHoraInicio()) + "  Llegada: " +
+                    sdf.format(dispon.getHoraFin()));
         System.out.println();
-        */
+
         for (int j= 0; j< listaPedido.size(); j++){
             //System.out.print( " -> " + listaPedido.get(j).getIdPedido());
             System.out.format ("-> Pedido N° %03d",  listaPedido.get(j).getIdPedido());
@@ -140,7 +146,7 @@ public class Ruta {
             System.out.print(" E: " + sdf.format(listaPedido.get(j).getFechaEntrega()));
             System.out.println();
         }
-        System.out.println();
+        System.out.println();        
     }
     
     private Date obtenerTiempo(int distanciaPedido, Date inicio, int accion ){
@@ -406,7 +412,15 @@ public class Ruta {
                         verificar = false;
                         break;
                     }
-                    if (dispon.getHoraInicio().before(llegada) && dispon.getHoraFin().after(llegada)){
+                    else if (dispon.getHoraInicio().before(llegada) && dispon.getHoraFin().after(llegada)){
+                        verificar = false;
+                        break;
+                    }
+                    else if (salida.before(dispon.getHoraInicio()) && llegada.after(dispon.getHoraInicio())){
+                        verificar = false;
+                        break;
+                    }
+                    else if (salida.before(dispon.getHoraFin()) && llegada.after(dispon.getHoraFin())){
                         verificar = false;
                         break;
                     }
@@ -455,29 +469,40 @@ public class Ruta {
         return verificar;
     }   
     
-    private void reducirDisponibilidad(Date inicio, Date fin){
+    private boolean reducirDisponibilidad(Date inicio, Date fin){
     
         int cantDispon = camion.getDisponibilidads().size();
-        Disponibilidad dispon = null;
-        boolean verificar = false;
+        Disponibilidad dispon, actual = null;
+        boolean verificarActual = false, verificarDispon = true;
         
         for(int i= 0; i< cantDispon; i++){
             dispon = (Disponibilidad) camion.getDisponibilidads().get(i);
+            
             if(dispon.getHoraInicio().equals(inicio) && dispon.getHoraFin().equals(fin)){
-                
-                verificar = true;
-                break;
+                actual = dispon;
+                verificarActual = true;
+            }
+            else if (!inicio.equals(salida)){ // buscar disponibilidad si se ha movido
+                if (dispon.getHoraInicio().before(inicio) && dispon.getHoraFin().after(inicio))
+                    verificarDispon = false;
+                else if (dispon.getHoraInicio().before(fin) && dispon.getHoraFin().after(fin))
+                    verificarDispon = false;
+                else if (inicio.before(dispon.getHoraInicio()) && fin.after(dispon.getHoraInicio())){
+                    verificarDispon = false;
+                }
+                else if (inicio.before(dispon.getHoraFin()) && fin.after(dispon.getHoraFin())){
+                    verificarDispon = false;
+                }
             }
         }
-        if(verificar){ 
-            dispon.setHoraInicio(salida);
-            dispon.setHoraFin(llegada);
+        
+        if(verificarActual && verificarDispon){ 
+            actual.setHoraInicio(salida);
+            actual.setHoraFin(llegada);
+            return true;
         }
-        else {
-            //System.out.println("no esta"); 
-            //this.imprimir();
-        }
-    } 
+        return false;
+    }  
     
     public boolean agregarPedido(ArrayList<Camion> camiones, Pedido pedido){
        

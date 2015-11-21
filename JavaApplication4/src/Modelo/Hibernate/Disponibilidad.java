@@ -17,8 +17,17 @@ public class Disponibilidad  implements java.io.Serializable {
      private Date fecha;
 
     public Disponibilidad() {
+        this.camion = camion;
+        horaInicio = horaFin = fecha = null;
     }
 
+    public Disponibilidad(Disponibilidad dispon){
+        this.camion = dispon.getCamion();
+        horaInicio = dispon.getHoraInicio();
+        horaFin = dispon.getHoraFin();
+        fecha = dispon.getFecha();        
+    }
+    
     public Disponibilidad(Camion camion, Date horaInicio, Date horaFin, Date fecha) {
        this.camion = camion;
        this.horaInicio = horaInicio;

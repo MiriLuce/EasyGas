@@ -8,7 +8,8 @@ package Mapa;
 
 import Mapa.Ciudades.CiudadXYZ;
 import Mapa.Utilidades.Pantalla;
-import Modelo.Constantes.EasyGas;
+import Modelo.Hibernate.Ruta;
+//import Modelo.Constantes.EasyGas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
@@ -21,27 +22,21 @@ public class Mapa implements Runnable {
     private Pantalla pantalla;
     public int ancho, alto;
     public String titulo;
-
     private Thread hilo;
-
     private BufferStrategy bs;
     private Graphics g;
 
     private boolean corriendo = false;
-
     private float camX, camY;
 
+    private Ruta ruta;
     CiudadXYZ ciudadXYZ;
-
     Camara camara;
-    
-    CamionMapa camion;
-    
-    ClienteMapa cliente;
-    
-    CentralMapa central;
-    
+    CamionMapa camion;    
+    ClienteMapa cliente;   
+    CentralMapa central; 
     private Teclado teclado;
+    
 
     public Mapa(String t, int an, int al) {
         titulo = t;
@@ -50,10 +45,10 @@ public class Mapa implements Runnable {
         teclado = new Teclado();
     }
 
-    private void Inicializa() {
+    private  void Inicializa() {
         pantalla = new Pantalla(titulo,ancho, alto);
         pantalla.ObtenFrame().addKeyListener(teclado);
-        EasyGas.Inicializa();
+        //EasyGas.Inicializa();
 
         camara = new Camara(this, 0, 0);
 
@@ -62,7 +57,7 @@ public class Mapa implements Runnable {
 
         ciudadXYZ = new CiudadXYZ(this);
         
-        camion = new CamionMapa(this, 1, 50, EasyGas.rutaPrueba);
+        camion = new CamionMapa(this, 1, 50, getRuta());
         
         central = new CentralMapa(this, 20, 10);
         
@@ -166,5 +161,19 @@ public class Mapa implements Runnable {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * @return the ruta
+     */
+    public Ruta getRuta() {
+        return ruta;
+    }
+
+    /**
+     * @param ruta the ruta to set
+     */
+    public void setRuta(Ruta ruta) {
+        this.ruta = ruta;
     }
 }

@@ -9,6 +9,7 @@ import Modelo.Hibernate.*;
 import Algoritmo.Constantes.Constantes;
 import Algoritmo.Constantes.Mapa;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
@@ -51,14 +52,8 @@ public class AlgoritmoGenetico {
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
-            /*
-            for(int i=0; i< poblacion.size(); i++)
-                for(int j=0; j< poblacion.get(i).getCadena().size(); j++)
-                    if(!poblacion.get(i).getCadena().get(j).verificar())
-                        poblacion.get(i).getCadena().get(j).imprimir();
-            */
+            
             eliminaAberraciones();
-            //mutaPoblacion();
             eliminaAberraciones();
             cant++;
         }
@@ -126,18 +121,42 @@ public class AlgoritmoGenetico {
     //mezcla las rutas de los camiones
     private void emparejaPoblacion(){
         int indAux = 0;
-        int cantAux = poblacion.size() - 1;
+        int cantAux = poblacion.size() - 1, contador;
         boolean seguirEmparejando = true;
-        //System.out.println("Empareja");
+        
+        int[] arrayPoblacion = new int[poblacion.size()];
+        Arrays.fill(arrayPoblacion, 0);
+        
         while (seguirEmparejando) {
-            ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux), poblacion.get(indAux + 1));
             
-            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0));  //hijos.get(0).imprimir();}
-            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1)); // hijos.get(1).imprimir();}
-            //System.out.println(indAux);
-            if (indAux == cantAux || indAux == (cantAux - 1)) {
-                seguirEmparejando = false;
-            } else indAux += 2;
+            int indAux1 = generaNumRandom(0, cantAux);
+            int indAux2 = generaNumRandom(0, cantAux);
+            
+            // Verifico su el cromosoma 1 no ha sido seleccionado
+            contador = 0;
+            while (arrayPoblacion[indAux1] == 1){                 
+                indAux1 = generaNumRandom(0, cantAux);
+                contador ++;
+                if (contador == cantAux) break;
+            }
+            if (arrayPoblacion[indAux1] == 1) break;
+            
+            // Verifico su el cromosoma 2 no ha sido seleccionado
+            contador = 0;
+            while (arrayPoblacion[indAux2] == 1){                 
+                indAux2 = generaNumRandom(0, cantAux);
+                contador ++;
+                if (contador == cantAux) break;
+            }
+            if (arrayPoblacion[indAux2] == 1) break;
+            
+            // Selecciono cromosoma 1 y 2
+            arrayPoblacion[indAux1] = arrayPoblacion[indAux2] = 1;
+            
+            ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux1), poblacion.get(indAux2));
+            
+            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0)); 
+            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1));
         }
     }
     
