@@ -25,6 +25,10 @@ public class Turno  implements java.io.Serializable {
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
     }
+    public Turno(Integer idTurno,Date horaInicio, Date horaFin) {
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+    }
     public Turno(Date horaInicio, Date horaFin, Set empleados) {
        this.horaInicio = horaInicio;
        this.horaFin = horaFin;

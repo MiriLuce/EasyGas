@@ -8,6 +8,11 @@ package Algoritmo.Constantes;
 import java.io.IOException;
 import java.util.ArrayList;
 import Modelo.Hibernate.Nodo;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  *
@@ -38,23 +43,45 @@ public class Mapa {
                 
             }
         }
-        /*
         FileInputStream fistream = new FileInputStream("mapa.txt");
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String fullLine = br.readLine();
-        String[] lineRead = fullLine.split("\\s+");
-        // lee cordenada y y coordenada x
-        int cantObstaculos = Integer.parseInt(lineRead[0]);
-        for(int i=0;i<cantObstaculos;i++){
-               fullLine = br.readLine();
-               lineRead = fullLine.split(",");
-               int x=Integer.parseInt(lineRead[0]);
-               int y=Integer.parseInt(lineRead[1]);
-               mapa[y][x]=0;
-            
+        String line;
+        
+        while((line=br.readLine())!=null){
+            Scanner scanner = new Scanner(line);
+            //System.out.println(line);
+            String obstaculos [] = line.split(";");
+            int [][] obstaculosEnteros= new int[obstaculos.length][2];
+            for(int i=0;i<obstaculos.length;i++){
+                int x=Integer.parseInt((obstaculos[i].split(","))[0]);
+                int y=Integer.parseInt((obstaculos[i].split(","))[1]);
+                obstaculosEnteros[i][0]=x;  
+                obstaculosEnteros[i][1]=y;       
+            }
+            	// int [i][0] [i][1] = iX iY
+	for(int i=0;i<obstaculos.length-1;i++){
+		mapa[obstaculosEnteros[i][1]][obstaculosEnteros[i][0]]=0;
+		
+		int xi=obstaculosEnteros[i][0];
+                int yi=obstaculosEnteros[i][1];
+		int xf=obstaculosEnteros[i+1][0];
+                int yf=obstaculosEnteros[i+1][1];
+		if(xf==xi){
+                    for(int j=(yi<yf?yi:yf);j<(yi>yf?yi:yf);j++){
+                       // System.out.println(xi + "," + j);
+                        mapa[j][xi]=0;
+                    }
+		}
+		if(yf==yi){
+                    for(int j=(xi<xf?xi:xf);j<(xi>xf?xi:xf);j++){
+                       // System.out.println(j + "," + yf);
+                        mapa[yf][j]=0;
+                    }
+		}
+            }
         }
-        */
+        
     }
 
     //constructor
@@ -422,16 +449,20 @@ public class Mapa {
                    
                    
                    ultimoIndice++;
-                   caminoX[ultimoIndice]=xi<xf?xf:xi;
-                   caminoY[ultimoIndice]=fueArribaFinal?(xi<xf?xi:xf)-mayorLimiteX-1:(xi<xf?xi:xf)+mayorLimiteX+1;
+                   caminoX[ultimoIndice]=xi<xf?xi:xf;
+                   caminoY[ultimoIndice]=fueArribaFinal?(yi<yf?yi:yf)-mayorLimiteX-1:(yi<yf?yi:yf)+mayorLimiteX+1;
                    ultimoIndice++;
                    caminoX[ultimoIndice]=xi<xf?xf:xi ;
                    caminoY[ultimoIndice]=fueArribaFinal?(xi<xf?xi:xf)-mayorLimiteX-1:(xi<xf?xi:xf)+mayorLimiteX+1;
-                   
-                   return Math.abs(xf-xi)+caminoY[ultimoIndice];
+                   int distancia=0;
+                   if((xi<xf?xi:xf)==caminoX[ultimoIndice-1]) distancia += Math.abs(yi-caminoY[ultimoIndice-1]);
+                   if(caminoY[ultimoIndice-1]==caminoY[ultimoIndice]) distancia += Math.abs(caminoX[ultimoIndice-1]-caminoX[ultimoIndice]);
+                   if((xi>xf?xi:xf)==caminoX[ultimoIndice]) distancia += Math.abs(yf-caminoY[ultimoIndice]);
+                   return distancia;
+            
             
             }
-        } else { //si ambos puntos son iguales tons no hay distancia duuuuuuuuuh :v
+        } else { //si ambos puntos son iguales tons no hay distancia
             return 0;
         }
         

@@ -7,12 +7,18 @@ package Vista;
 
 import Controlador.*;
 import Modelo.Constantes.EasyGas;
+import Modelo.Hibernate.Turno;
 import Modelo.Hibernate.Usuario;
 import Util.HibernateUtil;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
@@ -32,7 +38,7 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
      */
     UsuarioControlador usuarioControlador = new UsuarioControlador();
 
-    public Pantalla_Inicio() {
+    public Pantalla_Inicio() throws ParseException {
         
         initComponents();
         java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
@@ -40,6 +46,33 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
         Image img= kit.createImage(url);
         this.setIconImage(img);
         this.setVisible(true);
+         /****************************Lista de turnos******************************/
+         //****************************************Primer turno**************************/
+        Date ahora= new Date();
+        String ahoraString = new SimpleDateFormat("yyyy-MM-dd").format(ahora);
+        String horaStringInicio=ahoraString + " 00:00:00";
+        String horaStringFin=ahoraString +" 07:59:59";
+        Date dHoraInicio = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringInicio);
+        Date dHoraFin = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringFin);
+        Turno t = new Turno(1,dHoraInicio,dHoraFin);
+        Algoritmo.Constantes.Constantes.lTurnos.add(t);
+        //**************************************Segundo turno**************************/
+        horaStringInicio=ahoraString + " 08:00:00";
+        horaStringFin=ahoraString + " 15:59:59";
+        dHoraInicio = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringInicio);
+        dHoraFin = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringFin);
+        t = new Turno(2,dHoraInicio,dHoraFin);
+        Algoritmo.Constantes.Constantes.lTurnos.add(t);
+        //**************************************tercer turno**************************/
+        horaStringInicio=ahoraString + " 16:00:00";
+        horaStringFin=ahoraString + " 23:59:59";
+        dHoraInicio = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringInicio);
+        dHoraFin = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(horaStringFin);
+        t = new Turno(3,dHoraInicio,dHoraFin);
+        //System.out.println(ahoraString);
+        Algoritmo.Constantes.Constantes.lTurnos.add(t);
+        /********************* fin de insertar turnos*******************************/
+       
     }
 
     //funcion para validar los datos de ingreso
@@ -296,7 +329,11 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Pantalla_Inicio().setVisible(true);
+                try {
+                    new Pantalla_Inicio().setVisible(true);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

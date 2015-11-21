@@ -16,6 +16,7 @@ import java.awt.font.TextAttribute;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -387,7 +388,11 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         JOptionPane.showMessageDialog(null, "Hasta luego!");
-        Pantalla_Inicio pInicio = new Pantalla_Inicio();
+        try {
+            Pantalla_Inicio pInicio = new Pantalla_Inicio();
+        } catch (ParseException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 

@@ -10,9 +10,12 @@ import Modelo.Hibernate.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.CardLayout;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -3635,7 +3638,11 @@ public class Pantalla_Principal extends javax.swing.JFrame {
     private void menuCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCerrarSesionActionPerformed
         this.setVisible(false);
         JOptionPane.showMessageDialog(null, "Hasta luego!");
-        Pantalla_Inicio pInicio = new Pantalla_Inicio();
+        try {
+            Pantalla_Inicio pInicio = new Pantalla_Inicio();
+        } catch (ParseException ex) {
+            Logger.getLogger(Pantalla_Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.dispose();
     }//GEN-LAST:event_menuCerrarSesionActionPerformed
 

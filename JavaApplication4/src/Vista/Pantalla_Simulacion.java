@@ -18,7 +18,10 @@ import Algoritmo.Genetico.AlgoritmoGenetico;
 import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.Pedido;
 import Modelo.Hibernate.Ruta;
+import Modelo.Hibernate.Turno;
+import Util.RelojAlgoritmo;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +33,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     //private CamionControlador camionControlador;
     private Cromosoma solucion;
     private List<Ruta> listaRuta;
+    private List<Pedido> lstPedidos;
+    private List<Pedido> lstPedidosSinPrioridad;
+    private List<Pedido> lstPedidosConPrioridad;
     
     public Pantalla_Simulacion() {
         initComponents();
@@ -401,10 +407,31 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        List<Pedido> lstPedidos = PedidoControlador.ListarPedidos();
-        List<Camion> lstCamiones = CamionControlador.ListarCamion();
+        lstPedidos = PedidoControlador.ListarPedidos();// por datos del excel
+        List<Camion> lstCamiones = CamionControlador.ListarCamion(); // por base de datos
+        RelojAlgoritmo r = new RelojAlgoritmo();
+        Turno t = obtenerTurnoActual();
         AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList)lstCamiones, (ArrayList)lstPedidos, 1, mapa);
-        solucion = algoritmo.empieza();
+        
+        while(true){
+            Turno t2 = obtenerTurnoActual();
+            int cantListos=0;
+            if(t2!=null) {
+                        if(!t.equals(t2)) {
+                            System.out.println("Cambio de turno");
+                            t=t2;
+                        }
+                        cantListos=obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
+                        
+            }
+            if(cantListos!=0){
+                    //recalcula
+                    algoritmo.setPedidosConPrioridad((ArrayList)lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
+                    algoritmo.setPedidosSinPrioridad((ArrayList)lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
+                    solucion = algoritmo.empieza();
+            }
+            if(obtenerPedidosNoAtendidos(t)==0)break;
+        }
         
         this.btnIniciar.setEnabled(true);
         this.btnDetener.setEnabled(true);
@@ -422,10 +449,93 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
         }
     }//GEN-LAST:event_nPedCargaBotonActionPerformed
+    public Turno obtenerTurnoActual(){
+            //String originalString = "2010-07-14 09:00:02";
+            //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString);
+            //String newString = new SimpleDateFormat("H:mm").format(date); // 9:00
+            Date horaActual = RelojAlgoritmo.horaActual.getTime();
+            ArrayList<Turno> lturnos= Algoritmo.Constantes.Constantes.lTurnos;
+            //System.out.println(horaActual);
+            for(int i=0;i<3;i++){
 
+               if(perteneceATurno(horaActual,lturnos.get(i))) return lturnos.get(i);
+
+            }
+            return null;
+
+    }
+    public boolean perteneceATurno(Date hora,Turno turno){
+        return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
+      
+    }
+    
+    public int obtenerPedidosAtendidos(Turno t){
+        List<Pedido> pedidosListo;
+        int cantPedidos=lstPedidos.size();
+        int cantListo=0;
+        
+        for(int i=0;i<cantPedidos;i++){
+            Pedido p = lstPedidos.get(i);
+                
+                if(p.getEstado().equals(new String("atendido"))){
+                   cantListo++;
+                }
+            
+            
+        }
+        return cantListo;
+    
+    }
+     public int obtenerPedidosNoAtendidos(Turno t){
+        List<Pedido> pedidosListo;
+        int cantPedidos=lstPedidos.size();
+        int cantNoAtendidos=0;
+        
+        for(int i=0;i<cantPedidos;i++){
+            Pedido p = lstPedidos.get(i);
+            
+                
+                if(p.getEstado().equals(new String("no atendido"))){
+                   cantNoAtendidos++;
+                }
+            
+            
+        }
+        return cantNoAtendidos;
+    
+    }    
    
-
-
+    public int obtenerPedidosListos(Turno t){
+        List<Pedido> pedidosListo= new ArrayList<Pedido>();
+        int cantPedidos=lstPedidos.size();
+        int cantListo=0;
+        
+        for(int i=0;i<cantPedidos;i++){
+//          
+//            if(Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
+//            if(Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t)&& p.getCliente().getTipoDocumento().compareTo("DNI")==0)  p.setPrioridad("tiene");
+//            if(Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t)&& !(p.getCliente().getTipoDocumento().compareTo("DNI")==0)) p.setPrioridad("tiene");
+//            lstPedidos.get(i).setEstado("listo");
+//            cantListo++;
+            Pedido p = lstPedidos.get(i);
+            if(perteneceATurno(p.getHoraSolicitada(),t)) {
+                
+                if(p.getEstado().equals(new String("no atendido")) || p.getEstado().equals(new String("listo"))){
+                    System.out.println("No atendido");
+                    if(Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
+                    if(Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t)&& p.getCliente().getTipoDocumento().compareTo("DNI")==0)  p.setPrioridad("tiene");
+                    if(Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t)&& !(p.getCliente().getTipoDocumento().compareTo("DNI")==0)) p.setPrioridad("tiene");
+                    lstPedidos.get(i).setEstado("listo");
+                    if(p.getPrioridad().compareTo("tiene")==0) lstPedidosConPrioridad.add(p);
+                    else lstPedidosSinPrioridad.add(p);
+                   
+                    cantListo++;
+                }
+            }
+            
+        }
+        return cantListo;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCalcular;
     private javax.swing.JButton btnDetener;

@@ -236,4 +236,18 @@ public class AlgoritmoGenetico {
             }
         }
     }
+
+    /**
+     * @param pedidosConPrioridad the pedidosConPrioridad to set
+     */
+    public void setPedidosConPrioridad(ArrayList<Pedido> pedidosConPrioridad) {
+        this.pedidosConPrioridad = pedidosConPrioridad;
+    }
+
+    /**
+     * @param pedidosSinPrioridad the pedidosSinPrioridad to set
+     */
+    public void setPedidosSinPrioridad(ArrayList<Pedido> pedidosSinPrioridad) {
+        this.pedidosSinPrioridad = pedidosSinPrioridad;
+    }
 }

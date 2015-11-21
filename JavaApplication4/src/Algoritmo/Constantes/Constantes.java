@@ -5,9 +5,11 @@
  */
 package Algoritmo.Constantes;
 
+import Modelo.Hibernate.Turno;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +25,7 @@ public class Constantes {
     public static double probEmparejamiento = 0.75;
     public static double probMutacion = 0.05;
     public static int velCamion;
-    
+    public static ArrayList<Turno> lTurnos = new ArrayList<Turno>();
     // todos los camiones empezaran en la central
     public static int posInicialX = 100;
     public static int posInicialY = 100;
