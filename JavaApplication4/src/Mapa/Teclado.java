@@ -15,7 +15,7 @@ import java.awt.event.KeyListener;
 public class Teclado implements KeyListener {
 
     private boolean[] teclas;
-    public boolean arriba, abajo, izquierda, derecha, barraEspaciadora;
+    public boolean arriba, abajo, izquierda, derecha, barraEspaciadora, ele;
 
     public Teclado() {
         teclas = new boolean[256]; //exagerando 256 xD
@@ -27,6 +27,7 @@ public class Teclado implements KeyListener {
         izquierda = teclas[KeyEvent.VK_A];
         derecha = teclas[KeyEvent.VK_D];
         barraEspaciadora = teclas[KeyEvent.VK_SPACE];
+        ele = teclas[KeyEvent.VK_L];
     }
 
     @Override

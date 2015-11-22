@@ -38,7 +38,15 @@ public class CamionMapa {
     private int numArista; //para saber en cuál arista va
     private boolean recorriendo;
 
-    private int contador;
+    private String placa;
+
+    public BufferedImage getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(BufferedImage imagen) {
+        this.imagen = imagen;
+    }
 
     public CamionMapa(Mapa m, int nid, int vel, Ruta nRuta) {
         id = nid;
@@ -52,13 +60,27 @@ public class CamionMapa {
         numArista = 0;
         direccion = ruta.getAristas().get(0).getDireccion();
         recorriendo = true;
-        contador = 0;
+        placa = ruta.getCamion().getPlaca();
 
+        CambiaColor();
+    }
+
+    private void CambiaColor() {
         //generando color aleatorio del mapa
         int R = (int) (Math.random() * 256);
         int G = (int) (Math.random() * 256);
         int B = (int) (Math.random() * 256);
         colorCamion = new Color(R, G, B);
+        
+        int transparente = imagen.getRGB(0, 0);
+
+        for (int x = 0; x < imagen.getWidth(); x++) {
+            for (int y = 0; y < imagen.getHeight(); y++) {
+                if (imagen.getRGB(x, y) == transparente) {
+                    imagen.setRGB(x, y, colorCamion.getRGB());
+                }
+            }
+        }
     }
 
     public void Actualiza() {
@@ -205,4 +227,13 @@ public class CamionMapa {
         this.id = id;
     }
 
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    
 }

@@ -6,6 +6,7 @@
 package Mapa;
 
 import Mapa.Ciudades.CiudadXYZ;
+import Mapa.Utilidades.PanelLeyenda;
 import Mapa.Utilidades.Pantalla;
 import Modelo.Hibernate.Ruta;
 import Modelo.Constantes.EasyGas;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,14 +94,22 @@ public class Mapa implements Runnable {
     }
 
     private boolean teclaActualPausa, teclaAntiguaPausa; //para manejar que no se presione pausa mas de una vez
+    private boolean teclaActualLeyenda, teclaAntiguaLeyenda; //para manejar que no se presione pausa mas de una vez
     private void Actualiza() {
         teclaActualPausa = teclado.barraEspaciadora;
+        teclaActualLeyenda = teclado.ele;
         
         if (teclaActualPausa && !teclaAntiguaPausa && !enPausa) {
             enPausa = true;
         } else if (teclaActualPausa && !teclaAntiguaPausa && enPausa) {
             enPausa = false;
         }
+        
+        if(teclaActualLeyenda && !teclaAntiguaLeyenda && !enPausa){ //mostrar leyenda cuando se presiona L 
+            PanelLeyenda panel = new PanelLeyenda(camiones);
+            JOptionPane.showMessageDialog(null, panel, "Leyenda", JOptionPane.PLAIN_MESSAGE);
+        }
+            
         teclado.Actualiza();
         ciudadXYZ.Actualiza();
 
@@ -109,6 +119,7 @@ public class Mapa implements Runnable {
         }
         
         teclaAntiguaPausa = teclaActualPausa;
+        teclaAntiguaLeyenda = teclaActualLeyenda;
     }
 
     private void DibujaCamiones(Graphics g) {

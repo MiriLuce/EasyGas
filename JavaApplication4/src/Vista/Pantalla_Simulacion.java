@@ -358,8 +358,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             ArrayList<Cliente> listaClientes = new ArrayList<Cliente>(); //esta lista debe ser la lista de todos los clientes obtenida con la carga masiva
             Mapa mapa = new Mapa("Ciudad XYZ", 800, 800, listaRuta, listaClientes);
             mapa.Empieza();
-        }
-        else{
+        } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para empezar la simulación");
         }
     }//GEN-LAST:event_btnIniciarActionPerformed
@@ -381,60 +380,66 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
 
-        List<Ruta> ruta = null;// lo que acaba de guardar en la bd
-        JasperPrint jMain = null;
-        for (int i = 0; i < ruta.size(); i++) {
-            String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
-            Map<String, Object> params = new HashMap<String, Object>();
-            try {
-                if (!EasyGas.sesion.isOpen()) {
-                    EasyGas.sesion = EasyGas.sesFact.openSession();
-                }
-                Connection conn = null;
-                SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
-                ConnectionProvider cp = sfi.getConnectionProvider();
-                conn = cp.getConnection();
-                SimpleDateFormat formato
-                        = new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
-                String fecha = formato.format(new Date());
+        int fila = tblResultados.getSelectedRow();
+
+        if (fila != -1) {
+            List<Ruta> ruta = null;// lo que acaba de guardar en la bd
+            JasperPrint jMain = null;
+            for (int i = 0; i < ruta.size(); i++) {
+                String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
+                Map<String, Object> params = new HashMap<String, Object>();
+                try {
+                    if (!EasyGas.sesion.isOpen()) {
+                        EasyGas.sesion = EasyGas.sesFact.openSession();
+                    }
+                    Connection conn = null;
+                    SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
+                    ConnectionProvider cp = sfi.getConnectionProvider();
+                    conn = cp.getConnection();
+                    SimpleDateFormat formato
+                            = new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+                    String fecha = formato.format(new Date());
                     //System.out.println(fecha);
-                // cambio el parametro por fechas y se acabo,  yupii
-                params.put("idRuta", ruta.get(i).getIdRuta());
-                String nombre = EasyGas.usuarioActual == null ? "Administrador" : EasyGas.usuarioActual.getEmpleado().getNombres() + " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
-                params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString());
-                params.put("author", nombre);
-                params.put("startDate", fecha);
-                params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat());
-                JasperReport jasperReport
-                        = JasperCompileManager.compileReport(reportSource);
+                    // cambio el parametro por fechas y se acabo,  yupii
+                    params.put("idRuta", ruta.get(i).getIdRuta());
+                    String nombre = EasyGas.usuarioActual == null ? "Administrador" : EasyGas.usuarioActual.getEmpleado().getNombres() + " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
+                    params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString());
+                    params.put("author", nombre);
+                    params.put("startDate", fecha);
+                    params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat());
+                    JasperReport jasperReport
+                            = JasperCompileManager.compileReport(reportSource);
 
-                JasperPrint jasperPrint
-                        = JasperFillManager.fillReport(
-                                jasperReport, params, conn);
+                    JasperPrint jasperPrint
+                            = JasperFillManager.fillReport(
+                                    jasperReport, params, conn);
 
-                jasperPrint.setName("Ruta " + ruta.get(i).getIdRuta());
-                if (i == 0) {
-                    jMain = jasperPrint; // el primero es el main
-                } else { // sino anhado las paginas al main
-                    List pages = jasperPrint.getPages();
-                    for (int j = 0; j < pages.size(); j++) {
-                        JRPrintPage object = (JRPrintPage) pages.get(j);
-                        jMain.addPage(object);
+                    jasperPrint.setName("Ruta " + ruta.get(i).getIdRuta());
+                    if (i == 0) {
+                        jMain = jasperPrint; // el primero es el main
+                    } else { // sino anhado las paginas al main
+                        List pages = jasperPrint.getPages();
+                        for (int j = 0; j < pages.size(); j++) {
+                            JRPrintPage object = (JRPrintPage) pages.get(j);
+                            jMain.addPage(object);
+
+                        }
 
                     }
 
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    if (EasyGas.sesion.isOpen()) {
+                        EasyGas.sesion.close();
+                    }
                 }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                if (EasyGas.sesion.isOpen()) {
-                    EasyGas.sesion.close();
-                }
             }
-
+            JasperViewer.viewReport(jMain);
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para exportar los datos");
         }
-        JasperViewer.viewReport(jMain);
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
@@ -493,7 +498,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_nPedCargaBotonActionPerformed
     public Turno obtenerTurnoActual() {
-            //String originalString = "2010-07-14 09:00:02";
+        //String originalString = "2010-07-14 09:00:02";
         //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString);
         //String newString = new SimpleDateFormat("H:mm").format(date); // 9:00
         Date horaActual = RelojAlgoritmo.horaActual.getTime();
