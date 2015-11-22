@@ -370,42 +370,46 @@ public class ClienteControlador {
             while((cadena = b.readLine())!=null) {
                  
                 verifica = 0;
-                String[] cadenaArr = cadena.split(" ");
-                ArrayList<Cliente> arrCli = BuscaClienteNroDoc(cadenaArr[0]);                
+                String[] cadenaArr = cadena.split(":");
+                ArrayList<Cliente> arrCli = null;
+                if(cadenaArr[1].compareTo("jur")==0){
+                    arrCli = BuscaClienteNroDoc("0000000"+cadenaArr[0]);                
+                }else if(cadenaArr[1].compareTo("nat")==0){
+                    arrCli = BuscaClienteNroDoc("0000"+cadenaArr[0]);                
+                }
+                
                 Cliente c = new Cliente();
                 
-                if (arrCli.size()==0){
-                    int verificaPlaca = ValidarNumeroDoc(cadenaArr[0],cadenaArr[1]);
-                    if (verificaPlaca==1){
-                        int posX = Integer.parseInt(cadenaArr[2]);
-                        int posY = Integer.parseInt(cadenaArr[3]);
-                        int verificaNodo = ValidarNodo(posX,posY);
-                        if (verificaNodo==1){
-                            Nodo nod = new Nodo();
-                            nod.setCoordX(posX);
-                            nod.setCoordY(posY);
-                            nod.setHabilitado("SI");
-                            
-                            NodoControlador nodControlador = new NodoControlador();
-                            nodControlador.GuardarNodo(nod);
-                            
-                            c.setNodo(nod);
-                            c.setFechaRegistro(new Date());
-                            c.setNroDocumento(cadenaArr[0]);
-                            c.setTipoDocumento(cadenaArr[1]);
-                            String nombre = "";
-                            for(int i = 4; i<cadenaArr.length;i++){
-                                if(i!=4){
-                                    nombre += " ";
-                                }
-                                nombre += cadenaArr[i];
-                            }
-                            c.setNombres(nombre);
-                            c.setEstado("Registrado");
-                            GuardarCliente(c);
-                            verifica = 1;
-                        }
-                    }  
+                if (arrCli.isEmpty()){
+                    String[] cadenaNodo = cadenaArr[2].split(",");                    
+                    int posX = Integer.parseInt(cadenaNodo[0].trim());
+                    int posY = Integer.parseInt(cadenaNodo[1].trim());
+                    int verificaNodo = ValidarNodo(posX,posY);
+                    if (verificaNodo==1){
+                        Nodo nod = new Nodo();
+                        nod.setCoordX(posX);
+                        nod.setCoordY(posY);
+                        nod.setHabilitado("SI");
+
+                        NodoControlador nodControlador = new NodoControlador();
+                        nodControlador.GuardarNodo(nod);
+
+                        c.setNodo(nod);
+                        c.setFechaRegistro(new Date());
+                        //
+                        if(cadenaArr[1].compareTo("jur")==0){                            
+                            c.setNroDocumento("0000000"+cadenaArr[0]);
+                            c.setTipoDocumento("RUC");
+                        }else if(cadenaArr[1].compareTo("nat")==0){
+                            c.setNroDocumento("0000"+cadenaArr[0]);
+                            c.setTipoDocumento("DNI");
+                        }                        
+                        //                        
+                        c.setNombres("");
+                        c.setEstado("Registrado");
+                        GuardarCliente(c);
+                        verifica = 1;
+                    } 
                 }
                 if (verifica == 1){ 
                     datos[1]++;

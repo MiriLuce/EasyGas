@@ -343,7 +343,7 @@ public class Pantalla_ClienteCarga extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "DNI", "Nombre", "Dirección", "Fecha de registro", "Estado"
+                "Codigo", "DNI/RUC", "Nombre", "Dirección", "Fecha de registro", "Estado"
             }
         ) {
             Class[] types = new Class [] {

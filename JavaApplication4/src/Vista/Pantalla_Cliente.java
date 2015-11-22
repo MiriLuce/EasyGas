@@ -58,7 +58,7 @@ public class Pantalla_Cliente extends javax.swing.JInternalFrame {
     //Modelo de la tabla
     private class ClienteModelo extends AbstractTableModel{
 
-        String [] titles = {"Código","DNI","Nombre","Direccion","Fecha de Registro","Estado"};
+        String [] titles = {"Código","DNI/RUC","Nombre","Direccion","Fecha de Registro","Estado"};
         List<Cliente> lista = new ArrayList<Cliente>();
         
         @Override
