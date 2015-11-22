@@ -15,9 +15,14 @@ import Modelo.Hibernate.*;
 import Util.RelojAlgoritmo;
 import java.awt.Cursor;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -35,7 +40,7 @@ import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
 public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
     //private CamionControlador camionControlador;
-    private Cromosoma solucion;
+    private ArrayList<Cromosoma> soluciones;
     private ArrayList<Ruta> listaRuta;
     private List<Pedido> lstPedidos;
     private List<Pedido> lstPedidosSinPrioridad;
@@ -436,7 +441,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                     //recalcula
                     algoritmo.setPedidosConPrioridad((ArrayList)lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
                     algoritmo.setPedidosSinPrioridad((ArrayList)lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
-                    solucion = algoritmo.empieza();
+                    soluciones = algoritmo.empieza();
             }
             if(obtenerPedidosNoAtendidos(t)==0)break;
         }
@@ -451,7 +456,13 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         if (archivo != null) {
             nPedCargaBoton.setEnabled(false);
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            PedidoControlador.CargaPedidosSimulacion(archivo.getAbsolutePath()); //funcion de carga masiva de pedidos con el formato del profe
+            try {
+                lstPedidos = PedidoControlador.CargaPedidosSimulacion(archivo.getAbsolutePath()); //funcion de carga masiva de pedidos con el formato del profe
+            } catch (IOException ex) {
+                Logger.getLogger(Pantalla_Simulacion.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(Pantalla_Simulacion.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.setCursor(Cursor.getDefaultCursor());
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
         }

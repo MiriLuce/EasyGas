@@ -13,8 +13,10 @@ import Modelo.Hibernate.Cliente;
 import Modelo.Hibernate.Nodo;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -67,7 +69,7 @@ public class Mapa implements Runnable {
         }
     }
 
-    private void Inicializa() {
+    private void Inicializa() throws IOException {
         pantalla = new Pantalla(titulo, ancho, alto);
         pantalla.ObtenFrame().addKeyListener(teclado);
         EasyGas.Inicializa();
@@ -151,7 +153,11 @@ public class Mapa implements Runnable {
 
     @Override
     public void run() {
-        Inicializa();
+        try {
+            Inicializa();
+        } catch (IOException ex) {
+            Logger.getLogger(Mapa.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         int fps = 60;
         double tiempoPorAct = 1000000000 / fps; //nanosegundos

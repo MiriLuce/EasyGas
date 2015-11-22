@@ -8,6 +8,7 @@ package Controlador;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.*;
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
@@ -61,7 +62,7 @@ public class PedidoControlador {
 //                p.getCliente().setNodo(n);
                 lista.add(p);
             }
-            
+
             tx.commit();
 
         } catch (Exception e) {
@@ -112,16 +113,16 @@ public class PedidoControlador {
                     remueve = true;
                 }
             }
-            
+
             if (plazo.getSelectedIndex() != 0) {
                 String p = plazo.getSelectedItem().toString();
                 int plazoAux = GeneralControlador.SacaSiguienteNumeroEnString(p);
-                
-                if (ped.getPlazo()!=plazoAux) {
+
+                if (ped.getPlazo() != plazoAux) {
                     remueve = true;
                 }
             }
-            
+
             if (estado.getSelectedIndex() != 0) {
                 String e = estado.getSelectedItem().toString();
                 if (!ped.getEstado().equalsIgnoreCase(e)) {
@@ -158,7 +159,7 @@ public class PedidoControlador {
             query.addEntity(Pedido.class);
             query.setParameter("idpedido", pedidoId);
             List aux = query.list();
-            
+
             tx.commit();
 
             for (Iterator i = aux.iterator(); i.hasNext();) {
@@ -169,7 +170,6 @@ public class PedidoControlador {
                 p.getCliente().setNodo(n);
                 lista.add(p);
             }
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
@@ -287,7 +287,7 @@ public class PedidoControlador {
         BufferedReader br = null;
         String linea = "";
         String cvsDiv = ",";
-        
+
         ArrayList<Pedido> lista = new ArrayList<Pedido>();
 
         try {
@@ -321,8 +321,8 @@ public class PedidoControlador {
                 Pedido ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
 
                 lista.add(ped);
-                
-                //GuardarPedido(ped);
+
+                GuardarPedido(ped);
             }
 
         } catch (FileNotFoundException e) {
@@ -337,63 +337,54 @@ public class PedidoControlador {
                 }
             }
         }
-        
+
         return lista;
     }
+
+    private static Date FormaFechaRegistro(String fecha, String hora) throws ParseException{
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+        String nuevaFecha = ""+fecha+" "+hora;
+        return sdf.parse(nuevaFecha);
+    }
     
-    public static ArrayList<Pedido> CargaPedidosSimulacion(String rutaArchivo) {
-        BufferedReader br = null;
-        String linea = "";
-        String cvsDiv = ",";
-        
+    public static ArrayList<Pedido> CargaPedidosSimulacion(String rutaArchivo) throws FileNotFoundException, IOException, ParseException {
+
         ArrayList<Pedido> lista = new ArrayList<Pedido>();
 
-        try {
+        FileInputStream fistream = new FileInputStream(rutaArchivo);
+        DataInputStream in = new DataInputStream(fistream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line;
 
-            br = new BufferedReader(new FileReader(rutaArchivo));
-            while ((linea = br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
+            String pedido[] = line.split(".");
 
-                //se usa punto y coma de separador
-                String[] datosPed = linea.split(cvsDiv);
+            Cliente c = ClienteControlador.BuscaClienteId(Integer.parseInt(pedido[2]));
+            
+            Date fechaRegistro = FormaFechaRegistro(pedido[0],pedido[1]);
+            
+            int p = Integer.parseInt(pedido[4].substring(1));
+            
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fechaRegistro);
+            cal.add(Calendar.HOUR, p);
+            Date horaSolicitada = cal.getTime();
+            
+            int cantGLP = Integer.parseInt(pedido[3]);
+            
+            String prioridad;
 
-                String cadAux = GeneralControlador.DevuelveFormatoDireccion(Integer.parseInt(datosPed[2]), Integer.parseInt(datosPed[3]));
-                ArrayList<Integer> aux = GeneralControlador.SacaCoordinadas(cadAux);
-
-                Cliente c = ClienteControlador.BuscaClienteDireccion(ClienteControlador.ListarClientes(), aux);
-                int p = Integer.parseInt(datosPed[1]);
-                double cantGLP = Double.parseDouble(datosPed[0]);
-
-                String prioridad;
-
-                if (PedidoControlador.TienePrioridad(c)) {
-                    prioridad = "SI";
-                } else {
-                    prioridad = "NO";
-                }
-
-                Calendar cal = Calendar.getInstance(); //fecha y hora actual de registro
-                Date ahora = cal.getTime();
-                cal.add(Calendar.HOUR, p);
-                Date horaSol = cal.getTime();
-
-                Pedido ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
-
-                lista.add(ped);
+            if (PedidoControlador.TienePrioridad(c)) {
+                prioridad = "SI";
+            } else {
+                prioridad = "NO";
             }
+            
+            Pedido ped = new Pedido(c, fechaRegistro, horaSolicitada, cantGLP, p, prioridad);
 
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                }
-            }
+            lista.add(ped);
         }
-        
+
         return lista;
     }
 }
