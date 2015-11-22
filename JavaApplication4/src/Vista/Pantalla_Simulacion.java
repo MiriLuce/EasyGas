@@ -15,7 +15,6 @@ import Modelo.Hibernate.*;
 import Util.RelojAlgoritmo;
 import java.awt.Cursor;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.text.ParseException;
@@ -31,7 +30,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 
 /**
  *
