@@ -45,20 +45,23 @@ public class AlgoritmoGenetico {
         mapa = nuevoMapa;      
     }
     
-    public Cromosoma empieza(){
+    public ArrayList<Cromosoma> empieza(){
 
         int cant = 0;
         while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
             emparejaPoblacion();
-            
             eliminaAberraciones();
             eliminaAberraciones();
             cant++;
         }
-        
-        return mejorCromosoma;
+        this.ordenaPoblacion();
+        ArrayList<Cromosoma> soluciones = new ArrayList<Cromosoma>();
+        soluciones.add(poblacion.get(0));
+        soluciones.add(poblacion.get(1));
+        soluciones.add(poblacion.get(3));
+        return soluciones;
     }
     
     //Crea n nuevos cromosomas requeridos de manera aleatoria
