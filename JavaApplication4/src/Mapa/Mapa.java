@@ -67,7 +67,7 @@ public class Mapa implements Runnable {
     private void CargaClientes(){
         for (int i = 0; i < listaClientes.size(); i++) {
             Nodo n = listaClientes.get(i).getNodo();
-            clientes.add(new ClienteMapa(this,n.getCoordX(),n.getCoordY()));
+            clientes.add(new ClienteMapa(this,n.getCoordX(),n.getCoordY(),listaClientes.get(i).getTipoDocumento()));
         }
     }
 

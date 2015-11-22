@@ -8,6 +8,7 @@ package Mapa;
 import Mapa.Tejas.Teja;
 import Modelo.Constantes.EasyGas;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -21,11 +22,20 @@ public class ClienteMapa {
     private final int posY;
 
     private Mapa mapa;
+    
+    private BufferedImage imagen;
 
-    public ClienteMapa(Mapa m, int nx, int ny) {
+    public ClienteMapa(Mapa m, int nx, int ny, String tipoDoc) {
         posX = nx * Teja.ANCHOTEJA;
         posY = ny * Teja.ANCHOTEJA;
         mapa = m;
+        
+        if(tipoDoc.equalsIgnoreCase("DNI")){
+            imagen=EasyGas.mapaClienteNat;
+        }
+        else{
+            imagen=EasyGas.mapaClienteJur;
+        }
     }
 
     public void Actualiza() {
@@ -33,6 +43,6 @@ public class ClienteMapa {
     }
 
     public void Dibuja(Graphics g) {
-        g.drawImage(EasyGas.mapaCliente, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), 16, 16, null);
+        g.drawImage(imagen, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), 16, 16, null);
     }
 }

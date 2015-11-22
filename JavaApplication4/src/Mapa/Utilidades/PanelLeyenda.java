@@ -6,6 +6,7 @@
 package Mapa.Utilidades;
 
 import Mapa.CamionMapa;
+import Modelo.Constantes.EasyGas;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class PanelLeyenda extends JPanel {
 
     private void PreparaPanel(ArrayList<CamionMapa> lista) {
         JPanel main = new JPanel();
-        main.setLayout(new GridLayout(4, 1));
+        main.setLayout(new GridLayout(lista.size()+3, 1));
 
         for (int i = 0; i < lista.size(); i++) {            
             ImageIcon icono = new ImageIcon(lista.get(i).getImagen());
@@ -35,6 +36,14 @@ public class PanelLeyenda extends JPanel {
 
             main.add(label);
         }
+        
+        JLabel labelNat = new JLabel("Persona Natural", new ImageIcon(EasyGas.mapaClienteNat), SwingConstants.CENTER);
+        JLabel labelJur = new JLabel("Empresa", new ImageIcon(EasyGas.mapaClienteJur), SwingConstants.CENTER);
+        JLabel labelCentral = new JLabel("Central de EasyGas", new ImageIcon(EasyGas.mapaCentral), SwingConstants.CENTER);
+        
+        main.add(labelCentral);
+        main.add(labelNat);
+        main.add(labelJur);
 
         this.add(main);
     }

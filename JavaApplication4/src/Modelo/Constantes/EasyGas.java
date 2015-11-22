@@ -48,7 +48,8 @@ public class EasyGas {
     public static BufferedImage camionNormal;
     public static BufferedImage camionAccidente;
     public static BufferedImage mapaCentral;
-    public static BufferedImage mapaCliente;
+    public static BufferedImage mapaClienteNat;
+    public static BufferedImage mapaClienteJur;
     public static BufferedImage obstaculo;
     public static BufferedImage pista;
     public static BufferedImage rutaAzul;
@@ -60,10 +61,11 @@ public class EasyGas {
     public static Ruta rutaPrueba;
     
     public static void Inicializa(){
-        camionNormal = Imagen.CargaImagen("/mapa_camion_chuks_16.png");
+        camionNormal = Imagen.CargaImagen("/mapa_camion_16.png");
 //        camionAccidente = Imagen.CargaImagen("/mapa_camion_accidente.png");
-        mapaCentral = Imagen.CargaImagen("/mapa_central_chuks.png");
-        mapaCliente = Imagen.CargaImagen("/mapa_cliente_chuks.png");
+        mapaCentral = Imagen.CargaImagen("/mapa_central.png");
+        mapaClienteNat = Imagen.CargaImagen("/mapa_cliente_nat.png");
+        mapaClienteJur = Imagen.CargaImagen("/mapa_cliente_jur.png");
         obstaculo = Imagen.CargaImagen("/mapa_obstaculo.png");
         pista = Imagen.CargaImagen("/mapa_pista.png");
         rutaAzul = Imagen.CargaImagen("/mapa_ruta_azul.png");
