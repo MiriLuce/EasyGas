@@ -24,10 +24,10 @@ public class Mapa {
     int[][] mapa;
     boolean barrera1;
     boolean barrera2;
-    int [] caminoX;
-    int [] caminoY;
-    int caso;
-    int ultimoIndice=-1;
+    public static int [] caminoX;
+    public static int [] caminoY;
+    public static int caso;
+    public static int ultimoIndice=-1;
     boolean fueArriba;
     boolean fueAbajo;
     boolean fueIzq;

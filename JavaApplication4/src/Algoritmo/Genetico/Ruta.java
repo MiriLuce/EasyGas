@@ -159,199 +159,58 @@ public class Ruta {
     }
     
     public ArrayList<Arista> buscarCamino(Nodo inicio, Nodo fin){
-        
-        ArrayList<Arista> camino = new ArrayList();
-        int xi =  inicio.getCoordX(), yi = inicio.getCoordY();
-        int xf = fin.getCoordX(), yf = fin.getCoordY();
-        int dx = Math.abs(xf - xi); //diferencia de puntos X
-        int dy = Math.abs(yf - yi); //diferencia de puntos Y
-        
-        // Caso 1: esta en la misma coordenada x
-        if (xi == xf && yi != yf) { 
-            // No hay barreras en el camino
-            if (!mapa.hayBarrerasY(xi, yi, yf)) {
-                Arista arista = new Arista(dy, inicio, fin);
-                camino.add(arista);
-                return camino;
-            } 
-            // Hay barreras en el camino
+        // se cambio la logica con la distancia
+        ArrayList<Arista> camino=new ArrayList<Arista>();
+        int xi,xf,yi,yf;
+        xi=inicio.getCoordX();
+        xf=fin.getCoordX();
+        yi=inicio.getCoordY();
+        yf= fin.getCoordY();
+        mapa.distanciaMinima(xi,yi,xf,yf);
+        if(mapa.caso==3 &&  mapa.ultimoIndice!=-1){
+            if(mapa.caminoX[1]!=-1){
+                if(yi>yf || xi>xf) {
+                    int intercambio=mapa.caminoY[0]; 
+                    mapa.caminoY[0]=mapa.caminoY[1];
+                    mapa.caminoY[1]=intercambio;
+                    intercambio=mapa.caminoX[0];
+                    mapa.caminoX[0]=mapa.caminoX[1];
+                    mapa.caminoX[1]=intercambio;
+                }
+                //System.out.print("y:"+m.caminoY[0]  + ", x:" + m.caminoX[0] + " ->" );
+                //System.out.print("y:"+m.caminoY[1]  + ", x:" + m.caminoX[1] + " -> " );
+            }
             else {
-                int menorBloque = mapa.calculaMenorY(xi, yi, yf);
-                Nodo nodoA = new Nodo(xi + menorBloque, yi);
-                Nodo nodoB = new Nodo(xf + menorBloque, yf);
-                
-                Nodo nodoIni = yi<yf? nodoA: nodoB;
-                Nodo nodoFin = yi<yf? nodoB: nodoA;
-                
-                Arista arista1 = new Arista(Math.abs(menorBloque), inicio, nodoIni);
-                Arista arista2 = new Arista(dy, nodoIni, nodoFin);
-                Arista arista3 = new Arista(Math.abs(menorBloque), nodoFin, fin);
-                
-                camino.add(arista1);
-                camino.add(arista2);
-                camino.add(arista3);
-                
-                return camino;
+                //System.out.print("y:"+m.caminoY[0]  + ", x:" + m.caminoX[0] + " ->" );
             }
         }
-        
-        // Caso 2: esta en la misma coordenada y
-        if (yi == yf && xi != xf) { 
-            // No hay barreras en el camino
-            if (!mapa.hayBarrerasX(yi, xi, xf)) {
-                Arista arista = new Arista(dx, inicio, fin);
-                camino.add(arista);
-                return camino;
-            } 
-            // Hay barreras en el camino
-            else {
-                int menorBloque = mapa.calculaMenorX(yi, xi, xf);
-                Nodo nodoA = new Nodo(xi, yi + menorBloque);
-                Nodo nodoB = new Nodo(xf, yf + menorBloque);
-                
-                Nodo nodoIni = xi<xf? nodoA: nodoB;
-                Nodo nodoFin = xi<xf? nodoB: nodoA;
-                
-                Arista arista1 = new Arista(Math.abs(menorBloque), inicio, nodoIni);
-                Arista arista2 = new Arista(dx, nodoIni, nodoFin);
-                Arista arista3 = new Arista(Math.abs(menorBloque), nodoFin, fin);
-                
-                camino.add(arista1);
-                camino.add(arista2);
-                camino.add(arista3);
-                
-                return camino;
+        int tamanho= mapa.ultimoIndice!=-1?mapa.ultimoIndice+3:2;
+        int finalCamino[][] = new int [tamanho][2];
+        finalCamino[0][0]=xi;
+        finalCamino[0][1]=yi;
+        if (mapa.ultimoIndice!=-1){
+            for(int j=0;j<mapa.ultimoIndice+1;j++){
+                finalCamino[j+1][0]=mapa.caminoX[j];
+                finalCamino[j+1][1]=mapa.caminoY[j];
             }
         }
-        
-        // Caso 3: nodos no alineados
-        if (xi != xf && yi != yf) { 
-            
-            // No hay barreras en el camino directo (L)
-            int aux1X = xf, aux1Y = yi, aux2X = xi, aux2Y = yf;
-             Nodo aux1, aux2;
-             
-            boolean verficarAux1x = mapa.hayBarrerasX(yi, xi, aux1X);
-            boolean verficarAux1y = mapa.hayBarrerasY(xf, yf, aux1Y);
-            aux1 = new Nodo(aux1X, aux1Y);
-            aux2 = new Nodo(aux2X, aux2Y);
-            
-            if (!verficarAux1x && !verficarAux1y){
-                Arista arista1 = new Arista(dx, inicio, aux1);
-                Arista arista2 = new Arista(dy, aux1, fin);
-                camino.add(arista1);
-                camino.add(arista2);
-                return camino;
-            }
-            
-            boolean verficarAux2x = mapa.hayBarrerasX(yf, xf, aux2X);
-            boolean verficarAux2y = mapa.hayBarrerasY(xi, yi, aux2Y);
-            if (!verficarAux2x && !verficarAux2y){
-                Arista arista1 = new Arista(dy, inicio, aux2);
-                Arista arista2 = new Arista(dx, aux2, fin);
-                camino.add(arista1);
-                camino.add(arista2);
-                return camino;
-            }
-           
-            // Hay barreras en el camino directo (L)
-            int auxIniX = xi < xf ? xi: xf;
-            int auxFinX = xi < xf ? xf: xi;
-            int auxIniY = yi < yf ? yi: yf;
-            int auxFinY = yi < yf ? yf: yi;
-            
-            // Para el primer camino, que solo tiene barrera en el 2do tramo
-            if(!verficarAux1x){
-                int menorBloque =  mapa.calculaMenorY(aux1.getCoordX(), aux1.getCoordY(), yf);
-                // si tiene menor recorrido
-                if(auxIniX < xf + menorBloque && xf + menorBloque < auxFinX){
-                    
-                    Nodo nodoA = new Nodo(aux1.getCoordX()+ menorBloque, yi);
-                    Nodo nodoB = new Nodo(aux1.getCoordX()+ menorBloque, yf);
-                    
-                    Arista arista1 = new Arista(
-                            Math.abs(aux1.getCoordX()+ menorBloque - auxIniX), inicio, nodoA);
-                    Arista arista2 = new Arista(dy, nodoA, nodoB);
-                    Arista arista3 = new Arista(
-                            Math.abs(auxFinX- (aux1.getCoordX()+ menorBloque) ), nodoB, fin);
-                    camino.add(arista1);
-                    camino.add(arista2);
-                    camino.add(arista3);
-
-                    return camino;
-                }      
-                else;
-            }
-            
-            // Para el primer camino, que solo tiene barrera en el 1er tramo
-            if(!verficarAux1y){
-                int menorBloque =  mapa.calculaMenorX(aux1.getCoordY(), xi, aux1.getCoordX());
-                // si tiene menor recorrido
-                if(auxIniY < yi + menorBloque && yi + menorBloque < auxFinY){
-                    
-                    Nodo nodoA = new Nodo(xi, aux1.getCoordY() + menorBloque);
-                    Nodo nodoB = new Nodo(xf, aux1.getCoordY() + menorBloque);
-                    
-                    Arista arista1 = new Arista(
-                            Math.abs(aux1.getCoordY()+ menorBloque - auxIniY), inicio, nodoA);
-                    Arista arista2 = new Arista(dx, nodoA, nodoB);
-                    Arista arista3 = new Arista(
-                            Math.abs(auxFinY - (aux1.getCoordY()+ menorBloque) ), nodoB, fin);
-                    
-                    camino.add(arista1);
-                    camino.add(arista2);
-                    camino.add(arista3);
-
-                    return camino;
-                }      
-                else;
-            }
-            
-            // Para el segundo camino, que solo tiene barrera en el 2do tramo
-            if(!verficarAux2y){
-                int menorBloque =  mapa.calculaMenorX(aux2.getCoordY(), aux2.getCoordX(), xf);
-                // si tiene menor recorrido
-                if(auxIniY < yf + menorBloque && yf + menorBloque < auxFinY){
-                    
-                    Nodo nodoA = new Nodo(xi, yf + menorBloque);
-                    Nodo nodoB = new Nodo(xf, yf + menorBloque);
-                    
-                    Arista arista1 = new Arista(
-                            Math.abs(aux2.getCoordY()+ menorBloque - auxIniY), inicio, nodoA);
-                    Arista arista2 = new Arista(dx, nodoA, nodoB);
-                    Arista arista3 = new Arista(
-                            Math.abs(auxFinY - (aux2.getCoordY()+ menorBloque) ), nodoB, fin);
-                    
-                    camino.add(arista1);
-                    camino.add(arista2);
-                    camino.add(arista3);
-
-                    return camino;
-                }      
-                else;
-            }
-            // Para el segundo camino, que solo tiene barrera en el 1er tramo
-            if(!verficarAux2x){
-                int menorBloque =  mapa.calculaMenorY(aux2.getCoordX(), yi, aux2.getCoordY());
-                // si tiene menor recorrido
-                if(auxIniX < xi + menorBloque && xi + menorBloque < auxFinX){
-                    
-                    Nodo nodoA = new Nodo(aux2.getCoordX()+ menorBloque, yi);
-                    Nodo nodoB = new Nodo(aux2.getCoordX()+ menorBloque, yf);
-                    
-                    Arista arista1 = new Arista(
-                            Math.abs(aux2.getCoordX()+ menorBloque - auxIniX), inicio, nodoA);
-                    Arista arista2 = new Arista(dy, nodoA, nodoB);
-                    Arista arista3 = new Arista(
-                            Math.abs(auxFinX - (aux2.getCoordX()+ menorBloque) ), nodoB, fin);
-                    camino.add(arista1);
-                    camino.add(arista2);
-                    camino.add(arista3);
-
-                    return camino;
-                }      
-                else;
-            }
+        finalCamino[tamanho-1][0]=xf;
+        finalCamino[tamanho-1][1]=yf;
+       // System.out.println("y:"+yf  + ", x:" + xf + " ->");
+       // para guardar en las coordenadas solo hay que recorrer finalCamino con el tamanho
+        for(int j=0;j<tamanho-1;j++){
+          // System.out.print("y:"+ finalCamino[j][1]  + ", x:" + finalCamino[j][0] + " ->");  
+            Nodo nodoA = new Nodo();
+            nodoA.setCoordX(finalCamino[j][0]);
+            nodoA.setCoordY(finalCamino[j][1]);
+            Nodo nodoB = new Nodo();
+            nodoA.setCoordX(finalCamino[j+1][0]);
+            nodoB.setCoordY(finalCamino[j+1][1]);
+            int distancia=0;
+            distancia +=nodoA.getCoordX()==nodoB.getCoordX()?Math.abs(nodoA.getCoordY()-nodoB.getCoordY()):0;
+            distancia +=nodoA.getCoordY()==nodoB.getCoordY()?Math.abs(nodoA.getCoordX()-nodoB.getCoordX()):0;
+            Arista a= new Arista(distancia,nodoA,nodoB);
+            camino.add(a);
         }
         return camino;
     }
