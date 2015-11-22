@@ -27,7 +27,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+//import org..engine.jdbc.connections.spi.ConnectionProvider;
 
 /**
  *
@@ -253,8 +254,8 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         );
 
         btnVisualizar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnVisualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_generar.png"))); // NOI18N
-        btnVisualizar.setText("Visualizar");
+        btnVisualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_descargar.png"))); // NOI18N
+        btnVisualizar.setText("Exportar");
         btnVisualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVisualizarActionPerformed(evt);
@@ -268,7 +269,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel56Layout.createSequentialGroup()
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel56Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(247, Short.MAX_VALUE)
                         .addComponent(btnVisualizar))
                     .addGroup(jPanel56Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -351,7 +352,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 .addGroup(jPanel60Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel132)
                     .addComponent(datFechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel61.setBackground(new java.awt.Color(240, 240, 225));
@@ -601,7 +602,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
     private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
         // TODO add your handling code here:
-         String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
+        String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
      
         
         Map<String, Object> params = new HashMap<String, Object>();
@@ -630,7 +631,8 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 JasperPrint jasperPrint =
                     JasperFillManager.fillReport(
                         jasperReport, params,conn);
- 
+                
+                jasperPrint.setName("Ruta " + this.txtCodigo.getText());
                 JasperViewer.viewReport(jasperPrint);
             }
 

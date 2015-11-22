@@ -31,7 +31,8 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.apache.commons.digester.Digester; 
 import org.hibernate.Transaction;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
+//import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 /**
  *
  * @author Mariella
@@ -255,6 +256,7 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
                 // cambio el parametro por fechas y se acabo,  yupii
                 
                 params.put("NombreCliente","Pardos" );
+                params.put("FieldName","Pardos" );
                 params.put("numeroDocumento",this.txtNumeroDocumento.getText());
                 String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
                 params.put("reportTitle", "Pedidos por Cliente"); params.put("author", nombre ); params.put("startDate", fecha);

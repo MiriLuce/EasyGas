@@ -5,17 +5,28 @@
  */
 package Vista;
 
+import Algoritmo.Genetico.AlgoritmoGenetico;
 import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
+import Algoritmo.Genetico.Cromosoma;
 import Controlador.*;
 import Mapa.Mapa;
-import java.awt.Cursor;
-import java.io.File;
-import javax.swing.JOptionPane;
-import Algoritmo.Genetico.Cromosoma;
-import Algoritmo.Genetico.AlgoritmoGenetico;
+import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.*;
 import Util.RelojAlgoritmo;
+import java.awt.Cursor;
+import java.io.File;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRPrintPage;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
 
 /**
  *
@@ -344,10 +355,63 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        // TODO add your handling code here:
-        // opcion si quiere imprimir todos las rutas de los camiones o los camiones por separado
-        // es decir una imagen o n imagenes (n camiones)
-        // con la leyenda (si es que una imagen) si es con varias imagenes el titulo del camion a la hoja (con conductor)
+        
+        List<Ruta> ruta=null;// lo que acaba de guardar en la bd
+        JasperPrint jMain=null;
+        for(int i=0;i<ruta.size();i++){
+            String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
+            Map<String, Object> params = new HashMap<String, Object>();
+            try
+                {   
+                    if (!EasyGas.sesion.isOpen()) {
+                        EasyGas.sesion = EasyGas.sesFact.openSession();
+                    }
+                    Connection conn = null;
+                    SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
+                        ConnectionProvider cp = sfi.getConnectionProvider();
+                        conn = cp.getConnection();
+                    SimpleDateFormat formato = 
+                        new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es","ES"));
+                    String fecha = formato.format(new Date());
+                    //System.out.println(fecha);
+                    // cambio el parametro por fechas y se acabo,  yupii
+                    params.put("idRuta",ruta.get(i).getIdRuta());
+                    String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
+                    params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString() ); params.put("author", nombre ); params.put("startDate", fecha);
+                    params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat() );
+                    JasperReport jasperReport =
+                        JasperCompileManager.compileReport(reportSource);
+
+                    JasperPrint jasperPrint =
+                        JasperFillManager.fillReport(
+                            jasperReport, params,conn);
+
+                    jasperPrint.setName("Ruta " + ruta.get(i).getIdRuta());
+                    if(i==0) jMain=jasperPrint; // el primero es el main
+                    else { // sino anhado las paginas al main
+                        List pages = jasperPrint.getPages();
+                            for(int j=0;j<pages.size();j++){
+                                JRPrintPage object = (JRPrintPage)pages.get(j);
+                                jMain.addPage(object);
+
+                            }
+
+                    }
+
+                }
+
+            catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            finally{
+                    if (EasyGas.sesion.isOpen()){
+                        EasyGas.sesion.close();
+                    }
+                }
+        
+        }
+        JasperViewer.viewReport(jMain); 
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
