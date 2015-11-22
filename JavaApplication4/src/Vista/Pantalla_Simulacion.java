@@ -6,23 +6,16 @@
 package Vista;
 
 import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
-import Controlador.GeneralControlador;
-import Controlador.PedidoControlador;
-import Controlador.CamionControlador;
+import Controlador.*;
 import Mapa.Mapa;
 import java.awt.Cursor;
 import java.io.File;
 import javax.swing.JOptionPane;
 import Algoritmo.Genetico.Cromosoma;
 import Algoritmo.Genetico.AlgoritmoGenetico;
-import Modelo.Hibernate.Camion;
-import Modelo.Hibernate.Pedido;
-import Modelo.Hibernate.Ruta;
-import Modelo.Hibernate.Turno;
+import Modelo.Hibernate.*;
 import Util.RelojAlgoritmo;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -32,7 +25,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
     //private CamionControlador camionControlador;
     private Cromosoma solucion;
-    private List<Ruta> listaRuta;
+    private ArrayList<Ruta> listaRuta;
     private List<Pedido> lstPedidos;
     private List<Pedido> lstPedidosSinPrioridad;
     private List<Pedido> lstPedidosConPrioridad;
@@ -41,7 +34,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         initComponents();
         
         this.btnIniciar.setEnabled(false);
-        this.btnDetener.setEnabled(false);
         this.btnGrabar.setEnabled(false);        
     }
 
@@ -66,7 +58,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         btnCalcular = new javax.swing.JButton();
         jPanel59 = new javax.swing.JPanel();
         btnIniciar = new javax.swing.JButton();
-        btnDetener = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         btnExportar = new javax.swing.JButton();
@@ -153,14 +144,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
             }
         });
 
-        btnDetener.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnDetener.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_detener.png"))); // NOI18N
-        btnDetener.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDetenerActionPerformed(evt);
-            }
-        });
-
         tblResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -198,24 +181,20 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         jPanel59Layout.setHorizontalGroup(
             jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel59Layout.createSequentialGroup()
-                .addGap(201, 201, 201)
-                .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDetener)
-                .addGap(7, 7, 7))
-            .addGroup(jPanel59Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                    .addGroup(jPanel59Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnIniciar)))
                 .addContainerGap())
         );
         jPanel59Layout.setVerticalGroup(
             jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel59Layout.createSequentialGroup()
-                .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnIniciar)
-                    .addComponent(btnDetener))
+                .addComponent(btnIniciar)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -257,7 +236,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                         .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel56Layout.createSequentialGroup()
                                 .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                                 .addComponent(nPedCargaBoton))
                             .addComponent(jPanel57, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -356,7 +335,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
-        this.btnDetener.setEnabled(true);
         this.btnIniciar.setEnabled(false);
         this.btnGrabar.setEnabled(false);
         this.btnExportar.setEnabled(false);
@@ -368,25 +346,16 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
             listaRuta.add(ruta);
         }
         
-        //pintar
-        Mapa mapa = new Mapa("Ciudad XYZ",800,800);
-        mapa.setRuta(listaRuta.get(0));
+        ////////////////////// MUESTRA SIMULACION //////////////////////////
+        ArrayList<Cliente> listaClientes=new ArrayList<Cliente>(); //esta lista debe ser la lista de todos los clientes obtenida con la carga masiva
+        Mapa mapa = new Mapa("Ciudad XYZ",800,800,listaRuta,listaClientes);
         mapa.Empieza();
         
     }//GEN-LAST:event_btnIniciarActionPerformed
 
-    private void btnDetenerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerActionPerformed
-        // TODO add your handling code here:
-        this.btnDetener.setEnabled(false);
-        this.btnIniciar.setEnabled(true);
-        this.btnGrabar.setEnabled(true);
-        this.btnExportar.setEnabled(true);
-    }//GEN-LAST:event_btnDetenerActionPerformed
-
     private void tblResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultadosMouseClicked
         if (evt.getSource() == tblResultados){
            this.btnIniciar.setEnabled(true);
-           this.btnDetener.setEnabled(false);
            this.btnGrabar.setEnabled(true);
         }
     }//GEN-LAST:event_tblResultadosMouseClicked
@@ -434,7 +403,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         }
         
         this.btnIniciar.setEnabled(true);
-        this.btnDetener.setEnabled(true);
         this.btnGrabar.setEnabled(true);
     }//GEN-LAST:event_btnCalcularActionPerformed
 
@@ -444,7 +412,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         if (archivo != null) {
             nPedCargaBoton.setEnabled(false);
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            PedidoControlador.CargaPedidosArchivo(archivo.getAbsolutePath());
+            PedidoControlador.CargaPedidosSimulacion(archivo.getAbsolutePath());
             this.setCursor(Cursor.getDefaultCursor());
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
         }
@@ -538,7 +506,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCalcular;
-    private javax.swing.JButton btnDetener;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnIniciar;

@@ -1,0 +1,7 @@
+// código de cliente: ####
+// tipo de persona: jur (juridica), nat (natural)
+
+0001:jur:103, 94
+0002:nat:110, 91
+0003:nat:103,106
+0004:jur:190, 95

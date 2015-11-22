@@ -10,7 +10,6 @@ import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.Pedido;
 import Algoritmo.Constantes.Constantes;
 import static Algoritmo.Genetico.AlgoritmoGenetico.camiones;
-import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

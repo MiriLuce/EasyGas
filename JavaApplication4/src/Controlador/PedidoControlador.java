@@ -340,4 +340,62 @@ public class PedidoControlador {
         
         return lista;
     }
+    
+    public static ArrayList<Pedido> CargaPedidosSimulacion(String rutaArchivo) {
+        BufferedReader br = null;
+        String linea = "";
+        String cvsDiv = ",";
+        
+        ArrayList<Pedido> lista = new ArrayList<Pedido>();
+
+        try {
+
+            br = new BufferedReader(new FileReader(rutaArchivo));
+            while ((linea = br.readLine()) != null) {
+
+                //se usa punto y coma de separador
+                String[] datosPed = linea.split(cvsDiv);
+
+                String cadAux = GeneralControlador.DevuelveFormatoDireccion(Integer.parseInt(datosPed[2]), Integer.parseInt(datosPed[3]));
+                ArrayList<Integer> aux = GeneralControlador.SacaCoordinadas(cadAux);
+
+                Cliente c = ClienteControlador.BuscaClienteDireccion(ClienteControlador.ListarClientes(), aux);
+                int p = Integer.parseInt(datosPed[1]);
+                double cantGLP = Double.parseDouble(datosPed[0]);
+
+                String prioridad;
+
+                if (PedidoControlador.TienePrioridad(c)) {
+                    prioridad = "SI";
+                } else {
+                    prioridad = "NO";
+                }
+
+                Calendar cal = Calendar.getInstance(); //fecha y hora actual de registro
+                Date ahora = cal.getTime();
+                cal.add(Calendar.HOUR, p);
+                Date horaSol = cal.getTime();
+
+                Pedido ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
+
+                lista.add(ped);
+                
+                //GuardarPedido(ped);
+            }
+
+        } catch (FileNotFoundException e) {
+
+        } catch (IOException e) {
+
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        
+        return lista;
+    }
 }

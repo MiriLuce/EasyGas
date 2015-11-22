@@ -43,6 +43,8 @@ public class EasyGas {
     public static int altoMapa = 200;
     public static int tamCuadMapa = 10;
     
+    public static double factorTiempo=0.5;
+    
     public static BufferedImage camionNormal;
     public static BufferedImage camionAccidente;
     public static BufferedImage mapaCentral;
@@ -53,6 +55,7 @@ public class EasyGas {
     public static BufferedImage rutaRojo;
     public static BufferedImage rutaAmarillo;
     public static BufferedImage rutaVerde;
+    public static BufferedImage imagenPausa; 
     
     public static Ruta rutaPrueba;
     
@@ -63,10 +66,11 @@ public class EasyGas {
         mapaCliente = Imagen.CargaImagen("/mapa_cliente_chuks.png");
         obstaculo = Imagen.CargaImagen("/mapa_obstaculo.png");
         pista = Imagen.CargaImagen("/mapa_pista.png");
-        rutaAzul = Imagen.CargaImagen("/mapa_ruta_azul.png");;
-        rutaRojo = Imagen.CargaImagen("/mapa_ruta_rojo.png");;
-        rutaAmarillo = Imagen.CargaImagen("/mapa_ruta_amarillo.png");;
-        rutaVerde = Imagen.CargaImagen("/mapa_ruta_verde.png");;
+        rutaAzul = Imagen.CargaImagen("/mapa_ruta_azul.png");
+        rutaRojo = Imagen.CargaImagen("/mapa_ruta_rojo.png");
+        rutaAmarillo = Imagen.CargaImagen("/mapa_ruta_amarillo.png");
+        rutaVerde = Imagen.CargaImagen("/mapa_ruta_verde.png");
+        imagenPausa = Imagen.CargaImagen("/mapa_pausa_200.png");
         
         rutaPrueba = CreaRutaPrueba();
     }

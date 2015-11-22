@@ -41,7 +41,7 @@ public class CiudadXYZ {
         //aqui si importa el orden del x,y
         for (int i = yi; i < yf; i++) {
             for (int j = xi; j < xf; j++) {
-                ObtenTeja(j, i).Dibuja(g, (int) (j * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()));
+                ObtenTeja(j, i).Dibuja(g, (int) (j * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()),null);
             }
         }
     }

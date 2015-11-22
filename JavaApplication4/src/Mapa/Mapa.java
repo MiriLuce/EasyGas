@@ -5,13 +5,16 @@
  */
 package Mapa;
 
-
 import Mapa.Ciudades.CiudadXYZ;
 import Mapa.Utilidades.Pantalla;
 import Modelo.Hibernate.Ruta;
-//import Modelo.Constantes.EasyGas;
+import Modelo.Constantes.EasyGas;
+import Modelo.Hibernate.Cliente;
+import Modelo.Hibernate.Nodo;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,53 +30,99 @@ public class Mapa implements Runnable {
     private Graphics g;
 
     private boolean corriendo = false;
+    private boolean enPausa;
+    private int pausaAux;
     private float camX, camY;
 
-    private Ruta ruta;
+    private ArrayList<Ruta> rutas;
+    private ArrayList<CamionMapa> camiones;
+    private ArrayList<ClienteMapa> clientes;
+    private ArrayList<Cliente> listaClientes;
     CiudadXYZ ciudadXYZ;
     Camara camara;
-    CamionMapa camion;    
-    ClienteMapa cliente;   
-    CentralMapa central; 
+    CentralMapa central;
     private Teclado teclado;
-    
 
-    public Mapa(String t, int an, int al) {
+    public Mapa(String t, int an, int al, ArrayList<Ruta> sol, ArrayList<Cliente> lista) {
         titulo = t;
         ancho = an;
         alto = al;
         teclado = new Teclado();
+        rutas = (ArrayList<Ruta>) sol.clone();
+        listaClientes = (ArrayList<Cliente>) lista.clone();
+        camiones = new ArrayList<CamionMapa>();
+        clientes = new ArrayList<ClienteMapa>();
+        enPausa = false;
+        pausaAux = 0;
     }
 
-    private  void Inicializa() {
-        pantalla = new Pantalla(titulo,ancho, alto);
+    private void CargaCamiones() {
+        for (int i = 0; i < rutas.size(); i++) {
+            camiones.add(new CamionMapa(this, i, 50, rutas.get(i)));
+        }
+    }
+    
+    private void CargaClientes(){
+        for (int i = 0; i < listaClientes.size(); i++) {
+            Nodo n = listaClientes.get(i).getNodo();
+            clientes.add(new ClienteMapa(this,n.getCoordX(),n.getCoordY()));
+        }
+    }
+
+    private void Inicializa() {
+        pantalla = new Pantalla(titulo, ancho, alto);
         pantalla.ObtenFrame().addKeyListener(teclado);
-        //EasyGas.Inicializa();
+        EasyGas.Inicializa();
 
         camara = new Camara(this, 0, 0);
-
         camX = 2f; //auxiliar
         camY = 2f; //auxiliar
 
         ciudadXYZ = new CiudadXYZ(this);
-        
-        camion = new CamionMapa(this, 1, 50, getRuta());
-        
         central = new CentralMapa(this, 20, 10);
-        
-        cliente = new ClienteMapa(this, 60, 52);
+
+        CargaCamiones();
+        CargaClientes();
+    }
+
+    private void ActualizaCamiones() {
+        for (int i = 0; i < camiones.size(); i++) {
+            camiones.get(i).Actualiza();
+        }
     }
 
     private void Actualiza() {
+        if (teclado.barraEspaciadora && !enPausa && pausaAux == 0) {
+            pausaAux = 1;
+            enPausa = true;
+        } else if (teclado.barraEspaciadora && enPausa && pausaAux == 1) {
+            pausaAux = 0;
+            enPausa = false;
+        }
         teclado.Actualiza();
-        
         ciudadXYZ.Actualiza();
 
-        camion.Actualiza();
-        
-        camara.Mueve(camX, camY);
+        if (!enPausa) {
+            ActualizaCamiones();
+            camara.Mueve(camX, camY);
+        }
     }
 
+    private void DibujaCamiones(Graphics g) {
+        for (int i = 0; i < camiones.size(); i++) {
+            CamionMapa c = camiones.get(i);
+            c.DibujaRuta(g);
+            c.DibujaCamion(g);
+        }
+    }
+
+    private void DibujaClientes(Graphics g){
+        for (int i = 0; i < clientes.size(); i++) {
+            ClienteMapa c = clientes.get(i);
+            c.Dibuja(g);
+        }
+    }
+    
     private void Dibuja() { //draw
         bs = pantalla.ObtenCanvas().getBufferStrategy();
         if (bs == null) {
@@ -85,16 +134,16 @@ public class Mapa implements Runnable {
         g.clearRect(0, 0, ancho, alto); //clear screen
 
         //////////// PARTE DIBUJO //////////////
-        
         ciudadXYZ.Dibuja(g);
-        
-        camion.DibujaRuta(g);
-        camion.DibujaCamion(g);
+        DibujaCamiones(g);
         central.Dibuja(g);
-        cliente.Dibuja(g);
+        DibujaClientes(g);
+        
+        if (enPausa) {
+            g.drawImage(EasyGas.imagenPausa, ancho/2-EasyGas.imagenPausa.getWidth()/2, alto/2-EasyGas.imagenPausa.getHeight()/2, null);
+        }
 
         /////////// FIN DIBUJO //////////////
-        
         bs.show();
         g.dispose();
     }
@@ -137,8 +186,8 @@ public class Mapa implements Runnable {
     public Camara ObtenCamara() {
         return camara;
     }
-    
-    public Teclado ObtenTeclado(){
+
+    public Teclado ObtenTeclado() {
         return teclado;
     }
 
@@ -161,19 +210,5 @@ public class Mapa implements Runnable {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * @return the ruta
-     */
-    public Ruta getRuta() {
-        return ruta;
-    }
-
-    /**
-     * @param ruta the ruta to set
-     */
-    public void setRuta(Ruta ruta) {
-        this.ruta = ruta;
     }
 }

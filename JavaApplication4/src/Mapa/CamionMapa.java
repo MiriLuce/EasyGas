@@ -10,6 +10,7 @@ import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Arista;
 import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Ruta;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -29,19 +30,21 @@ public class CamionMapa {
     private int direccion;
 
     private BufferedImage imagen;
+    private Color colorCamion;
 
-    private boolean tuvoAccidente;
-
+    //private boolean tuvoAccidente;
     private Ruta ruta;
 
     private int numArista; //para saber en cuál arista va
     private boolean recorriendo;
 
+    private int contador;
+
     public CamionMapa(Mapa m, int nid, int vel, Ruta nRuta) {
         id = nid;
         mapa = m;
-        velocidad = vel;
-        tuvoAccidente = false;
+        velocidad = vel; //(Km/h)
+        //tuvoAccidente = false;
         imagen = EasyGas.camionNormal;
         ruta = nRuta;
         posX = ruta.getAristas().get(0).getNodoByIdOrigen().getCoordX() * Teja.ANCHOTEJA;
@@ -49,6 +52,13 @@ public class CamionMapa {
         numArista = 0;
         direccion = ruta.getAristas().get(0).getDireccion();
         recorriendo = true;
+        contador = 0;
+
+        //generando color aleatorio del mapa
+        int R = (int) (Math.random() * 256);
+        int G = (int) (Math.random() * 256);
+        int B = (int) (Math.random() * 256);
+        colorCamion = new Color(R, G, B);
     }
 
     public void Actualiza() {
@@ -103,12 +113,7 @@ public class CamionMapa {
     }
 
     public void DibujaCamion(Graphics g) {
-        if (!tuvoAccidente) {
-            imagen = EasyGas.camionNormal;
-        } else {
-            imagen = EasyGas.camionAccidente;
-        }
-        g.drawImage(imagen, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), null);
+        g.drawImage(imagen, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), colorCamion, null);
     }
 
     private void DibujaRecta(Graphics g, Nodo origen, Nodo destino) {
@@ -117,26 +122,26 @@ public class CamionMapa {
         int xf = destino.getCoordX();
         int yf = destino.getCoordY();
 
-        Teja teja = Teja.tejaRutaRojo;
+        g.setColor(colorCamion);
 
         if (xi == xf) {//recta vertical
             if (yi < yf) {// recta de arriba hacia abajo
                 for (int i = yi; i <= yf; i++) {
-                    teja.Dibuja(g, (int) (xi * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()));
+                    g.fillRect((int) (xi * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet() + 1), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet() + 1), Teja.ANCHOTEJA - 2, Teja.ANCHOTEJA - 2);
                 }
             } else {// recta de abajo hacia arriba
                 for (int i = yi; i >= yf; i--) {
-                    teja.Dibuja(g, (int) (xi * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()));
+                    g.fillRect((int) (xi * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet() + 1), (int) (i * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet() + 1), Teja.ANCHOTEJA - 2, Teja.ANCHOTEJA - 2);
                 }
             }
         } else {//recta horizontal
             if (xi < xf) {// recta de izquierda a derecha
                 for (int i = xi; i <= xf; i++) {
-                    teja.Dibuja(g, (int) (i * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (yi * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()));
+                    g.fillRect((int) (i * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet() + 1), (int) (yi * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet() + 1), Teja.ANCHOTEJA - 2, Teja.ANCHOTEJA - 2);
                 }
             } else {// recta de derecha a izquierda
                 for (int i = xi; i >= xf; i--) {
-                    teja.Dibuja(g, (int) (i * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet()), (int) (yi * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet()));
+                    g.fillRect((int) (i * Teja.ANCHOTEJA - mapa.ObtenCamara().getxOffSet() + 1), (int) (yi * Teja.ALTOTEJA - mapa.ObtenCamara().getyOffSet() + 1), Teja.ANCHOTEJA - 2, Teja.ANCHOTEJA - 2);
                 }
             }
         }
