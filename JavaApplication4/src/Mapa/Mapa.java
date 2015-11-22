@@ -31,12 +31,11 @@ public class Mapa implements Runnable {
 
     private boolean corriendo = false;
     private boolean enPausa;
-    private int pausaAux;
     private float camX, camY;
 
-    private ArrayList<Ruta> rutas;
-    private ArrayList<CamionMapa> camiones;
-    private ArrayList<ClienteMapa> clientes;
+    private final ArrayList<Ruta> rutas;
+    private final ArrayList<CamionMapa> camiones;
+    private final ArrayList<ClienteMapa> clientes;
     private ArrayList<Cliente> listaClientes;
     CiudadXYZ ciudadXYZ;
     Camara camara;
@@ -53,7 +52,6 @@ public class Mapa implements Runnable {
         camiones = new ArrayList<CamionMapa>();
         clientes = new ArrayList<ClienteMapa>();
         enPausa = false;
-        pausaAux = 0;
     }
 
     private void CargaCamiones() {
@@ -91,12 +89,13 @@ public class Mapa implements Runnable {
         }
     }
 
+    private boolean teclaActualPausa, teclaAntiguaPausa; //para manejar que no se presione pausa mas de una vez
     private void Actualiza() {
-        if (teclado.barraEspaciadora && !enPausa && pausaAux == 0) {
-            pausaAux = 1;
+        teclaActualPausa = teclado.barraEspaciadora;
+        
+        if (teclaActualPausa && !teclaAntiguaPausa && !enPausa) {
             enPausa = true;
-        } else if (teclado.barraEspaciadora && enPausa && pausaAux == 1) {
-            pausaAux = 0;
+        } else if (teclaActualPausa && !teclaAntiguaPausa && enPausa) {
             enPausa = false;
         }
         teclado.Actualiza();
@@ -106,6 +105,8 @@ public class Mapa implements Runnable {
             ActualizaCamiones();
             camara.Mueve(camX, camY);
         }
+        
+        teclaAntiguaPausa = teclaActualPausa;
     }
 
     private void DibujaCamiones(Graphics g) {

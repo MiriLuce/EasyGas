@@ -379,8 +379,6 @@ public class PedidoControlador {
                 Pedido ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
 
                 lista.add(ped);
-                
-                //GuardarPedido(ped);
             }
 
         } catch (FileNotFoundException e) {
