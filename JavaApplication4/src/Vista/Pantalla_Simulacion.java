@@ -36,7 +36,7 @@ import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
  *
  * @author alulab14
  */
-public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
+public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
     //private CamionControlador camionControlador;
     private ArrayList<Cromosoma> soluciones;
@@ -44,13 +44,17 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     private List<Pedido> lstPedidos;
     private List<Pedido> lstPedidosSinPrioridad;
     private List<Pedido> lstPedidosConPrioridad;
-    
+
     public Pantalla_Simulacion() {
         initComponents();
-        
+
         this.btnIniciar.setEnabled(false);
-        this.btnGrabar.setEnabled(false);  
-        
+        this.btnExportar.setEnabled(false);
+        this.btnGrabar.setEnabled(false);
+        this.btnCalcular.setEnabled(false);
+        this.duracionSpinner.setEnabled(false);
+        this.tblResultados.setEnabled(false);
+
         listaRuta = new ArrayList<Ruta>();
     }
 
@@ -68,7 +72,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         label23 = new java.awt.Label();
         jPanel57 = new javax.swing.JPanel();
         jLabel127 = new javax.swing.JLabel();
-        jSpinner5 = new javax.swing.JSpinner();
+        duracionSpinner = new javax.swing.JSpinner();
         btnCalcular = new javax.swing.JButton();
         jPanel59 = new javax.swing.JPanel();
         btnIniciar = new javax.swing.JButton();
@@ -96,6 +100,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 
         jLabel127.setText("Duración (min):");
 
+        duracionSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100, 1));
+
         javax.swing.GroupLayout jPanel57Layout = new javax.swing.GroupLayout(jPanel57);
         jPanel57.setLayout(jPanel57Layout);
         jPanel57Layout.setHorizontalGroup(
@@ -104,7 +110,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                 .addContainerGap()
                 .addComponent(jLabel127)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(duracionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
         jPanel57Layout.setVerticalGroup(
@@ -113,7 +119,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
                 .addContainerGap()
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel127)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(duracionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -325,28 +331,43 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
         // TODO add your handling code here:
         this.btnIniciar.setEnabled(false);
-        this.btnGrabar.setEnabled(false);
-        this.btnExportar.setEnabled(false);
-        
-        // obtener el camino de la solucion
-        listaRuta.clear();
-        /*int cantRutas = solucion.getCadena().size();
-        for(int i=0; i <cantRutas; i++){
-            Ruta ruta = solucion.getCadena().get(i).guardarEnMapa();
-            listaRuta.add(ruta);
-        }*/
-        
-        ////////////////////// MUESTRA SIMULACION //////////////////////////
-        ArrayList<Cliente> listaClientes=new ArrayList<Cliente>(); //esta lista debe ser la lista de todos los clientes obtenida con la carga masiva
-        Mapa mapa = new Mapa("Ciudad XYZ",800,800,listaRuta,listaClientes);
-        mapa.Empieza();
-        
+
+        int fila = tblResultados.getSelectedRow();
+        Cromosoma solucion = null;
+
+        if (fila != -1) { //si se ha seleccionado una fila
+            if (fila == 0) {
+                solucion = soluciones.get(0);
+            }
+            if (fila == 1) {
+                solucion = soluciones.get(1);
+            }
+            if (fila == 2) {
+                solucion = soluciones.get(2);
+            }
+
+            // obtener el camino de la solucion
+            listaRuta.clear();
+            int cantRutas = solucion.getCadena().size();
+            for (int i = 0; i < cantRutas; i++) {
+                Ruta ruta = solucion.getCadena().get(i).guardarEnMapa();
+                listaRuta.add(ruta);
+            }
+
+            ////////////////////// MUESTRA SIMULACION //////////////////////////
+            ArrayList<Cliente> listaClientes = new ArrayList<Cliente>(); //esta lista debe ser la lista de todos los clientes obtenida con la carga masiva
+            Mapa mapa = new Mapa("Ciudad XYZ", 800, 800, listaRuta, listaClientes);
+            mapa.Empieza();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para empezar la simulación");
+        }
     }//GEN-LAST:event_btnIniciarActionPerformed
 
     private void tblResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultadosMouseClicked
-        if (evt.getSource() == tblResultados){
-           this.btnIniciar.setEnabled(true);
-           this.btnGrabar.setEnabled(true);
+        if (evt.getSource() == tblResultados) {
+            this.btnIniciar.setEnabled(true);
+            this.btnExportar.setEnabled(true);
         }
     }//GEN-LAST:event_tblResultadosMouseClicked
 
@@ -359,63 +380,61 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     }//GEN-LAST:event_btnGrabarActionPerformed
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        
-        List<Ruta> ruta=null;// lo que acaba de guardar en la bd
-        JasperPrint jMain=null;
-        for(int i=0;i<ruta.size();i++){
-            String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
+
+        List<Ruta> ruta = null;// lo que acaba de guardar en la bd
+        JasperPrint jMain = null;
+        for (int i = 0; i < ruta.size(); i++) {
+            String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
             Map<String, Object> params = new HashMap<String, Object>();
-            try
-                {   
-                    if (!EasyGas.sesion.isOpen()) {
-                        EasyGas.sesion = EasyGas.sesFact.openSession();
-                    }
-                    Connection conn = null;
-                    SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
-                        ConnectionProvider cp = sfi.getConnectionProvider();
-                        conn = cp.getConnection();
-                    SimpleDateFormat formato = 
-                        new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es","ES"));
-                    String fecha = formato.format(new Date());
+            try {
+                if (!EasyGas.sesion.isOpen()) {
+                    EasyGas.sesion = EasyGas.sesFact.openSession();
+                }
+                Connection conn = null;
+                SessionFactoryImplementor sfi = (SessionFactoryImplementor) EasyGas.sesion.getSessionFactory();
+                ConnectionProvider cp = sfi.getConnectionProvider();
+                conn = cp.getConnection();
+                SimpleDateFormat formato
+                        = new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+                String fecha = formato.format(new Date());
                     //System.out.println(fecha);
-                    // cambio el parametro por fechas y se acabo,  yupii
-                    params.put("idRuta",ruta.get(i).getIdRuta());
-                    String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
-                    params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString() ); params.put("author", nombre ); params.put("startDate", fecha);
-                    params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat() );
-                    JasperReport jasperReport =
-                        JasperCompileManager.compileReport(reportSource);
+                // cambio el parametro por fechas y se acabo,  yupii
+                params.put("idRuta", ruta.get(i).getIdRuta());
+                String nombre = EasyGas.usuarioActual == null ? "Administrador" : EasyGas.usuarioActual.getEmpleado().getNombres() + " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
+                params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString());
+                params.put("author", nombre);
+                params.put("startDate", fecha);
+                params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat());
+                JasperReport jasperReport
+                        = JasperCompileManager.compileReport(reportSource);
 
-                    JasperPrint jasperPrint =
-                        JasperFillManager.fillReport(
-                            jasperReport, params,conn);
+                JasperPrint jasperPrint
+                        = JasperFillManager.fillReport(
+                                jasperReport, params, conn);
 
-                    jasperPrint.setName("Ruta " + ruta.get(i).getIdRuta());
-                    if(i==0) jMain=jasperPrint; // el primero es el main
-                    else { // sino anhado las paginas al main
-                        List pages = jasperPrint.getPages();
-                            for(int j=0;j<pages.size();j++){
-                                JRPrintPage object = (JRPrintPage)pages.get(j);
-                                jMain.addPage(object);
-
-                            }
+                jasperPrint.setName("Ruta " + ruta.get(i).getIdRuta());
+                if (i == 0) {
+                    jMain = jasperPrint; // el primero es el main
+                } else { // sino anhado las paginas al main
+                    List pages = jasperPrint.getPages();
+                    for (int j = 0; j < pages.size(); j++) {
+                        JRPrintPage object = (JRPrintPage) pages.get(j);
+                        jMain.addPage(object);
 
                     }
 
                 }
 
-            catch (Exception ex)
-                {
-                    ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (EasyGas.sesion.isOpen()) {
+                    EasyGas.sesion.close();
                 }
-            finally{
-                    if (EasyGas.sesion.isOpen()){
-                        EasyGas.sesion.close();
-                    }
-                }
-        
+            }
+
         }
-        JasperViewer.viewReport(jMain); 
+        JasperViewer.viewReport(jMain);
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
@@ -423,30 +442,33 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
         List<Camion> lstCamiones = CamionControlador.ListarCamion(); // por base de datos
         RelojAlgoritmo r = new RelojAlgoritmo();
         Turno t = obtenerTurnoActual();
-        AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList)lstCamiones, (ArrayList)lstPedidos, 1, mapa);
-        
-        while(true){
+        AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
+
+        while (true) {
             Turno t2 = obtenerTurnoActual();
-            int cantListos=0;
-            if(t2!=null) {
-                        if(!t.equals(t2)) {
-                            System.out.println("Cambio de turno");
-                            t=t2;
-                        }
-                        cantListos=obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
-                        
+            int cantListos = 0;
+            if (t2 != null) {
+                if (!t.equals(t2)) {
+                    System.out.println("Cambio de turno");
+                    t = t2;
+                }
+                cantListos = obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
+
             }
-            if(cantListos!=0){
-                    //recalcula
-                    algoritmo.setPedidosConPrioridad((ArrayList)lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
-                    algoritmo.setPedidosSinPrioridad((ArrayList)lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
-                    soluciones = algoritmo.empieza();
+            if (cantListos != 0) {
+                //recalcula
+                algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
+                algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
+                soluciones = algoritmo.empieza();
             }
-            if(obtenerPedidosNoAtendidos(t)==0)break;
+            if (obtenerPedidosNoAtendidos(t) == 0) {
+                break;
+            }
         }
-        
-        this.btnIniciar.setEnabled(true);
-        this.btnGrabar.setEnabled(true);
+
+        GeneralControlador.ActualizaTablaResultadosAlgoritmo(soluciones, tblResultados); //se actualiza la tabla
+
+        this.tblResultados.setEnabled(true);
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed
@@ -464,70 +486,75 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
             }
             this.setCursor(Cursor.getDefaultCursor());
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
+
+            this.duracionSpinner.setEnabled(true);
+            this.btnCalcular.setEnabled(true);
+            this.btnGrabar.setEnabled(true);
         }
     }//GEN-LAST:event_nPedCargaBotonActionPerformed
-    public Turno obtenerTurnoActual(){
+    public Turno obtenerTurnoActual() {
             //String originalString = "2010-07-14 09:00:02";
-            //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString);
-            //String newString = new SimpleDateFormat("H:mm").format(date); // 9:00
-            Date horaActual = RelojAlgoritmo.horaActual.getTime();
-            ArrayList<Turno> lturnos= Algoritmo.Constantes.Constantes.lTurnos;
-            //System.out.println(horaActual);
-            for(int i=0;i<3;i++){
+        //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString);
+        //String newString = new SimpleDateFormat("H:mm").format(date); // 9:00
+        Date horaActual = RelojAlgoritmo.horaActual.getTime();
+        ArrayList<Turno> lturnos = Algoritmo.Constantes.Constantes.lTurnos;
+        //System.out.println(horaActual);
+        for (int i = 0; i < 3; i++) {
 
-               if(perteneceATurno(horaActual,lturnos.get(i))) return lturnos.get(i);
-
+            if (perteneceATurno(horaActual, lturnos.get(i))) {
+                return lturnos.get(i);
             }
-            return null;
+
+        }
+        return null;
 
     }
-    public boolean perteneceATurno(Date hora,Turno turno){
+
+    public boolean perteneceATurno(Date hora, Turno turno) {
         return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
-      
+
     }
-    
-    public int obtenerPedidosAtendidos(Turno t){
+
+    public int obtenerPedidosAtendidos(Turno t) {
         List<Pedido> pedidosListo;
-        int cantPedidos=lstPedidos.size();
-        int cantListo=0;
-        
-        for(int i=0;i<cantPedidos;i++){
+        int cantPedidos = lstPedidos.size();
+        int cantListo = 0;
+
+        for (int i = 0; i < cantPedidos; i++) {
             Pedido p = lstPedidos.get(i);
-                
-                if(p.getEstado().equals(new String("atendido"))){
-                   cantListo++;
-                }
-            
-            
+
+            if (p.getEstado().equals(new String("atendido"))) {
+                cantListo++;
+            }
+
         }
         return cantListo;
-    
+
     }
-     public int obtenerPedidosNoAtendidos(Turno t){
+
+    public int obtenerPedidosNoAtendidos(Turno t) {
         List<Pedido> pedidosListo;
-        int cantPedidos=lstPedidos.size();
-        int cantNoAtendidos=0;
-        
-        for(int i=0;i<cantPedidos;i++){
+        int cantPedidos = lstPedidos.size();
+        int cantNoAtendidos = 0;
+
+        for (int i = 0; i < cantPedidos; i++) {
             Pedido p = lstPedidos.get(i);
-            
-                
-                if(p.getEstado().equals(new String("no atendido"))){
-                   cantNoAtendidos++;
-                }
-            
-            
+
+            if (p.getEstado().equals(new String("no atendido"))) {
+                cantNoAtendidos++;
+            }
+
         }
         return cantNoAtendidos;
-    
-    }    
-   
-    public int obtenerPedidosListos(Turno t){
-        List<Pedido> pedidosListo= new ArrayList<Pedido>();
-        int cantPedidos=lstPedidos.size();
-        int cantListo=0;
-        
-        for(int i=0;i<cantPedidos;i++){
+
+    }
+
+    public int obtenerPedidosListos(Turno t) {
+        List<Pedido> pedidosListo = new ArrayList<Pedido>();
+        int cantPedidos = lstPedidos.size();
+        int cantListo = 0;
+
+        for (int i = 0; i < cantPedidos; i++) {
 //          
 //            if(Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
 //            if(Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t)&& p.getCliente().getTipoDocumento().compareTo("DNI")==0)  p.setPrioridad("tiene");
@@ -535,21 +562,30 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
 //            lstPedidos.get(i).setEstado("listo");
 //            cantListo++;
             Pedido p = lstPedidos.get(i);
-            if(perteneceATurno(p.getHoraSolicitada(),t)) {
-                
-                if(p.getEstado().equals(new String("no atendido")) || p.getEstado().equals(new String("listo"))){
+            if (perteneceATurno(p.getHoraSolicitada(), t)) {
+
+                if (p.getEstado().equals(new String("no atendido")) || p.getEstado().equals(new String("listo"))) {
                     System.out.println("No atendido");
-                    if(Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
-                    if(Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t)&& p.getCliente().getTipoDocumento().compareTo("DNI")==0)  p.setPrioridad("tiene");
-                    if(Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t)&& !(p.getCliente().getTipoDocumento().compareTo("DNI")==0)) p.setPrioridad("tiene");
+                    if (Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t)) {
+                        p.setPrioridad("no tiene");
+                    }
+                    if (Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t) && p.getCliente().getTipoDocumento().compareTo("DNI") == 0) {
+                        p.setPrioridad("tiene");
+                    }
+                    if (Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t) && !(p.getCliente().getTipoDocumento().compareTo("DNI") == 0)) {
+                        p.setPrioridad("tiene");
+                    }
                     lstPedidos.get(i).setEstado("listo");
-                    if(p.getPrioridad().compareTo("tiene")==0) lstPedidosConPrioridad.add(p);
-                    else lstPedidosSinPrioridad.add(p);
-                   
+                    if (p.getPrioridad().compareTo("tiene") == 0) {
+                        lstPedidosConPrioridad.add(p);
+                    } else {
+                        lstPedidosSinPrioridad.add(p);
+                    }
+
                     cantListo++;
                 }
             }
-            
+
         }
         return cantListo;
     }
@@ -558,12 +594,12 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame{
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnGrabar;
     private javax.swing.JButton btnIniciar;
+    private javax.swing.JSpinner duracionSpinner;
     private javax.swing.JLabel jLabel127;
     private javax.swing.JPanel jPanel56;
     private javax.swing.JPanel jPanel57;
     private javax.swing.JPanel jPanel59;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JSpinner jSpinner5;
     private java.awt.Label label23;
     private javax.swing.JButton nPedCargaBoton;
     private javax.swing.JPanel panelMapa;

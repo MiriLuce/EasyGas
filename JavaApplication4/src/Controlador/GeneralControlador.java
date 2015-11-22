@@ -5,12 +5,17 @@
  */
 package Controlador;
 
+import Algoritmo.Genetico.Cromosoma;
 import Modelo.Hibernate.Nodo;
+import Modelo.Hibernate.Pedido;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -77,7 +82,7 @@ public class GeneralControlador {
     public static File obtenerArchivo() {
         JFileChooser selector = new JFileChooser();
         selector.setFileFilter( new FileNameExtensionFilter("*.csv", "csv"));
-        //selector.setFileFilter( new FileNameExtensionFilter("*.txt", "txt"));
+        selector.setFileFilter( new FileNameExtensionFilter("*.txt", "txt"));
         
         File archivo;
         
@@ -87,5 +92,19 @@ public class GeneralControlador {
         else archivo = null;
         
         return archivo;
+    }
+    
+    public static void ActualizaTablaResultadosAlgoritmo(ArrayList<Cromosoma> lista, JTable tabla) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.setRowCount(0);
+
+        for (int i = 0; i < lista.size(); i++) {
+            Object[] fila = new Object[4];
+            fila[0] = lista.get(i).getCadena().size(); //la cantidad de camiones es igual a la cantidad de rutas
+            fila[1] = lista.get(i).getCantDieselTotal();
+            fila[2] = (lista.get(i).getCantTiempoTotal()/60); //en horas
+            fila[3] = lista.get(i).getCosto();
+            modelo.addRow(fila);
+        }
     }
 }

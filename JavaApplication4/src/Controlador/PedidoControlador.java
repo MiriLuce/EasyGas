@@ -357,7 +357,7 @@ public class PedidoControlador {
         String line;
 
         while ((line = br.readLine()) != null) {
-            String pedido[] = line.split(".");
+            String pedido[] = line.split(";");
 
             Cliente c = ClienteControlador.BuscaClienteId(Integer.parseInt(pedido[2]));
             
