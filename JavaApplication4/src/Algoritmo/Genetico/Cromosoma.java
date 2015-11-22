@@ -144,14 +144,14 @@ public class Cromosoma {
     }
     
     public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
-    
         //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
         ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
         for(int i=0; i< pedidos.size(); i++){
             Pedido ped = new Pedido(pedidos.get(i));
-            listaPedidos.add(ped);
+            //solo voy a juntar los que estan listos
+            if(ped.getEstado().compareTo("listo")==0)
+                listaPedidos.add(ped);
         }
-        
         int cantCamiones = camiones.size();
         for(int i= 0; i<cantCamiones; i++){
             Camion c = new Camion(camiones.get(i).getTipoCamion(), camiones.get(i).getEstado());
@@ -161,15 +161,12 @@ public class Cromosoma {
         int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
         Pedido pedidoAleatorio;  
         Ruta rutaAleatoria;
-        
         while(cantPedidos > 0){
-            
             indicePedidoAleatorio =  generaNumRandom(0, cantPedidos - 1);
             pedidoAleatorio = listaPedidos.get(indicePedidoAleatorio);
             boolean estaAsignado = false;
             int[] listaEscogido = new int [cantRutas];
             Arrays.fill(listaEscogido, 0);
-            
             // Intento incrustar el pedido en la lista de rutas existente 
             // sera asignado a la primera ruta disponible que encuentre
             while(!estaAsignado){

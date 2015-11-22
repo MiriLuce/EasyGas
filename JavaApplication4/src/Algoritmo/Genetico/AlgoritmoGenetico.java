@@ -67,7 +67,6 @@ public class AlgoritmoGenetico {
     //Crea n nuevos cromosomas requeridos de manera aleatoria
     private void generaCromosomasAleatorio(int cantRequerida){
         int cantActual = 0;
-        
         while(cantActual < cantRequerida){
             Cromosoma cromosoma = new Cromosoma();
             // Asignar cada camion a una ruta que este incluida en la cadena del cromosoma
@@ -88,15 +87,10 @@ public class AlgoritmoGenetico {
     
     //me quedo con un porcentaje mejor de la poblacion
     private void seleccionaElite(){
-        
         ordenaPoblacion(); 
-        
         int poblacionFinal = (int) (Constantes.cantPoblacion * Constantes.probSeleccion);
         // como estan ordenados remuevo los ultimos ya que son los peores
-        for (int i = poblacionFinal; i < poblacion.size(); i++) {
-            poblacion.remove(i);
-        }
-        
+        for (int i = poblacionFinal; i < poblacion.size(); i++) poblacion.remove(i);
         if (mejorCromosoma.getCosto()==-1 || poblacion.get(0).getCosto() < mejorCromosoma.getCosto()) {
             mejorCromosoma = new Cromosoma(poblacion.get(0));
             cantRepiteMejor = 0; 
