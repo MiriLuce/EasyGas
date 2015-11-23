@@ -344,7 +344,7 @@ public class Cromosoma {
 
     public void condensarCromosoma(){
         
-        ArrayList<Ruta> listaRutas = new ArrayList<Ruta>();
+        //ArrayList<Ruta> listaRutas = new ArrayList<Ruta>();
         Ruta rutaEscogida = null;
         int cantRutas = cadena.size();
         boolean verificar = false;
@@ -361,13 +361,13 @@ public class Cromosoma {
                 cantGLPTotal += rutaEscogida.getCantGLP();
                 cantDieselTotal += rutaEscogida.getCantDiesel();
                 cantTiempoTotal += rutaEscogida.getDistancia() / Constantes.velCamion;
-                listaRutas.add(rutaEscogida);
+                //listaRutas.add(rutaEscogida);
             }
         }
         // q es cada parametro para calcular costo
         costo = ((  difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
-        cadena = listaRutas;
+        //cadena = listaRutas;
     }
     
     public void imprimir() {

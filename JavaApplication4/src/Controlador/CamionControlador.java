@@ -7,6 +7,7 @@ package Controlador;
 
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Camion;
+import Modelo.Hibernate.Disponibilidad;
 import Modelo.Hibernate.TipoCamion;
 import Modelo.Hibernate.Usuario;
 import Util.HibernateUtil;
@@ -46,7 +47,7 @@ public class CamionControlador{
             tx = EasyGas.sesion.beginTransaction();
             lista = EasyGas.sesion.createCriteria(Camion.class).list();
             for(Camion cam : lista){
-                Hibernate.initialize(cam.getTipoCamion());                
+                Hibernate.initialize(cam.getTipoCamion()); 
             }
             tx.commit();
         }
@@ -61,7 +62,43 @@ public class CamionControlador{
                 EasyGas.sesion.close();
             }
         }
+        
+        for(Camion cam : lista){  
+                List<Disponibilidad> listaDispon = BuscarDisponibilidaPorCamion(cam.getIdCamion());
+                cam.setDisponibilidads(listaDispon);
+            }
         return lista;
+    }
+    
+    public static List<Disponibilidad> BuscarDisponibilidaPorCamion(int codigo){
+       
+        List<Disponibilidad> listaDispon = null;
+         if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }        
+        Transaction tx = null;
+        try{
+            String consulta = "SELECT DISPONIBILIDAD.* FROM DISPONIBILIDAD " + 
+                     " WHERE DISPONIBILIDAD.idCamion = :codigo ";
+            tx = EasyGas.sesion.beginTransaction();
+            SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
+            query.addEntity(Disponibilidad.class);
+            query.setParameter("codigo", codigo);
+            listaDispon = query.list();
+            tx.commit();
+        }
+         catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Hubo un error de conexión");
+            if (tx != null) {
+                tx.rollback();
+            }
+        }                
+        finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+        return listaDispon;
     }
     
     public List<Camion> BuscarCamion(String placa, String estado, int idTipoCamion, Date desde, Date hasta){

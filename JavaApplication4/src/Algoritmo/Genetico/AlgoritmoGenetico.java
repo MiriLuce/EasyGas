@@ -206,21 +206,15 @@ public class AlgoritmoGenetico {
         int prob = (int) (Constantes.probMutacion * cantPoblacion);
         
         for (int i = 0; i < cantPoblacion; i++) {
-            int indice = generaNumRandom(0, cantPoblacion - 1);
+            int dado = generaNumRandom(0, cantPoblacion - 1);
 
-            if (i != 0 && indice <= prob) { 
-                //poblacion.get(indice).mutar();
-                if (poblacion.get(indice).isAberracion()){
-                    poblacion.remove(indice);
+            if (dado <= prob) { 
+                poblacion.get(i).mutar();
+                if (poblacion.get(i).isAberracion()){
+                    poblacion.remove(i);
                     cantPoblacion--;
                     i--;
-                }                
-                /*
-                int cantPedido = 0, cantCad = poblacion.get(r).getCadena().size();
-                for (int k = 0; k< cantCad; k++)
-                    cantPedido += poblacion.get(r).getCadena().get(k).getListaPedido().size();
-                if (cantPedido != pedidos.size()) poblacion.get(r).setAberracion(true);
-                */
+                }       
             }
         }
     }

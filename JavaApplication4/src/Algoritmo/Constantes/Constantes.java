@@ -25,6 +25,8 @@ public class Constantes {
     public static double probEmparejamiento = 0.75;
     public static double probMutacion = 0.05;
     public static int velCamion=50;
+    public static double factorDiesel = 0.05/52.0;
+    
     public static ArrayList<Turno> lTurnos = new ArrayList<Turno>();
     // todos los camiones empezaran en la central
     public static int posInicialX = 100;
