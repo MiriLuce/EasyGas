@@ -52,8 +52,8 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-           // emparejaPoblacion();
-           // eliminaAberraciones();
+            emparejaPoblacion();
+            eliminaAberraciones();
             eliminaAberraciones();
             cant++;
         }
@@ -62,6 +62,8 @@ public class AlgoritmoGenetico {
         soluciones.add(poblacion.get(0));
         soluciones.add(poblacion.get(1));
         soluciones.add(poblacion.get(3));
+        
+        poblacion.get(0).imprimir();
         return soluciones;
     }
     
