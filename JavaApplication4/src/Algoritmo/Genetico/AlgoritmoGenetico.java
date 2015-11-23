@@ -8,6 +8,7 @@ package Algoritmo.Genetico;
 import Modelo.Hibernate.*;
 import Algoritmo.Constantes.Constantes;
 import Algoritmo.Constantes.Mapa;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +34,7 @@ public class AlgoritmoGenetico {
     public static ArrayList<Pedido> pedidos;
     
     public AlgoritmoGenetico(ArrayList<Camion> listaCamiones, ArrayList<Pedido> listaPedidos,
-            int nuevaFase, Mapa nuevoMapa) {
+            int nuevaFase, Mapa nuevoMapa) throws IOException {
         
         poblacion = new ArrayList<Cromosoma>();
         pedidosConPrioridad = new ArrayList<Pedido>();
@@ -42,7 +43,7 @@ public class AlgoritmoGenetico {
         mejorCromosoma.setCosto(-1);
         camiones = listaCamiones;
         pedidos = listaPedidos;
-        mapa = nuevoMapa;      
+        mapa = new Mapa(201,301);
     }
     
     public ArrayList<Cromosoma> empieza(){
@@ -51,8 +52,8 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-            emparejaPoblacion();
-            eliminaAberraciones();
+           // emparejaPoblacion();
+           // eliminaAberraciones();
             eliminaAberraciones();
             cant++;
         }

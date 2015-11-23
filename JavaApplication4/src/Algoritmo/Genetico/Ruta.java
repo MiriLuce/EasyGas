@@ -221,7 +221,7 @@ public class Ruta {
         int cantPedido = listaPedido.size();
         Modelo.Hibernate.Ruta nuevaRuta = new Modelo.Hibernate.Ruta();
         Nodo inicio, fin;
-        
+        nuevaRuta.setCamion(camion);
         inicio = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
         fin = new Nodo(listaPedido.get(0).getPosX(), listaPedido.get(0).getPosY());
         ArrayList<Arista> tramo = buscarCamino(inicio, fin);
@@ -379,7 +379,7 @@ public class Ruta {
                 
                 System.out.println(pedido.getPosX());
                 System.out.println(Constantes.posCentralX);
-                distanciaPedido = mapa.distanciaMinima(Constantes.posCentralX,Constantes.posCentralY,pedido.getPosX(), pedido.getPosY());
+                distanciaPedido =  mapa.distanciaMinima(Constantes.posCentralX,Constantes.posCentralY,pedido.getPosX(), pedido.getPosY());
                 regreso = mapa.distanciaMinima(pedido.getPosX(), pedido.getPosY(), Constantes.posCentralX,Constantes.posCentralY);
                 
                 distancia  += regreso;
