@@ -24,18 +24,19 @@ public class Constantes {
     public static double probSeleccion = 0.5; //no debe ser mayor a 0.5
     public static double probEmparejamiento = 0.75;
     public static double probMutacion = 0.05;
-    public static int velCamion;
+    public static int velCamion=50;
     public static ArrayList<Turno> lTurnos = new ArrayList<Turno>();
     // todos los camiones empezaran en la central
     public static int posInicialX = 100;
     public static int posInicialY = 100;
     public static int posCentralX = 100;
     public static int posCentralY = 100;
-    
+    /*
     public static Mapa obtenMapa() throws IOException{
         Mapa mapa = new Mapa(201, 301);
         return mapa;
     }
+    */
 
      public static Date obtenHoraActual() {
        

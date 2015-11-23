@@ -20,18 +20,18 @@ import java.util.Scanner;
  */
 public class Mapa {
     
-    public  int alto, ancho;
-    public  static int[][] mapa;
-    public  boolean barrera1;
-    public  boolean barrera2;
-    public  int [] caminoX;
-    public  int [] caminoY;
-    public  int caso;
-    public  int ultimoIndice=-1;
-    public  boolean fueArriba;
-    public  boolean fueAbajo;
-    public  boolean fueIzq;
-    public  boolean fueDer;
+    public static int alto, ancho;
+    public static int[][] mapa;
+    public static boolean barrera1;
+    public static boolean barrera2;
+    public static  int [] caminoX;
+    public static int [] caminoY;
+    public static int caso;
+    public static int ultimoIndice=-1;
+    public static boolean fueArriba;
+    public static boolean fueAbajo;
+    public static boolean fueIzq;
+    public static boolean fueDer;
     
     //se carga el mapa en "m" desde el archivo mapa.txt
     private void cargaMapa() throws IOException { //el throw es es formalidad xD en caso no exista el txt
@@ -103,7 +103,7 @@ public class Mapa {
         }       
     }
     
-    public  void hayBarreras(int xi, int yi, int xf, int yf) {
+    public static  void hayBarreras(int xi, int yi, int xf, int yf) {
         boolean hayBarreraX1 = false;
         boolean hayBarreraX2 = false;
         boolean hayBarreraY1 = false;
@@ -163,7 +163,7 @@ public class Mapa {
     }
     
 
-    public  boolean hayBarrerasY(int x, int yi, int yf) {
+    public static boolean hayBarrerasY(int x, int yi, int yf) {
         int i;
         if (yf > yi) {
             for (i = yi + 1; i < yf; i++) {
@@ -181,7 +181,7 @@ public class Mapa {
         return false;
     }
 
-    public   boolean hayBarrerasX(int y, int xi, int xf) {
+    public  static boolean hayBarrerasX(int y, int xi, int xf) {
         int i;
         if (xf > xi) {
             for (i = xi + 1; i < xf; i++) {
@@ -199,7 +199,7 @@ public class Mapa {
         return false;
     }
 
-    public  int calculaMenorY(int x, int yi, int yf) {
+    public static  int calculaMenorY(int x, int yi, int yf) {
         int ind,indDer,indIzq,menorDer = 0,menorIzq = 0,aux, aux2;
         int izqLimite=0;
         int derLimite=0;
@@ -247,7 +247,7 @@ public class Mapa {
         }
     }
     
-    public  int calculaMayorY(int x, int yi, int yf) {
+    public static  int calculaMayorY(int x, int yi, int yf) {
         int ind,indDer,indIzq,mayorDer = 0,mayorIzq = 0,aux, aux2;
         int izqLimite=0;
         int derLimite=0;
@@ -281,7 +281,7 @@ public class Mapa {
             return derLimite;
         }
     }
-    public  int calculaMayorX(int y, int xi, int xf) {
+    public static int calculaMayorX(int y, int xi, int xf) {
         int ind,indArriba,indAbajo,mayorArriba = 0, mayorAbajo = 0,aux, aux2,abajoLimite=0,arribaLimite=0;
         fueArriba=false;
         fueAbajo=false;
@@ -317,7 +317,7 @@ public class Mapa {
             return abajoLimite;
         }
     }
-    public  int calculaMenorX(int y, int xi, int xf) {
+    public static  int calculaMenorX(int y, int xi, int xf) {
         int ind,indArriba,indAbajo,menorArriba = 0, menorAbajo = 0,aux, aux2,abajoLimite=0,arribaLimite=0;
          // se escogen los mayores entre toda la linea para arriba y para abajo
         // al final se escogen entre arriba y abajo
@@ -363,7 +363,7 @@ public class Mapa {
             return abajoLimite * -1;
         }
     }
-    public  void inicializa(){
+    public static void inicializa(){
         ultimoIndice=-1;
         caminoX= new int[3];
         caminoY= new int[3];
@@ -378,7 +378,7 @@ public class Mapa {
         fueDer=false;
     
     }
-    public  int distanciaMinima(int xi, int yi, int xf, int yf) { //coordenadas del punto inicial (xi,yi), coordenadas del punto final (xf,yf)
+    public static int distanciaMinima(int xi, int yi, int xf, int yf) { //coordenadas del punto inicial (xi,yi), coordenadas del punto final (xf,yf)
         inicializa();
         int dx = Math.abs(xf - xi)+1; //diferencia de puntos X
         int dy = Math.abs(yf - yi)+1; //diferencia de puntos Y
