@@ -525,6 +525,45 @@ public class UsuarioControlador {
         return mensaje;
     }
     
+    public String actualizarContrasenha(String idUsuario,String contrasenha){
+       // valido para cambiar contrasenha
+        int codigo=Integer.parseInt(idUsuario);
+        String mensaje = "Se guardaron los cambios exitosamente";
+       // String contrasenhaEncriptada=encriptar(contrasenha); 
+             if (!EasyGas.sesion.isOpen()) {
+                EasyGas.sesion = EasyGas.sesFact.openSession();
+            }
+
+            Transaction tx = null;
+            try{
+                tx = EasyGas.sesion.beginTransaction();
+                Usuario usuario = (Usuario) EasyGas.sesion.get(Usuario.class, codigo);
+                Hibernate.initialize(usuario.getPerfil());
+                Hibernate.initialize(usuario.getEmpleado());
+                usuario.setContrasenha(contrasenha);
+                EasyGas.sesion.saveOrUpdate(usuario);
+                //verificar que el username no exista en la bd
+                
+                
+                tx.commit();
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Hubo un error en la conexion");
+                if (tx != null) {
+                    tx.rollback();
+                }
+            }       
+            finally{
+                if (EasyGas.sesion.isOpen()) {
+                    EasyGas.sesion.close();
+                }
+                
+            }
+              
+                
+        return mensaje;
+    }
+    
     public String EliminarUsuario(int codigo){
         
         String mensaje = "Se ha eliminado el registro exitosamente";
