@@ -30,6 +30,8 @@ public class Pedido  implements java.io.Serializable {
         this.fechaEntrega = ped.getFechaEntrega();
         this.horaSolicitada = ped.getHoraSolicitada();
         this.cliente = ped.cliente;
+        this.cliente.setNodo(ped.cliente.getNodo());
+        this.estado=ped.estado;
     }
     
     public Pedido(Cliente cliente, Date fechaRegistro, Date horaSolicitada, double cantGlp, int plazo, String prioridad) {
@@ -40,6 +42,7 @@ public class Pedido  implements java.io.Serializable {
         this.plazo = plazo;
         this.prioridad = prioridad;
         this.estado = "ACTIVO";
+        
     }
     
     public Pedido(Cliente cliente, Date fechaRegistro, Date horaSolicitada, double cantGlp, int plazo, String prioridad, String estado) {
