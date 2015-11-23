@@ -109,7 +109,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel57Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel127)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
                 .addComponent(duracionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
         );
@@ -120,7 +120,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGroup(jPanel57Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel127)
                     .addComponent(duracionSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         btnCalcular.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -183,7 +183,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(jPanel59Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
                     .addGroup(jPanel59Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnIniciar)))
@@ -194,7 +194,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             .addGroup(jPanel59Layout.createSequentialGroup()
                 .addComponent(btnIniciar)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -234,7 +234,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel56Layout.createSequentialGroup()
                         .addComponent(label23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                         .addComponent(nPedCargaBoton))
                     .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -263,7 +263,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 .addGroup(jPanel56Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExportar)
                     .addComponent(btnGrabar))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         panelMapa.setBackground(new java.awt.Color(240, 240, 225));
@@ -443,46 +443,52 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        List<Camion> lstCamiones = CamionControlador.ListarCamion(); // por base de datos
-        
-        RelojAlgoritmo r = new RelojAlgoritmo();
-        Turno t = obtenerTurnoActual();
-        ArrayList<Cromosoma> solucionParcial = new ArrayList<Cromosoma>();
-        AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
-        
-        while (true) {
-            Turno t2 = obtenerTurnoActual();
-            int cantListos = 0;
-            if (t2 != null) {
-                if (!t.equals(t2)) {
-                    System.out.println("Cambio de turno");
-                    t = t2;
+        try {
+            List<Camion> lstCamiones = CamionControlador.ListarCamion(); // por base de datos
+            
+            RelojAlgoritmo r = new RelojAlgoritmo();
+            Turno t = obtenerTurnoActual();
+            ArrayList<Cromosoma> solucionParcial = new ArrayList<Cromosoma>();
+            
+            AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1,mapa);
+            
+            while (true) {
+                Turno t2 = obtenerTurnoActual();
+                int cantListos = 0;
+                if (t2 != null) {
+                    if (!t.equals(t2)) {
+                        System.out.println("Cambio de turno");
+                        t = t2;
+                    }
+                    cantListos = obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
                 }
-                cantListos = obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
+                if (cantListos != 0) {
+                    //recalcula
+                    Algoritmo.Genetico.AlgoritmoGenetico.pedidos=(ArrayList)lstPedidos;
+                    // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
+                    // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
+                    soluciones = algoritmo.empieza();
+                    System.out.println("Ya recalculu");
+                    solucionParcial.add(soluciones.get(0));
+                    solucionParcial.add(soluciones.get(1));
+                    solucionParcial.add(soluciones.get(2));
+                    quitarListos();
+                    break;
+                    
+                }
+                if (obtenerPedidosNoAtendidos(t) == 0) {
+                    System.out.println("Todos los pedidos atendidos");
+                    break;
+                }
             }
-            if (cantListos != 0) {
-                //recalcula
-                Algoritmo.Genetico.AlgoritmoGenetico.pedidos=(ArrayList)lstPedidos;
-               // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
-               // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
-                soluciones = algoritmo.empieza();
-                System.out.println("Ya recalculu");
-                solucionParcial.add(soluciones.get(0));
-                solucionParcial.add(soluciones.get(1));
-                solucionParcial.add(soluciones.get(2));
-                quitarListos();
-               
-              }
-            if (obtenerPedidosNoAtendidos(t) == 0) {
-                 System.out.println("Todos los pedidos atendidos");
-                break;
-            }
+            
+            
+            GeneralControlador.ActualizaTablaResultadosAlgoritmo(solucionParcial, tblResultados); //se actualiza la tabla
+            
+            this.tblResultados.setEnabled(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Pantalla_Simulacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-       
-        GeneralControlador.ActualizaTablaResultadosAlgoritmo(solucionParcial, tblResultados); //se actualiza la tabla
-
-        this.tblResultados.setEnabled(true);
     }//GEN-LAST:event_btnCalcularActionPerformed
 
     private void nPedCargaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCargaBotonActionPerformed
