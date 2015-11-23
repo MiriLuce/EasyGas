@@ -307,7 +307,7 @@ public class Ruta {
             boolean verificar = true;
             
             // Si tiene capcidad suficiente
-            if (true || camion.getTipoCamion().getCapacidadGlp() >= cantGLP){
+            if (camion.getTipoCamion().getCapacidadGlp() >= cantGLP){
                 
                 // Si tiene disponibilidad suficiente
                 int cantDispon = camion.getDisponibilidads().size();
@@ -437,9 +437,10 @@ public class Ruta {
                 
                 horaLlegada = obtenerTiempo(regreso, pedido.getHoraSolicitada(), 1);
                 horaEntrega = pedido.getHoraSolicitada();
+                Date horaSalida = obtenerTiempo(distanciaPedido,pedido.getHoraSolicitada(), -1);
                 
                 // como no hay pedidos no hay camion asignado
-                camion = seleccionarCamion(camiones, pedido.getCantGlp(), salida, horaLlegada);
+                camion = seleccionarCamion(camiones, pedido.getCantGlp(), horaSalida, horaLlegada);
                 tp = camion.getTipoCamion();
                 if (camion == null ) return false;
                 boolean verificarDiesel = verificarDiesel(tp, distancia + distanciaPedido + regreso,
@@ -447,7 +448,7 @@ public class Ruta {
                 
                 if(verificarDiesel){
                     estaAsignado = true;
-                    salida = obtenerTiempo(distanciaPedido,pedido.getHoraSolicitada(), -1);
+                    salida = horaSalida;
                 }
             }
             else{
@@ -681,7 +682,7 @@ public class Ruta {
             hora = obtenerTiempo(tramo, pedAnt.getFechaEntrega(), 1);
             distancia += tramo;
             cantDiesel += camion.getTipoCamion().getTara()*distancia;
-            cantDiesel = 0.05*cantDiesel/52;
+            cantDiesel = 0.05*cantDiesel/52.0;
             llegada = hora;
         }
     }

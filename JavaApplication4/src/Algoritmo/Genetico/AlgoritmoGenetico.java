@@ -54,6 +54,7 @@ public class AlgoritmoGenetico {
             seleccionaElite();
             emparejaPoblacion();
             eliminaAberraciones();
+            mutaPoblacion();
             eliminaAberraciones();
             cant++;
         }

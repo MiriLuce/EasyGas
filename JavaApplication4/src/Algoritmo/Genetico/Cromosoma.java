@@ -154,7 +154,7 @@ public class Cromosoma {
         }
         int cantCamiones = camiones.size();
         for(int i= 0; i<cantCamiones; i++){
-            Camion c = new Camion(camiones.get(i).getTipoCamion(), camiones.get(i).getEstado());
+            Camion c = new Camion(camiones.get(i));
             listaCamiones.add(c);
         }        
         int indicePedidoAleatorio, indiceRutaAleatoria;
@@ -334,7 +334,7 @@ public class Cromosoma {
             //Ruta rut = new Ruta(this.cadena.get(indiceRuta));
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
             if (verificar) {
-                
+                this.cadena.get(indiceRuta).calcularRuta();
                 return 1; // 1: se quito con exito            
             }
             else return -1; // -1: es una aberracion
@@ -392,6 +392,10 @@ public class Cromosoma {
     
     public void mutar() {
         
+        int cantRutas = cadena.size();
+        for(int i = 0; i< cantRutas; i++)
+            cadena.get(i).permutarPedidos();
+        /*
         int n1 = generaNumRandom(0, cadena.size() - 1);
         int n2 = generaNumRandom(0, cadena.size() - 1);
 
@@ -406,6 +410,7 @@ public class Cromosoma {
             //this.agregarRuta(e1);
             //this.asignarPedidos(e2);
         }
+        */
     }
     
     
