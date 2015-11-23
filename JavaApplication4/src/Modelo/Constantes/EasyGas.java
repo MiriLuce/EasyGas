@@ -73,44 +73,5 @@ public class EasyGas {
         rutaAmarillo = Imagen.CargaImagen("/mapa_ruta_amarillo.png");
         rutaVerde = Imagen.CargaImagen("/mapa_ruta_verde.png");
         imagenPausa = Imagen.CargaImagen("/mapa_pausa_200.png");
-        
-        rutaPrueba = CreaRutaPrueba();
-    }
-    
-    private static Ruta CreaRutaPrueba(){
-        Ruta nRuta = new Ruta();
-        List aristas = new ArrayList();
-        
-        Arista arista1 = new Arista();
-        arista1.setNodoByIdOrigen(new Nodo(20,10));
-        arista1.setNodoByIdDestino(new Nodo(20,52));
-        arista1.CalculaDireccion();
-        
-        aristas.add(arista1);
-        
-        Arista arista2 = new Arista();
-        arista2.setNodoByIdOrigen(new Nodo(20,52));
-        arista2.setNodoByIdDestino(new Nodo(60,52));
-        arista2.CalculaDireccion();
-        
-        aristas.add(arista2);
-        
-        Arista arista3 = new Arista();
-        arista3.setNodoByIdOrigen(new Nodo(60,52));
-        arista3.setNodoByIdDestino(new Nodo(60,10));
-        arista3.CalculaDireccion();
-        
-        aristas.add(arista3);
-        
-        Arista arista4 = new Arista();
-        arista4.setNodoByIdOrigen(new Nodo(60,10));
-        arista4.setNodoByIdDestino(new Nodo(20,10));
-        arista4.CalculaDireccion();
-        
-        aristas.add(arista4);
-        
-        nRuta.setAristas(aristas);
-        
-        return nRuta;
     }
 }

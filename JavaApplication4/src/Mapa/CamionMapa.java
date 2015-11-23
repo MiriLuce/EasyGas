@@ -72,7 +72,7 @@ public class CamionMapa {
         int B = (int) (Math.random() * 256);
         colorCamion = new Color(R, G, B);
         
-        int transparente = imagen.getRGB(0, 0);
+        int transparente = 16777215; //sacado manualmente de un proyecto de prueba
 
         for (int x = 0; x < imagen.getWidth(); x++) {
             for (int y = 0; y < imagen.getHeight(); y++) {
@@ -135,7 +135,7 @@ public class CamionMapa {
     }
 
     public void DibujaCamion(Graphics g) {
-        g.drawImage(imagen, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), colorCamion, null);
+        g.drawImage(imagen, (int) (posX - mapa.ObtenCamara().getxOffSet() - 3), (int) (posY - mapa.ObtenCamara().getyOffSet() - 3), null);
     }
 
     private void DibujaRecta(Graphics g, Nodo origen, Nodo destino) {

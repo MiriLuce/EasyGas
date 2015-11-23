@@ -22,10 +22,10 @@ public class Teclado implements KeyListener {
     }
 
     public void Actualiza() {
-        arriba = teclas[KeyEvent.VK_W];
-        abajo = teclas[KeyEvent.VK_S];
-        izquierda = teclas[KeyEvent.VK_A];
-        derecha = teclas[KeyEvent.VK_D];
+        arriba = teclas[KeyEvent.VK_UP];
+        abajo = teclas[KeyEvent.VK_DOWN];
+        izquierda = teclas[KeyEvent.VK_LEFT];
+        derecha = teclas[KeyEvent.VK_RIGHT];
         barraEspaciadora = teclas[KeyEvent.VK_SPACE];
         ele = teclas[KeyEvent.VK_L];
     }

@@ -6,19 +6,19 @@
 package Mapa;
 
 import Mapa.Ciudades.CiudadXYZ;
-import Mapa.Utilidades.PanelLeyenda;
 import Mapa.Utilidades.Pantalla;
 import Modelo.Hibernate.Ruta;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Cliente;
 import Modelo.Hibernate.Nodo;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  *
@@ -45,6 +45,7 @@ public class Mapa implements Runnable {
     Camara camara;
     CentralMapa central;
     private Teclado teclado;
+    private JPanel panel;
 
     public Mapa(String t, int an, int al, ArrayList<Ruta> sol, ArrayList<Cliente> lista) {
         titulo = t;
@@ -63,14 +64,32 @@ public class Mapa implements Runnable {
             camiones.add(new CamionMapa(this, i, 50, rutas.get(i)));
         }
     }
-    
-    private void CargaClientes(){
+
+    private void CargaClientes() {
         for (int i = 0; i < listaClientes.size(); i++) {
             Nodo n = listaClientes.get(i).getNodo();
-            clientes.add(new ClienteMapa(this,n.getCoordX(),n.getCoordY(),listaClientes.get(i).getTipoDocumento()));
+            clientes.add(new ClienteMapa(this, n.getCoordX(), n.getCoordY(), listaClientes.get(i).getTipoDocumento()));
         }
     }
 
+    private void PreparaLeyenda() {
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(camiones.size()+3, 1));
+        
+        for (int i = 0; i < camiones.size(); i++) {
+            JLabel label = new JLabel(String.valueOf(i), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
+            panel.add(label);
+        }
+        
+        JLabel labelCentral = new JLabel("Central de EasyGas", new ImageIcon(EasyGas.mapaCentral), SwingConstants.LEFT);
+        JLabel labelClienteNat = new JLabel("Persona Natural", new ImageIcon(EasyGas.mapaClienteNat), SwingConstants.LEFT);
+        JLabel labelClienteJur = new JLabel("Empresa", new ImageIcon(EasyGas.mapaClienteJur), SwingConstants.LEFT);
+
+        panel.add(labelCentral);
+        panel.add(labelClienteNat);
+        panel.add(labelClienteJur);
+    }
+    
     private void Inicializa() throws IOException {
         pantalla = new Pantalla(titulo, ancho, alto);
         pantalla.ObtenFrame().addKeyListener(teclado);
@@ -85,6 +104,8 @@ public class Mapa implements Runnable {
 
         CargaCamiones();
         CargaClientes();
+        
+        PreparaLeyenda();
     }
 
     private void ActualizaCamiones() {
@@ -92,24 +113,23 @@ public class Mapa implements Runnable {
             camiones.get(i).Actualiza();
         }
     }
-
+    
     private boolean teclaActualPausa, teclaAntiguaPausa; //para manejar que no se presione pausa mas de una vez
     private boolean teclaActualLeyenda, teclaAntiguaLeyenda; //para manejar que no se presione pausa mas de una vez
     private void Actualiza() {
         teclaActualPausa = teclado.barraEspaciadora;
         teclaActualLeyenda = teclado.ele;
-        
+
         if (teclaActualPausa && !teclaAntiguaPausa && !enPausa) {
             enPausa = true;
         } else if (teclaActualPausa && !teclaAntiguaPausa && enPausa) {
             enPausa = false;
         }
-        
-        if(teclaActualLeyenda && !teclaAntiguaLeyenda && !enPausa){ //mostrar leyenda cuando se presiona L 
-            PanelLeyenda panel = new PanelLeyenda(camiones);
+
+        if (teclaActualLeyenda && !teclaAntiguaLeyenda && !enPausa) { //mostrar leyenda cuando se presiona L 
             JOptionPane.showMessageDialog(null, panel, "Leyenda", JOptionPane.PLAIN_MESSAGE);
         }
-            
+
         teclado.Actualiza();
         ciudadXYZ.Actualiza();
 
@@ -117,26 +137,32 @@ public class Mapa implements Runnable {
             ActualizaCamiones();
             camara.Mueve(camX, camY);
         }
-        
+
         teclaAntiguaPausa = teclaActualPausa;
         teclaAntiguaLeyenda = teclaActualLeyenda;
+    }
+
+    private void DibujaRutas(Graphics g) {
+        for (int i = 0; i < camiones.size(); i++) {
+            CamionMapa c = camiones.get(i);
+            c.DibujaRuta(g);
+        }
     }
 
     private void DibujaCamiones(Graphics g) {
         for (int i = 0; i < camiones.size(); i++) {
             CamionMapa c = camiones.get(i);
-            c.DibujaRuta(g);
             c.DibujaCamion(g);
         }
     }
 
-    private void DibujaClientes(Graphics g){
+    private void DibujaClientes(Graphics g) {
         for (int i = 0; i < clientes.size(); i++) {
             ClienteMapa c = clientes.get(i);
             c.Dibuja(g);
         }
     }
-    
+
     private void Dibuja() { //draw
         bs = pantalla.ObtenCanvas().getBufferStrategy();
         if (bs == null) {
@@ -149,12 +175,13 @@ public class Mapa implements Runnable {
 
         //////////// PARTE DIBUJO //////////////
         ciudadXYZ.Dibuja(g);
+        DibujaRutas(g);
         DibujaCamiones(g);
         central.Dibuja(g);
         DibujaClientes(g);
-        
+
         if (enPausa) {
-            g.drawImage(EasyGas.imagenPausa, ancho/2-EasyGas.imagenPausa.getWidth()/2, alto/2-EasyGas.imagenPausa.getHeight()/2, null);
+            g.drawImage(EasyGas.imagenPausa, ancho / 2 - EasyGas.imagenPausa.getWidth() / 2, alto / 2 - EasyGas.imagenPausa.getHeight() / 2, null);
         }
 
         /////////// FIN DIBUJO //////////////

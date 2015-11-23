@@ -50,7 +50,7 @@ public class Arista implements java.io.Serializable {
         this.estado = estado;
     }
 
-    public void CalculaDireccion() {
+    public int getDireccion() {
         if (nodoByIdOrigen.getCoordX() == nodoByIdDestino.getCoordX()) {//vertical
             if (nodoByIdOrigen.getCoordY() < nodoByIdDestino.getCoordY()) {
                 direccion = 2;
@@ -64,9 +64,6 @@ public class Arista implements java.io.Serializable {
                 direccion = 1;
             }
         }
-    }
-
-    public int getDireccion() {
         return direccion;
     }
 
