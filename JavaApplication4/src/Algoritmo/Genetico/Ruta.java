@@ -376,10 +376,11 @@ public class Ruta {
                     
             if(cantPedidoRuta == 0){
                 // La ruta no tiene pedidos asignados
-                distanciaPedido = mapa.distanciaMinima(Constantes.posCentralX,Constantes.posCentralY,
-                    pedido.getPosX(), pedido.getPosY());
-                regreso = mapa.distanciaMinima(pedido.getPosX(), pedido.getPosY(),
-                    Constantes.posCentralX,Constantes.posCentralY);
+                
+                System.out.println(pedido.getPosX());
+                System.out.println(Constantes.posCentralX);
+                distanciaPedido = mapa.distanciaMinima(Constantes.posCentralX,Constantes.posCentralY,pedido.getPosX(), pedido.getPosY());
+                regreso = mapa.distanciaMinima(pedido.getPosX(), pedido.getPosY(), Constantes.posCentralX,Constantes.posCentralY);
                 
                 distancia  += regreso;
                 salida = obtenerTiempo(distanciaPedido,pedido.getHoraSolicitada(), -1);
