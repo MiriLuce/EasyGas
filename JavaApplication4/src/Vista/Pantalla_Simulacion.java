@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.service.jdbc.connections.spi.ConnectionProvider;
 
 /**
  *
@@ -42,8 +42,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private ArrayList<Cromosoma> soluciones;
     private ArrayList<Ruta> listaRuta;
     private List<Pedido> lstPedidos;
-    private List<Pedido> lstPedidosSinPrioridad;
-    private List<Pedido> lstPedidosConPrioridad;
+    private List<Pedido> lstPedidosSinPrioridad=null;
+    private List<Pedido> lstPedidosConPrioridad=null;
 
     public Pantalla_Simulacion() {
         initComponents();
@@ -443,12 +443,13 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnExportarActionPerformed
 
     private void btnCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularActionPerformed
-        lstPedidos = PedidoControlador.ListarPedidos();// por datos del excel
         List<Camion> lstCamiones = CamionControlador.ListarCamion(); // por base de datos
+        
         RelojAlgoritmo r = new RelojAlgoritmo();
         Turno t = obtenerTurnoActual();
+        ArrayList<Cromosoma> solucionParcial = new ArrayList<Cromosoma>();
         AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
-
+        
         while (true) {
             Turno t2 = obtenerTurnoActual();
             int cantListos = 0;
@@ -458,20 +459,28 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     t = t2;
                 }
                 cantListos = obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
-
             }
             if (cantListos != 0) {
                 //recalcula
-                algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
-                algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
+                Algoritmo.Genetico.AlgoritmoGenetico.pedidos=(ArrayList)lstPedidos;
+               // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
+               // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
                 soluciones = algoritmo.empieza();
-            }
+                System.out.println("Ya recalculu");
+                solucionParcial.add(soluciones.get(0));
+                solucionParcial.add(soluciones.get(1));
+                solucionParcial.add(soluciones.get(2));
+                quitarListos();
+               
+              }
             if (obtenerPedidosNoAtendidos(t) == 0) {
+                 System.out.println("Todos los pedidos atendidos");
                 break;
             }
         }
-
-        GeneralControlador.ActualizaTablaResultadosAlgoritmo(soluciones, tblResultados); //se actualiza la tabla
+        
+       
+        GeneralControlador.ActualizaTablaResultadosAlgoritmo(solucionParcial, tblResultados); //se actualiza la tabla
 
         this.tblResultados.setEnabled(true);
     }//GEN-LAST:event_btnCalcularActionPerformed
@@ -514,28 +523,22 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         return null;
 
     }
-
+    public void quitarListos(){
+        int cantPedidos=lstPedidos.size();
+        ArrayList<Pedido> pedidosFinales = new ArrayList<Pedido>();
+        for(int i=0;i<cantPedidos;i++){
+            if(lstPedidos.get(i).getEstado().compareTo("listo")!=0) 
+                pedidosFinales.add(new Pedido(lstPedidos.get(i)));
+        }
+        lstPedidos.clear();
+        lstPedidos=pedidosFinales;
+    }
     public boolean perteneceATurno(Date hora, Turno turno) {
         return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
 
     }
 
-    public int obtenerPedidosAtendidos(Turno t) {
-        List<Pedido> pedidosListo;
-        int cantPedidos = lstPedidos.size();
-        int cantListo = 0;
 
-        for (int i = 0; i < cantPedidos; i++) {
-            Pedido p = lstPedidos.get(i);
-
-            if (p.getEstado().equals(new String("atendido"))) {
-                cantListo++;
-            }
-
-        }
-        return cantListo;
-
-    }
 
     public int obtenerPedidosNoAtendidos(Turno t) {
         List<Pedido> pedidosListo;
@@ -543,11 +546,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         int cantNoAtendidos = 0;
 
         for (int i = 0; i < cantPedidos; i++) {
-            Pedido p = lstPedidos.get(i);
-
-            if (p.getEstado().equals(new String("no atendido"))) {
-                cantNoAtendidos++;
-            }
+            cantNoAtendidos++;
+          
 
         }
         return cantNoAtendidos;
@@ -560,17 +560,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         int cantListo = 0;
 
         for (int i = 0; i < cantPedidos; i++) {
-//          
-//            if(Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
-//            if(Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t)&& p.getCliente().getTipoDocumento().compareTo("DNI")==0)  p.setPrioridad("tiene");
-//            if(Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t)&& !(p.getCliente().getTipoDocumento().compareTo("DNI")==0)) p.setPrioridad("tiene");
-//            lstPedidos.get(i).setEstado("listo");
-//            cantListo++;
             Pedido p = lstPedidos.get(i);
             if (perteneceATurno(p.getHoraSolicitada(), t)) {
-
-                if (p.getEstado().equals(new String("no atendido")) || p.getEstado().equals(new String("listo"))) {
-                    System.out.println("No atendido");
                     if (Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t)) {
                         p.setPrioridad("no tiene");
                     }
@@ -581,14 +572,15 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                         p.setPrioridad("tiene");
                     }
                     lstPedidos.get(i).setEstado("listo");
-                    if (p.getPrioridad().compareTo("tiene") == 0) {
+                   /* if (p.getPrioridad().compareTo("tiene") == 0) {
                         lstPedidosConPrioridad.add(p);
                     } else {
                         lstPedidosSinPrioridad.add(p);
                     }
+                           */
 
                     cantListo++;
-                }
+                
             }
 
         }
