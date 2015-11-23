@@ -330,7 +330,8 @@ public class Cromosoma {
     private int  quitarPedido(int indiceRuta, int indicePedido, int idPedidoOriginal, int idPedidoEliminar){
         
         if (idPedidoOriginal ==  idPedidoEliminar){
-            Ruta rut = new Ruta(this.cadena.get(indiceRuta));
+
+            //Ruta rut = new Ruta(this.cadena.get(indiceRuta));
             boolean verificar = this.cadena.get(indiceRuta).quitarPedido(indicePedido);
             if (verificar) {
                 

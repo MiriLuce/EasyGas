@@ -355,7 +355,7 @@ public class PedidoControlador {
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
-
+        int indice = 0;
         while ((line = br.readLine()) != null) {
             String pedido[] = line.split(";");
 
@@ -381,8 +381,9 @@ public class PedidoControlador {
             }
             
             Pedido ped = new Pedido(c, fechaRegistro, horaSolicitada, cantGLP, p, prioridad);
-
+            ped.setIdPedido(indice);
             lista.add(ped);
+            indice++;
         }
 
         return lista;
