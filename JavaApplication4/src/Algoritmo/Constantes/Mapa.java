@@ -44,7 +44,7 @@ public class Mapa {
             }
         }
         
-        FileInputStream fistream = new FileInputStream("mapa.txt");
+        FileInputStream fistream = new FileInputStream("callesBloqueadas.txt");
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;
