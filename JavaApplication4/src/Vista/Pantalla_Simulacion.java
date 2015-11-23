@@ -356,7 +356,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
             ////////////////////// MUESTRA SIMULACION //////////////////////////
             ArrayList<Cliente> listaClientes = ClienteControlador.ListarClientes(); //esta lista debe ser la lista de todos los clientes obtenida con la carga masiva
-            Mapa mapa = new Mapa("Ciudad XYZ", 1200, 800, listaRuta, listaClientes);
+            Mapa mapa = new Mapa("Ciudad XYZ", 1200, 600, listaRuta, listaClientes);
             mapa.Empieza();
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para empezar la simulación");

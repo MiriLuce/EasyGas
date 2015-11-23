@@ -74,13 +74,13 @@ public class Mapa implements Runnable {
 
     private void PreparaLeyenda() {
         panel = new JPanel();
-        panel.setLayout(new GridLayout(camiones.size()+3, 1));
-        
+        panel.setLayout(new GridLayout(camiones.size() + 3, 1));
+
         for (int i = 0; i < camiones.size(); i++) {
             JLabel label = new JLabel(String.valueOf(i), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
             panel.add(label);
         }
-        
+
         JLabel labelCentral = new JLabel("Central de EasyGas", new ImageIcon(EasyGas.mapaCentral), SwingConstants.LEFT);
         JLabel labelClienteNat = new JLabel("Persona Natural", new ImageIcon(EasyGas.mapaClienteNat), SwingConstants.LEFT);
         JLabel labelClienteJur = new JLabel("Empresa", new ImageIcon(EasyGas.mapaClienteJur), SwingConstants.LEFT);
@@ -89,22 +89,37 @@ public class Mapa implements Runnable {
         panel.add(labelClienteNat);
         panel.add(labelClienteJur);
     }
-    
+
     private void Inicializa() throws IOException {
         pantalla = new Pantalla(titulo, ancho, alto);
         pantalla.ObtenFrame().addKeyListener(teclado);
+        pantalla.ObtenFrame().addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (!corriendo) {
+                    return;
+                }
+                corriendo = false;
+                try {
+                    hilo.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
         EasyGas.Inicializa();
 
         camara = new Camara(this, 0, 0);
-        camX = 2f; //auxiliar
-        camY = 2f; //auxiliar
+        camX = 4f; //auxiliar
+        camY = 4f; //auxiliar
 
         ciudadXYZ = new CiudadXYZ(this);
-        central = new CentralMapa(this, 20, 10);
+        central = new CentralMapa(this, 100, 100);
 
         CargaCamiones();
         CargaClientes();
-        
+
         PreparaLeyenda();
     }
 
@@ -113,9 +128,10 @@ public class Mapa implements Runnable {
             camiones.get(i).Actualiza();
         }
     }
-    
+
     private boolean teclaActualPausa, teclaAntiguaPausa; //para manejar que no se presione pausa mas de una vez
     private boolean teclaActualLeyenda, teclaAntiguaLeyenda; //para manejar que no se presione pausa mas de una vez
+
     private void Actualiza() {
         teclaActualPausa = teclado.barraEspaciadora;
         teclaActualLeyenda = teclado.ele;
