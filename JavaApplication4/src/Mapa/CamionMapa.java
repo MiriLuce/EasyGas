@@ -6,6 +6,7 @@
 package Mapa;
 
 import Mapa.Tejas.Teja;
+import Mapa.Utilidades.Imagen;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Arista;
 import Modelo.Hibernate.Nodo;
@@ -47,13 +48,13 @@ public class CamionMapa {
     public void setImagen(BufferedImage imagen) {
         this.imagen = imagen;
     }
-
+    
     public CamionMapa(Mapa m, int nid, int vel, Ruta nRuta) {
         id = nid;
         mapa = m;
         velocidad = vel; //(Km/h)
         //tuvoAccidente = false;
-        imagen = EasyGas.camionNormal;
+        imagen = Imagen.CargaImagen("/mapa_camion_16.png");
         ruta = nRuta;
         posX = ruta.getAristas().get(0).getNodoByIdOrigen().getCoordX() * Teja.ANCHOTEJA;
         posY = ruta.getAristas().get(0).getNodoByIdOrigen().getCoordY() * Teja.ANCHOTEJA;

@@ -17,7 +17,6 @@ import Modelo.Hibernate.TipoCamion;
 import Modelo.Hibernate.Disponibilidad;
 import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Arista;
-import java.util.List;
 
 /**
  *
@@ -216,7 +215,6 @@ public class Ruta {
     }
     
     public Modelo.Hibernate.Ruta guardarEnMapa(){
-        
         ArrayList<Arista> camino = new ArrayList();
         int cantPedido = listaPedido.size();
         Modelo.Hibernate.Ruta nuevaRuta = new Modelo.Hibernate.Ruta();

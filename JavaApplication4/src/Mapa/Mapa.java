@@ -77,7 +77,7 @@ public class Mapa implements Runnable {
         panel.setLayout(new GridLayout(camiones.size() + 3, 1));
 
         for (int i = 0; i < camiones.size(); i++) {
-            JLabel label = new JLabel(String.valueOf(i), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
+            JLabel label = new JLabel(camiones.get(i).getPlaca(), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
             panel.add(label);
         }
 
