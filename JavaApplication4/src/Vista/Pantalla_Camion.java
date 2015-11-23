@@ -175,6 +175,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         btnCamionBuscar = new javax.swing.JButton();
         jScrollPane8 = new javax.swing.JScrollPane();
         tblCamion = new javax.swing.JTable();
+        btnLimpiar = new javax.swing.JButton();
 
         panelCamion.setBackground(new java.awt.Color(240, 240, 225));
 
@@ -536,6 +537,15 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
             tblCamion.getColumnModel().getColumn(4).setResizable(false);
         }
 
+        btnLimpiar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_borrar.png"))); // NOI18N
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBuscarLayout = new javax.swing.GroupLayout(panelBuscar);
         panelBuscar.setLayout(panelBuscarLayout);
         panelBuscarLayout.setHorizontalGroup(
@@ -544,6 +554,8 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
                 .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelBuscarLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnCamionBuscar))
                     .addGroup(panelBuscarLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
@@ -568,7 +580,9 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
                     .addComponent(panelDatos, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addComponent(panelManten, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCamionBuscar)
+                .addGroup(panelBuscarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCamionBuscar)
+                    .addComponent(btnLimpiar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
@@ -740,6 +754,13 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tblCamionMouseClicked
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        cmbCamionBuscarTipo.setSelectedIndex(0);
+        txtCamionBuscarPlaca.setText("");
+        cmbCamionBuscarEstado.setSelectedIndex(0);
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCamionBuscar;
     private javax.swing.JButton btnCamionCancelar;
@@ -747,6 +768,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnCamionEliminar;
     private javax.swing.JButton btnCamionGuardar;
     private javax.swing.JButton btnCamionNuevo;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JComboBox cmbCamionBuscarEstado;
     private javax.swing.JComboBox cmbCamionBuscarTipo;
     private javax.swing.JComboBox cmbCamionTipo;
