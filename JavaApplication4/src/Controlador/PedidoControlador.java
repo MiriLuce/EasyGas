@@ -233,6 +233,34 @@ public class PedidoControlador {
         return false;
     }
 
+    public static void GuardarPedidos(ArrayList<Pedido> lista) {
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+
+        Transaction tx = null;
+
+        try {
+            tx = EasyGas.sesion.beginTransaction();
+
+            for (int i = 0; i < lista.size(); i++) {
+                EasyGas.sesion.saveOrUpdate(lista.get(i));
+            }
+
+            tx.commit();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (EasyGas.sesion.isOpen()) {
+                EasyGas.sesion.close();
+            }
+        }
+    }
+
     public static void GuardarPedido(Pedido nuevoPed) {
         if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();
@@ -341,12 +369,12 @@ public class PedidoControlador {
         return lista;
     }
 
-    private static Date FormaFechaRegistro(String fecha, String hora) throws ParseException{
+    private static Date FormaFechaRegistro(String fecha, String hora) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-        String nuevaFecha = ""+fecha+" "+hora;
+        String nuevaFecha = "" + fecha + " " + hora;
         return sdf.parse(nuevaFecha);
     }
-    
+
     public static ArrayList<Pedido> CargaPedidosSimulacion(String rutaArchivo) throws FileNotFoundException, IOException, ParseException {
 
         ArrayList<Pedido> lista = new ArrayList<Pedido>();
@@ -360,18 +388,18 @@ public class PedidoControlador {
             String pedido[] = line.split(";");
 
             Cliente c = ClienteControlador.BuscaClienteId(Integer.parseInt(pedido[2]));
-            
-            Date fechaRegistro = FormaFechaRegistro(pedido[0],pedido[1]);
-            
+
+            Date fechaRegistro = FormaFechaRegistro(pedido[0], pedido[1]);
+
             int p = Integer.parseInt(pedido[4].substring(1));
-            
+
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaRegistro);
             cal.add(Calendar.HOUR, p);
             Date horaSolicitada = cal.getTime();
-            
+
             int cantGLP = Integer.parseInt(pedido[3]);
-            
+
             String prioridad;
 
             if (PedidoControlador.TienePrioridad(c)) {
@@ -379,7 +407,7 @@ public class PedidoControlador {
             } else {
                 prioridad = "NO";
             }
-            
+
             Pedido ped = new Pedido(c, fechaRegistro, horaSolicitada, cantGLP, p, prioridad);
             ped.setIdPedido(indice);
             lista.add(ped);

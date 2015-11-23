@@ -248,6 +248,48 @@ public class Ruta {
         nuevaRuta.setAristas(camino);
         return nuevaRuta;
     }
+    
+    public Modelo.Hibernate.Ruta GuardarEnMapaReal(ArrayList<Pedido> listAux){
+        ArrayList<Arista> camino = new ArrayList();
+        
+        listaPedido.clear();
+        for(int i=0; i< listAux.size(); i++){
+            Pedido ped = new Pedido(listAux.get(i));
+            listaPedido.add(ped);
+        } 
+        
+        int cantPedido = listaPedido.size();
+        Modelo.Hibernate.Ruta nuevaRuta = new Modelo.Hibernate.Ruta();
+        Nodo inicio, fin;
+        nuevaRuta.setCamion(camion);
+        inicio = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
+        fin = new Nodo(listaPedido.get(0).getPosX(), listaPedido.get(0).getPosY());
+        ArrayList<Arista> tramo = buscarCamino(inicio, fin);
+        for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));   
+        
+        for(int i= 0; i< cantPedido; i++){
+            /*if (i == 0){
+                inicio = new modeloCompleto.Nodo(Constantes.posCentralX, Constantes.posCentralY);
+                fin = new modeloCompleto.Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+            }
+            else */
+            if ( i == cantPedido -1 ){
+                inicio = new Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+                fin = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
+            }
+            else {
+                inicio = new Nodo(listaPedido.get(i).getPosX(), listaPedido.get(i).getPosY());
+                fin = new Nodo(listaPedido.get(i+1).getPosX(), listaPedido.get(i+1).getPosY());
+            }
+            tramo.clear();
+            tramo = buscarCamino(inicio, fin);
+            for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));
+        }
+        
+        nuevaRuta.setCantDiesel((int)cantDiesel);
+        nuevaRuta.setAristas(camino);
+        return nuevaRuta;
+    }
         
     private Camion seleccionarCamion(ArrayList<Camion> camiones, double cantGLP, Date salida, Date llegada){
         int cantCamiones = camiones.size();

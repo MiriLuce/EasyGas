@@ -191,5 +191,33 @@ public class RutaControlador {
 
         return aux;
     }
+    
+    public static void GuardarRutas(ArrayList<Ruta> lista){
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+
+        Transaction tx = null;
+
+        try {
+            tx = EasyGas.sesion.beginTransaction();
+
+            for (int i = 0; i < lista.size(); i++) {
+                EasyGas.sesion.saveOrUpdate(lista.get(i));
+            }
+
+            tx.commit();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (EasyGas.sesion.isOpen()) {
+                EasyGas.sesion.close();
+            }
+        }
+    }
      
 }
