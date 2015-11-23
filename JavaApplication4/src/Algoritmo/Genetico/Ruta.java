@@ -204,7 +204,7 @@ public class Ruta {
             nodoA.setCoordX(finalCamino[j][0]);
             nodoA.setCoordY(finalCamino[j][1]);
             Nodo nodoB = new Nodo();
-            nodoA.setCoordX(finalCamino[j+1][0]);
+            nodoB.setCoordX(finalCamino[j+1][0]);
             nodoB.setCoordY(finalCamino[j+1][1]);
             int distancia=0;
             distancia +=nodoA.getCoordX()==nodoB.getCoordX()?Math.abs(nodoA.getCoordY()-nodoB.getCoordY()):0;
