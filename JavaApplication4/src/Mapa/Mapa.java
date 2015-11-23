@@ -76,11 +76,6 @@ public class Mapa implements Runnable {
         panel = new JPanel();
         panel.setLayout(new GridLayout(camiones.size() + 3, 1));
 
-        for (int i = 0; i < camiones.size(); i++) {
-            JLabel label = new JLabel(camiones.get(i).getPlaca(), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
-            panel.add(label);
-        }
-
         JLabel labelCentral = new JLabel("Central de EasyGas", new ImageIcon(EasyGas.mapaCentral), SwingConstants.LEFT);
         JLabel labelClienteNat = new JLabel("Persona Natural", new ImageIcon(EasyGas.mapaClienteNat), SwingConstants.LEFT);
         JLabel labelClienteJur = new JLabel("Empresa", new ImageIcon(EasyGas.mapaClienteJur), SwingConstants.LEFT);
@@ -88,6 +83,11 @@ public class Mapa implements Runnable {
         panel.add(labelCentral);
         panel.add(labelClienteNat);
         panel.add(labelClienteJur);
+        
+        for (int i = 0; i < camiones.size(); i++) {
+            JLabel label = new JLabel(camiones.get(i).getPlaca(), new ImageIcon(camiones.get(i).getImagen()), SwingConstants.LEFT);
+            panel.add(label);
+        }
     }
 
     private void Inicializa() throws IOException {
