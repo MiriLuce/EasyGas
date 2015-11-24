@@ -441,8 +441,10 @@ public class Ruta {
                 
                 // como no hay pedidos no hay camion asignado
                 camion = seleccionarCamion(camiones, pedido.getCantGlp(), horaSalida, horaLlegada);
-                tp = camion.getTipoCamion();
+                
                 if (camion == null ) return false;
+                tp = camion.getTipoCamion();
+                
                 boolean verificarDiesel = verificarDiesel(tp, distancia + distanciaPedido + regreso,
                         distancia + distanciaPedido, pedido.getCantGlp());
                 

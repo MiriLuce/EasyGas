@@ -481,6 +481,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
 
             while (true) {
+                // System.out.println(Util.RelojAlgoritmo.horaActual.getTime());
                 Turno t2 = obtenerTurnoActual();
                 int cantListos = 0;
                 if (t2 != null) {
@@ -496,7 +497,6 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
                     // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
                     soluciones = algoritmo.empieza();
-                    System.out.println("Ya recalculu");
                     solucionParcial.add(soluciones.get(0));
                     solucionParcial.add(soluciones.get(1));
                     solucionParcial.add(soluciones.get(2));

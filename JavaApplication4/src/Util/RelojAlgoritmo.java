@@ -51,5 +51,6 @@ public class RelojAlgoritmo {
                 };
             Timer t = new Timer();
             t.schedule(task,10, factorTiempo);
+           
    }
 }

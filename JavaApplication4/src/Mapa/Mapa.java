@@ -110,7 +110,7 @@ public class Mapa implements Runnable {
 
         EasyGas.Inicializa();
 
-        camara = new Camara(this, 0, 0);
+        camara = new Camara(this, 400, 700);
         camX = 4f; //auxiliar
         camY = 4f; //auxiliar
 
