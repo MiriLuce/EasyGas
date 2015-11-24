@@ -504,6 +504,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     break;
 
                 }
+                System.out.println(obtenerPedidosNoAtendidos(t));
                 if (obtenerPedidosNoAtendidos(t) == 0) {
                     System.out.println("Todos los pedidos atendidos");
                     break;
