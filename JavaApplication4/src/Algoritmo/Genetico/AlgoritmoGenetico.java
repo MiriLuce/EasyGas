@@ -64,7 +64,7 @@ public class AlgoritmoGenetico {
         soluciones.add(poblacion.get(1));
         soluciones.add(poblacion.get(3));
         
-        poblacion.get(0).imprimir();
+        //poblacion.get(0).imprimir();
         return soluciones;
     }
     

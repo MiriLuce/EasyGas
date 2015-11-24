@@ -5,6 +5,7 @@
  */
 package Vista;
 
+import Algoritmo.Constantes.Constantes;
 import Algoritmo.Genetico.AlgoritmoGenetico;
 import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
 import Algoritmo.Genetico.Cromosoma;
@@ -42,6 +43,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private ArrayList<Cromosoma> soluciones;
     private ArrayList<Ruta> listaRuta;
     private ArrayList<Pedido> lstPedidos;
+    private ArrayList<Pedido> lstPedidosDelDia;
     private List<Pedido> lstPedidosSinPrioridad = null;
     private List<Pedido> lstPedidosConPrioridad = null;
 
@@ -367,17 +369,17 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private void tblResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResultadosMouseClicked
         if (evt.getSource() == tblResultados) {
             this.btnIniciar.setEnabled(true);
-            this.btnExportar.setEnabled(true);
         }
     }//GEN-LAST:event_tblResultadosMouseClicked
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
 
+         this.btnExportar.setEnabled(true);
         int fila = tblResultados.getSelectedRow();
         Cromosoma solucion = null;
-        
+       /* 
         if (fila != -1) {
-            PedidoControlador.GuardarPedidos(lstPedidos);
+            PedidoControlador.GuardarPedidos(lstPedidosDelDia);
 
             if (fila == 0) {
                 solucion = soluciones.get(0);
@@ -393,7 +395,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             listaRuta.clear();
             int cantRutas = solucion.getCadena().size();
             for (int i = 0; i < cantRutas; i++) {
-                Ruta ruta = solucion.getCadena().get(i).GuardarEnMapaReal(lstPedidos);
+                Ruta ruta = solucion.getCadena().get(i).GuardarEnMapaReal(lstPedidosDelDia);
                 listaRuta.add(ruta);
             }
             
@@ -402,7 +404,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para grabar los datos");
         }
-
+        */
 
     }//GEN-LAST:event_btnGrabarActionPerformed
 
@@ -411,7 +413,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         int fila = tblResultados.getSelectedRow();
 
         if (fila != -1) {
-            List<Ruta> ruta = null;// lo que acaba de guardar en la bd
+            List<Ruta> ruta = listaRuta;// lo que acaba de guardar en la bd
             JasperPrint jMain = null;
             for (int i = 0; i < ruta.size(); i++) {
                 String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
@@ -479,7 +481,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             ArrayList<Cromosoma> solucionParcial = new ArrayList<Cromosoma>();
 
             AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
-
+            obtenerPedidosDelDia(); // solo voy a atender los pedidos del dia
             while (true) {
                 // System.out.println(Util.RelojAlgoritmo.horaActual.getTime());
                 Turno t2 = obtenerTurnoActual();
@@ -496,16 +498,17 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     Algoritmo.Genetico.AlgoritmoGenetico.pedidos = (ArrayList) lstPedidos;
                     // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
                     // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
+                    System.out.println("He atendido " + cantListos);
                     soluciones = algoritmo.empieza();
                     solucionParcial.add(soluciones.get(0));
                     solucionParcial.add(soluciones.get(1));
                     solucionParcial.add(soluciones.get(2));
                     quitarListos();
-                    break;
+                    System.out.println("Quedan " + obtenerPedidosNoAtendidos(t));
 
                 }
-                System.out.println(obtenerPedidosNoAtendidos(t));
-                if (obtenerPedidosNoAtendidos(t) == 0) {
+                
+                if (obtenerPedidosNoAtendidos(t)==0) {
                     System.out.println("Todos los pedidos atendidos");
                     break;
                 }
@@ -525,6 +528,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         if (archivo != null) {
             lstPedidos.clear();
             nPedCargaBoton.setEnabled(false);
+            this.btnExportar.setEnabled(false);
             this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             try {
                 lstPedidos = PedidoControlador.CargaPedidosSimulacion(archivo.getAbsolutePath()); //funcion de carga masiva de pedidos con el formato del profe
@@ -549,12 +553,10 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         ArrayList<Turno> lturnos = Algoritmo.Constantes.Constantes.lTurnos;
         //System.out.println(horaActual);
         for (int i = 0; i < 3; i++) {
-
             if (perteneceATurno(horaActual, lturnos.get(i))) {
                 return lturnos.get(i);
             }
-
-        }
+}
         return null;
 
     }
@@ -572,34 +574,49 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     }
 
     public boolean perteneceATurno(Date hora, Turno turno) {
-        return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
-
+        //return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
+        return hora.compareTo(turno.getHoraInicio()) >= 0 && hora.compareTo(turno.getHoraFin()) <= 0;
     }
 
     public int obtenerPedidosNoAtendidos(Turno t) {
         List<Pedido> pedidosListo;
         int cantPedidos = lstPedidos.size();
         int cantNoAtendidos = 0;
-
-        for (int i = 0; i < cantPedidos; i++) {
+        for (int i = 0; i < cantPedidos; i++)
             cantNoAtendidos++;
-
-        }
         return cantNoAtendidos;
+    }
+    
+     public void obtenerPedidosDelDia() {
+        ArrayList<Pedido> pedidoDelDia=new ArrayList<Pedido>();
+        lstPedidosDelDia=new ArrayList<Pedido>();
+        int cantPedidos = lstPedidos.size();
+        for (int i = 0; i < cantPedidos; i++) {
+            if(lstPedidos.get(i).getHoraSolicitada().before(Constantes.lTurnos.get(2).getHoraFin())
+                    && lstPedidos.get(i).getHoraSolicitada().after(Constantes.lTurnos.get(0).getHoraInicio())){
+                System.out.println("Fecha para hoy " + lstPedidos.get(i).getHoraSolicitada());
+                Pedido p = new Pedido(lstPedidos.get(i));
+                pedidoDelDia.add(p);
+                lstPedidosDelDia.add(p);
+            }
+        }
+        lstPedidos.clear();
+        lstPedidos=pedidoDelDia;
+        System.out.println("Son " + lstPedidos.size() + " pedidos para hoy");
 
     }
+    
+    
+   
 
     public int obtenerPedidosListos(Turno t) {
         List<Pedido> pedidosListo = new ArrayList<Pedido>();
         int cantPedidos = lstPedidos.size();
         int cantListo = 0;
-
         for (int i = 0; i < cantPedidos; i++) {
             Pedido p = lstPedidos.get(i);
             if (perteneceATurno(p.getHoraSolicitada(), t)) {
-                if (Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t)) {
-                    p.setPrioridad("no tiene");
-                }
+                if (Algoritmo.Constantes.Constantes.lTurnos.get(1).equals(t))  p.setPrioridad("no tiene");
                 if (Algoritmo.Constantes.Constantes.lTurnos.get(0).equals(t) && p.getCliente().getTipoDocumento().compareTo("DNI") == 0) {
                     p.setPrioridad("tiene");
                 }

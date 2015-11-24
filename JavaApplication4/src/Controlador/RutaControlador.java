@@ -203,6 +203,9 @@ public class RutaControlador {
             tx = EasyGas.sesion.beginTransaction();
 
             for (int i = 0; i < lista.size(); i++) {
+                for(int j=0;j<lista.get(i).getAristas().size();i++){
+                    EasyGas.sesion.saveOrUpdate(lista.get(i).getAristas().get(j));
+                }
                 EasyGas.sesion.saveOrUpdate(lista.get(i));
             }
 

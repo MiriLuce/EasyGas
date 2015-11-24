@@ -107,9 +107,9 @@ public class Principal extends javax.swing.JFrame {
         mantAccidente = new javax.swing.JMenuItem();
         mantRuta = new javax.swing.JMenuItem();
         mantSimulacion = new javax.swing.JMenuItem();
-        menuAyuda = new javax.swing.JMenu();
         menuReporte = new javax.swing.JMenu();
         mantPedidosPorCliente = new javax.swing.JMenuItem();
+        menuAyuda = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setFocusCycleRoot(false);
@@ -276,9 +276,6 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar.add(menuReparto);
 
-        menuAyuda.setText("Ayuda");
-        jMenuBar.add(menuAyuda);
-
         menuReporte.setText("Reporte");
 
         mantPedidosPorCliente.setText("Pedidos Por Cliente");
@@ -290,6 +287,9 @@ public class Principal extends javax.swing.JFrame {
         menuReporte.add(mantPedidosPorCliente);
 
         jMenuBar.add(menuReporte);
+
+        menuAyuda.setText("Ayuda");
+        jMenuBar.add(menuAyuda);
 
         setJMenuBar(jMenuBar);
 

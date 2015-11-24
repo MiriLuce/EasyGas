@@ -122,11 +122,6 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="menuAyuda">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Ayuda"/>
-          </Properties>
-        </Menu>
         <Menu class="javax.swing.JMenu" name="menuReporte">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reporte"/>
@@ -141,6 +136,11 @@
               </Events>
             </MenuItem>
           </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="menuAyuda">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ayuda"/>
+          </Properties>
         </Menu>
       </SubComponents>
     </Menu>
