@@ -67,8 +67,8 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jPanel40" pref="879" max="32767" attributes="0"/>
-                      <Component id="jPanel37" pref="879" max="32767" attributes="0"/>
+                      <Component id="jPanel40" pref="883" max="32767" attributes="0"/>
+                      <Component id="jPanel37" pref="883" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

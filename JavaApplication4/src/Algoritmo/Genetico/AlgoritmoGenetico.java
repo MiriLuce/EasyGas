@@ -26,10 +26,10 @@ public class AlgoritmoGenetico {
    
     private ArrayList<Pedido> pedidosConPrioridad;
     private ArrayList<Pedido> pedidosSinPrioridad;
-    
     private Cromosoma mejorCromosoma;
     private int cantRepiteMejor;
     public static Mapa mapa;
+    public static ArrayList<Modelo.Hibernate.Ruta> lsrutas;
     public static ArrayList<Camion> camiones;
     public static ArrayList<Pedido> pedidos;
     
@@ -68,6 +68,24 @@ public class AlgoritmoGenetico {
         return soluciones;
     }
     
+    public Cromosoma recalcula(){
+
+        int cant = 0;
+        while(cant < 50){
+            generaCromosomasAleatorioRecalcular(Constantes.cantPoblacion - poblacion.size());
+            seleccionaElite();
+            emparejaPoblacion();
+            eliminaAberraciones();
+            mutaPoblacion();
+            eliminaAberraciones();
+            cant++;
+        }
+        this.ordenaPoblacion();
+       
+        //poblacion.get(0).imprimir();
+        return poblacion.get(0);
+    }
+    
     //Crea n nuevos cromosomas requeridos de manera aleatoria
     private void generaCromosomasAleatorio(int cantRequerida){
         int cantActual = 0;
@@ -89,6 +107,22 @@ public class AlgoritmoGenetico {
         }        
     }
     
+    private void generaCromosomasAleatorioRecalcular(int cantRequerida){
+        int cantActual = 0;
+        //unir los pedidos que aun no han sido entregados en este momento
+        while(cantActual < cantRequerida){
+            Cromosoma cromosoma = new Cromosoma();
+            //camiones ya tiene asignada la estructura Ruta del algoritmo
+            cromosoma.generarRecalcular(pedidos, camiones,lsrutas);
+            cromosoma.condensarCromosoma();
+            //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
+            //cromosoma.imprimir();
+            if(!cromosoma.isAberracion()){
+                poblacion.add(cromosoma);
+                cantActual++;
+            }
+        }        
+    }
     //me quedo con un porcentaje mejor de la poblacion
     private void seleccionaElite(){
         ordenaPoblacion(); 

@@ -24,12 +24,18 @@ public class Nodo  implements java.io.Serializable {
     }
 
 	
+    public Nodo(int id,int coordX, int coordY) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+        this.idNodo=id;
+    }
     public Nodo(int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
+        
     }
     
-    public Nodo(int coordX, int coordY, String habilitado, Set clientes, Set accidentes, Set aristasForIdOrigen, Set aristasForIdDestino) {
+    public Nodo(int id,int coordX, int coordY, String habilitado, Set clientes, Set accidentes, Set aristasForIdOrigen, Set aristasForIdDestino) {
        this.coordX = coordX;
        this.coordY = coordY;
        this.habilitado = habilitado;
@@ -37,6 +43,7 @@ public class Nodo  implements java.io.Serializable {
        this.accidentes = accidentes;
        this.aristasForIdOrigen = aristasForIdOrigen;
        this.aristasForIdDestino = aristasForIdDestino;
+       this.idNodo=id;
     }
    
     public Integer getIdNodo() {

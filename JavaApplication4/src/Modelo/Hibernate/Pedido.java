@@ -32,6 +32,8 @@ public class Pedido  implements java.io.Serializable {
         this.cliente = ped.cliente;
         this.cliente.setNodo(ped.cliente.getNodo());
         this.estado=ped.estado;
+        this.fechaRegistro=ped.getFechaRegistro();
+        this.plazo=ped.getPlazo();
     }
     
     public Pedido(Cliente cliente, Date fechaRegistro, Date horaSolicitada, double cantGlp, int plazo, String prioridad) {

@@ -149,7 +149,7 @@ public class Cromosoma {
         for(int i=0; i< pedidos.size(); i++){
             Pedido ped = new Pedido(pedidos.get(i));
             //solo voy a juntar los que estan listos
-            if(ped.getEstado().compareTo("listo")==0)
+            if(ped.getEstado().compareTo("LISTO")==0)
                 listaPedidos.add(ped);
         }
         int cantCamiones = camiones.size();
@@ -198,7 +198,58 @@ public class Cromosoma {
             cantPedidos--;
         }        
     }
-     
+    
+    public void generarRecalcular(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones,ArrayList<Modelo.Hibernate.Ruta> rutas){
+        // anhadir la lista de pedidos y ordenar cuando anhades a pedidos siempre y cuando este pedido no haya sido entregado
+        // la hora de entrega sea menor a la hora actual
+        //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
+        ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
+        for(int i=0; i< pedidos.size(); i++){
+            Pedido ped = new Pedido(pedidos.get(i));
+            //solo voy a juntar los que estan listos
+            if(ped.getEstado().compareTo("LISTO")==0)
+                listaPedidos.add(ped);
+        }
+        int cantCamiones = camiones.size();
+        for(int i= 0; i<cantCamiones; i++){
+            Camion c = new Camion(camiones.get(i));
+            listaCamiones.add(c);
+        }      
+        int cantRutasModelo = rutas.size();
+        for(int i= 0; i<cantRutasModelo; i++){
+           //llenar cadena (Ruta, sin nodos intermedios) del cromosoma con el modelo de rutas del hibernate
+        } 
+        int indicePedidoAleatorio, indiceRutaAleatoria;
+        int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
+        Pedido pedidoAleatorio;  
+        Ruta rutaAleatoria;
+        while(cantPedidos > 0){
+            indicePedidoAleatorio =  generaNumRandom(0, cantPedidos - 1);
+            pedidoAleatorio = listaPedidos.get(indicePedidoAleatorio);
+            boolean estaAsignado = false;
+            // Intento incrustar el pedido en la lista de rutas existente 
+            // sera asignado a la primera ruta disponible que encuentre
+            while(!estaAsignado){
+                if (cantRutas == 0)break;
+                else{
+                    indiceRutaAleatoria = generaNumRandom(0, cantRutas - 1);
+                    rutaAleatoria = getCadena().get(indiceRutaAleatoria);
+                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                }
+            }
+            if(!estaAsignado){ // Crear una nueva ruta
+                rutaAleatoria = new Ruta();
+                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                if(estaAsignado){ // no hay disponibilidad en los camiones
+                cadena.add(rutaAleatoria);
+                //ordena segun la hora de los pedidos
+                cantRutas++;}
+            }            
+            
+            listaPedidos.remove(indicePedidoAleatorio);
+            cantPedidos--;
+        }        
+    }
     public void intercambiarPedidos(Ruta ruta){
         int cantPedidosHijo = 0;
         for (int i= 0; i< cadena.size(); i++)

@@ -46,7 +46,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
     private ArrayList<Pedido> lstPedidosDelDia;
     private List<Pedido> lstPedidosSinPrioridad = null;
     private List<Pedido> lstPedidosConPrioridad = null;
-
+   
     public Pantalla_Simulacion() {
         initComponents();
 
@@ -374,12 +374,12 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
     private void btnGrabarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGrabarActionPerformed
 
-         this.btnExportar.setEnabled(true);
+        this.btnExportar.setEnabled(true);
         int fila = tblResultados.getSelectedRow();
         Cromosoma solucion = null;
-       /* 
+       
         if (fila != -1) {
-            PedidoControlador.GuardarPedidos(lstPedidosDelDia);
+            PedidoControlador.GuardarPedidos(this.lstPedidosDelDia);
 
             if (fila == 0) {
                 solucion = soluciones.get(0);
@@ -395,7 +395,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             listaRuta.clear();
             int cantRutas = solucion.getCadena().size();
             for (int i = 0; i < cantRutas; i++) {
-                Ruta ruta = solucion.getCadena().get(i).GuardarEnMapaReal(lstPedidosDelDia);
+                Ruta ruta = solucion.getCadena().get(i).GuardarEnMapaReal(this.lstPedidosDelDia);
                 listaRuta.add(ruta);
             }
             
@@ -404,7 +404,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para grabar los datos");
         }
-        */
+       
 
     }//GEN-LAST:event_btnGrabarActionPerformed
 
@@ -565,7 +565,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         int cantPedidos = lstPedidos.size();
         ArrayList<Pedido> pedidosFinales = new ArrayList<Pedido>();
         for (int i = 0; i < cantPedidos; i++) {
-            if (lstPedidos.get(i).getEstado().compareTo("listo") != 0) {
+            if (lstPedidos.get(i).getEstado().compareTo("LISTO") != 0) {
                 pedidosFinales.add(new Pedido(lstPedidos.get(i)));
             }
         }
@@ -598,6 +598,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 Pedido p = new Pedido(lstPedidos.get(i));
                 pedidoDelDia.add(p);
                 lstPedidosDelDia.add(p);
+                
             }
         }
         lstPedidos.clear();
@@ -623,7 +624,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 if (Algoritmo.Constantes.Constantes.lTurnos.get(2).equals(t) && !(p.getCliente().getTipoDocumento().compareTo("DNI") == 0)) {
                     p.setPrioridad("tiene");
                 }
-                lstPedidos.get(i).setEstado("listo");
+                lstPedidos.get(i).setEstado("LISTO");
                 /* if (p.getPrioridad().compareTo("tiene") == 0) {
                  lstPedidosConPrioridad.add(p);
                  } else {

@@ -163,7 +163,7 @@ public class Ruta {
         return cal.getTime();
     }
     
-    public ArrayList<Arista> buscarCamino(Nodo inicio, Nodo fin){
+    public ArrayList<Arista> buscarCamino(Nodo inicio, Nodo fin,Pedido pedido){
         // se cambio la logica con la distancia
         ArrayList<Arista> camino=new ArrayList<Arista>();
         int xi,xf,yi,yf;
@@ -215,6 +215,9 @@ public class Ruta {
             distancia +=nodoA.getCoordX()==nodoB.getCoordX()?Math.abs(nodoA.getCoordY()-nodoB.getCoordY()):0;
             distancia +=nodoA.getCoordY()==nodoB.getCoordY()?Math.abs(nodoA.getCoordX()-nodoB.getCoordX()):0;
             Arista a= new Arista(distancia,nodoA,nodoB);
+            if(pedido!=null){
+                if(nodoB.getCoordX()==pedido.getPosX() && nodoB.getCoordX()==pedido.getPosY() ) a.setPedido(new Pedido(pedido));
+            }
             camino.add(a);
         }
         return camino;
@@ -228,7 +231,7 @@ public class Ruta {
         nuevaRuta.setCamion(camion);
         inicio = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
         fin = new Nodo(listaPedido.get(0).getPosX(), listaPedido.get(0).getPosY());
-        ArrayList<Arista> tramo = buscarCamino(inicio, fin);
+        ArrayList<Arista> tramo = buscarCamino(inicio, fin,listaPedido.get(0));
         for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));   
         
         for(int i= 0; i< cantPedido; i++){
@@ -246,7 +249,7 @@ public class Ruta {
                 fin = new Nodo(listaPedido.get(i+1).getPosX(), listaPedido.get(i+1).getPosY());
             }
             tramo.clear();
-            tramo = buscarCamino(inicio, fin);
+            tramo = buscarCamino(inicio, fin,listaPedido.get(i+1));
             for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));
         }
         
@@ -270,7 +273,7 @@ public class Ruta {
         nuevaRuta.setCamion(camion);
         inicio = new Nodo(Constantes.posCentralX, Constantes.posCentralY);
         fin = new Nodo(listaPedido.get(0).getPosX(), listaPedido.get(0).getPosY());
-        ArrayList<Arista> tramo = buscarCamino(inicio, fin);
+        ArrayList<Arista> tramo = buscarCamino(inicio, fin,listaPedido.get(0));
         for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));   
         
         for(int i= 0; i< cantPedido; i++){
@@ -288,7 +291,13 @@ public class Ruta {
                 fin = new Nodo(listaPedido.get(i+1).getPosX(), listaPedido.get(i+1).getPosY());
             }
             tramo.clear();
-            tramo = buscarCamino(inicio, fin);
+            if ( i == cantPedido -1 ){
+                tramo = buscarCamino(inicio, fin,null);
+            }
+            else {
+                tramo = buscarCamino(inicio, fin,listaPedido.get(i+1));
+            }
+            
             for(int j = 0; j< tramo.size(); j++) camino.add(tramo.get(j));
         }
         

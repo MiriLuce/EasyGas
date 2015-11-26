@@ -7,6 +7,7 @@ package Controlador;
 
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Empleado;
+import Modelo.Hibernate.Nodo;
 import Modelo.Hibernate.Ruta;
 import Modelo.Hibernate.Usuario;
 import java.text.SimpleDateFormat;
@@ -103,7 +104,12 @@ public class RutaControlador {
         }
         return ruta;
     }
-      
+    public List<Ruta> buscarRutasDeHoy(double cantGLP){
+        // va a buscar las rutas de hoy que tengan espacios para esta cantidad de GLP para este turno o un turno despues
+    
+    
+        return null;
+    }  
     public  List<Ruta> buscaRutaFiltro(Date dtfechaDesde, Date dtfechaHasta,String placa,String nombreTipoCamion) {
        
         List aux=null;
@@ -203,10 +209,16 @@ public class RutaControlador {
             tx = EasyGas.sesion.beginTransaction();
 
             for (int i = 0; i < lista.size(); i++) {
-                for(int j=0;j<lista.get(i).getAristas().size();i++){
+                EasyGas.sesion.saveOrUpdate(lista.get(i));
+                for(int j=0;j<lista.get(i).getAristas().size();j++){
+                    int idNodoOrigen=buscarNodo(lista.get(i).getAristas().get(j).getNodoByIdOrigen().getCoordX(),lista.get(i).getAristas().get(j).getNodoByIdOrigen().getCoordY());
+                    int idNodoDestino=buscarNodo(lista.get(i).getAristas().get(j).getNodoByIdDestino().getCoordX(),lista.get(i).getAristas().get(j).getNodoByIdDestino().getCoordY());
+                    lista.get(i).getAristas().get(j).getNodoByIdOrigen().setIdNodo(idNodoOrigen);
+                    lista.get(i).getAristas().get(j).getNodoByIdDestino().setIdNodo(idNodoDestino);
+                    lista.get(i).getAristas().get(j).setRuta(lista.get(i));
                     EasyGas.sesion.saveOrUpdate(lista.get(i).getAristas().get(j));
                 }
-                EasyGas.sesion.saveOrUpdate(lista.get(i));
+                
             }
 
             tx.commit();
@@ -221,6 +233,43 @@ public class RutaControlador {
                 EasyGas.sesion.close();
             }
         }
+    }
+    
+    public static int buscarNodo(int x,int y ){
+        int idNodo=0;
+        List<Nodo> aux=null;
+        String sql = "SELECT NODO.* FROM NODO WHERE 1";
+        sql = sql + " and  NODO.CoordX = :x";
+        sql = sql + " and  NODO.CoordY = :y";
+        try {
+            SQLQuery query = EasyGas.sesion.createSQLQuery(sql);
+            query.addEntity(Nodo.class);
+            query.setParameter("x",x);
+            query.setParameter("y",y);
+            aux = query.list();
+            
+            if(aux.size()==0){
+                //save
+                Nodo nodo= new Nodo(x,y);
+                nodo.setHabilitado("SI");
+                EasyGas.sesion.saveOrUpdate(nodo);
+                idNodo=nodo.getIdNodo();
+            }
+            else {
+                idNodo=aux.get(0).getIdNodo();
+            
+            }
+            
+            
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexion");
+        } finally {
+        }
+
+        return idNodo;
+    
+    
     }
      
 }

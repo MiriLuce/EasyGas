@@ -5,12 +5,18 @@
  */
 package Vista;
 
+import Algoritmo.Genetico.AlgoritmoGenetico;
+import static Algoritmo.Genetico.AlgoritmoGenetico.mapa;
+import Algoritmo.Genetico.Cromosoma;
 import Controlador.*;
 import Modelo.Hibernate.*;
 import java.awt.Cursor;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -740,7 +746,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                         Pedido ped;
 
                         int fila = bPedTabla.getSelectedRow();
-
+                         Date horaSol =null;
                         if (fila != -1) { //que una fila de la tabla está seleccionada
                             String strCodigo = bPedTabla.getValueAt(fila, 0).toString();
                             int pedidoId = Integer.parseInt(strCodigo);
@@ -751,7 +757,7 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(ped.getFechaRegistro());
                             cal.add(Calendar.HOUR, p);
-                            Date horaSol = cal.getTime();
+                            horaSol = cal.getTime();
 
                             ped.setHoraSolicitada(horaSol);
                         } else {
@@ -766,12 +772,35 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
                             Calendar cal = Calendar.getInstance(); //fecha y hora actual de registro
                             Date ahora = cal.getTime();
                             cal.add(Calendar.HOUR, p);
-                            Date horaSol = cal.getTime();
+                            horaSol = cal.getTime();
 
                             ped = new Pedido(c, ahora, horaSol, cantGLP, p, prioridad);
                         }
 
                         PedidoControlador.GuardarPedido(ped);
+                        if(perteneceADia(horaSol)){
+                            try {
+                                //recalcular ruta
+                                RutaControlador rutaControlador = new RutaControlador();
+                                List<Camion>lstCamiones = CamionControlador.ListarCamion();
+                                List<Ruta>lstRutas = rutaControlador.buscarRutasDeHoy(ped.getCantGlp()); 
+                                ArrayList<Pedido> lstPedidos = new ArrayList<Pedido>();
+                                lstPedidos.add(ped);
+                                AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, lstPedidos, 1, mapa);
+                                AlgoritmoGenetico.lsrutas= (ArrayList)lstRutas;
+                                Cromosoma solucion =algoritmo.recalcula();
+                                //guardo los pedidos actualizados y guardo las rutas actulizadas
+                                // elimino las aristas generadas antes y anaho las nuevas
+                                
+                                
+                            } catch (IOException ex) {
+                                Logger.getLogger(Pantalla_Pedido.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                        }
+                        else {
+                            // quedara pendiente
+                        }
                         this.setCursor(Cursor.getDefaultCursor());
                         JOptionPane.showMessageDialog(null, "Se registró el pedido correctamente");
                         this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -789,7 +818,10 @@ public class Pantalla_Pedido extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_nPedGuardBotonActionPerformed
-
+    public boolean perteneceADia(Date hora) {
+        //return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
+        return hora.compareTo(Algoritmo.Constantes.Constantes.lTurnos.get(0).getHoraInicio()) >= 0 && hora.compareTo(Algoritmo.Constantes.Constantes.lTurnos.get(2).getHoraFin()) <= 0;
+    }
     private void nPedCancelBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nPedCancelBotonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nPedCancelBotonActionPerformed
