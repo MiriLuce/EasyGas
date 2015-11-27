@@ -8,11 +8,13 @@ package Algoritmo.Genetico;
 import Modelo.Hibernate.*;
 import Algoritmo.Constantes.Constantes;
 import Algoritmo.Constantes.Mapa;
+import Util.RelojAlgoritmo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -46,11 +48,11 @@ public class AlgoritmoGenetico {
         mapa = new Mapa(201,301);
     }
     
-    public ArrayList<Cromosoma> empieza(){
+    public ArrayList<Cromosoma> empieza(Date horaInicio){
 
         int cant = 0;
         while(cant < 50){
-            generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
+            generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size(), horaInicio);
             seleccionaElite();
             emparejaPoblacion();
             eliminaAberraciones();
@@ -87,7 +89,7 @@ public class AlgoritmoGenetico {
     }
     
     //Crea n nuevos cromosomas requeridos de manera aleatoria
-    private void generaCromosomasAleatorio(int cantRequerida){
+    private void generaCromosomasAleatorio(int cantRequerida, Date horaInicio){
         int cantActual = 0;
         while(cantActual < cantRequerida){
             Cromosoma cromosoma = new Cromosoma();
@@ -96,7 +98,7 @@ public class AlgoritmoGenetico {
             // Asignar cada pedido a una ruta y evitar aberraciones
             //cromosoma.asignarPedidos(pedidos);
             // cerrar cromosoma con 
-            cromosoma.generar(pedidos, camiones);
+            cromosoma.generar(pedidos, camiones, horaInicio);
             cromosoma.condensarCromosoma();
             System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
             //cromosoma.imprimir();
@@ -107,13 +109,34 @@ public class AlgoritmoGenetico {
         }        
     }
     
+    public boolean perteneceATurno(Date hora, Turno turno) {
+        //return hora.after(turno.getHoraInicio()) && hora.before(turno.getHoraFin());
+        return hora.compareTo(turno.getHoraInicio()) >= 0 && hora.compareTo(turno.getHoraFin()) <= 0;
+    }
+    
+    public Turno obtenerTurnoActual() {
+        //String originalString = "2010-07-14 09:00:02";
+        //Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(originalString);
+        //String newString = new SimpleDateFormat("H:mm").format(date); // 9:00
+        Date horaActual = RelojAlgoritmo.horaActual.getTime();
+        ArrayList<Turno> lturnos = Algoritmo.Constantes.Constantes.lTurnos;
+        //System.out.println(horaActual);
+        for (int i = 0; i < 3; i++) {
+            if (perteneceATurno(horaActual, lturnos.get(i))) {
+                return lturnos.get(i);
+            }
+}
+        return null;
+
+    }
     private void generaCromosomasAleatorioRecalcular(int cantRequerida){
         int cantActual = 0;
+        Turno t = obtenerTurnoActual();
         //unir los pedidos que aun no han sido entregados en este momento
         while(cantActual < cantRequerida){
             Cromosoma cromosoma = new Cromosoma();
             //camiones ya tiene asignada la estructura Ruta del algoritmo
-            cromosoma.generarRecalcular(pedidos, camiones,lsrutas);
+            cromosoma.generarRecalcular(pedidos, camiones,lsrutas, t.getHoraInicio());
             cromosoma.condensarCromosoma();
             //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
             //cromosoma.imprimir();

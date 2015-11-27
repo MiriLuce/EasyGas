@@ -27,7 +27,7 @@ public class Cromosoma {
     private ArrayList<Ruta> cadena; 
     private double costo;
     private boolean aberracion;
-    
+    private String duracion;
     private int distanciaTotal; // en km
     private int cantTiempoTotal; // en minutos
     private int difTiempoTotal; // en minutos
@@ -106,7 +106,7 @@ public class Cromosoma {
     // considerando la capacidad del camion de la ruta
     // considerando la hora solicitada del pedido con la hora de salida de la ruta
     // considerando la capacidad de diesel incluudo el regreso  
-    public void asignarPedidos(ArrayList<Pedido> pedidos){
+    public void asignarPedidos(ArrayList<Pedido> pedidos, Date horaInicio){
     
         ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone(); 
         int indicePedidoAleatorio, indiceRutaAleatoria;
@@ -136,7 +136,7 @@ public class Cromosoma {
                 listaEscogido[indiceRutaAleatoria] = 1;
                 
                 rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(camiones, pedidoAleatorio, horaInicio);
                 if(!estaAsignado && cantRutas==0) break;
             }
             if (aberracion) break;
@@ -145,7 +145,7 @@ public class Cromosoma {
         }        
     }
     
-    public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones){
+    public void generar(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones, Date horaInicio){
         //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
         ArrayList<Pedido> listaPedidos = new ArrayList<Pedido>();
         for(int i=0; i< pedidos.size(); i++){
@@ -186,12 +186,12 @@ public class Cromosoma {
                     listaEscogido[indiceRutaAleatoria] = 1;
 
                     rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio,  horaInicio);
                 }
             }
             if(!estaAsignado){ // Crear una nueva ruta
                 rutaAleatoria = new Ruta();
-                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio, horaInicio);
                 if(estaAsignado){ // no hay disponibilidad en los camiones
                 cadena.add(rutaAleatoria);
                 cantRutas++;}
@@ -202,7 +202,7 @@ public class Cromosoma {
         }        
     }
     
-    public void generarRecalcular(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones,ArrayList<Modelo.Hibernate.Ruta> rutas){
+    public void generarRecalcular(ArrayList<Pedido> pedidos, ArrayList<Camion> camiones,ArrayList<Modelo.Hibernate.Ruta> rutas, Date inicioTurno){
         // anhadir la lista de pedidos y ordenar cuando anhades a pedidos siempre y cuando este pedido no haya sido entregado
         // la hora de entrega sea menor a la hora actual
         //ArrayList<Pedido> listaPedidos = (ArrayList<Pedido>) pedidos.clone();
@@ -237,12 +237,12 @@ public class Cromosoma {
                 else{
                     indiceRutaAleatoria = generaNumRandom(0, cantRutas - 1);
                     rutaAleatoria = getCadena().get(indiceRutaAleatoria);
-                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                    estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio, inicioTurno);
                 }
             }
             if(!estaAsignado){ // Crear una nueva ruta
                 rutaAleatoria = new Ruta();
-                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio);
+                estaAsignado = rutaAleatoria.agregarPedido(listaCamiones, pedidoAleatorio, inicioTurno);
                 if(estaAsignado){ // no hay disponibilidad en los camiones
                 cadena.add(rutaAleatoria);
                 //ordena segun la hora de los pedidos
@@ -405,21 +405,32 @@ public class Cromosoma {
         difTiempoTotal = 0;
         double difCantGLP = 0;
         
+        Date inicio = null, fin = null; 
+        
         for(int i = 0; i < cantRutas; i++){
             rutaEscogida = cadena.get(i);
             verificar = rutaEscogida.cerrarRuta();
             if (verificar){  
-                //difTiempoTotal += rutaEscogida.getDifTiempo();
+                difTiempoTotal += rutaEscogida.getDifTiempo();
                 distanciaTotal += rutaEscogida.getDistancia();
                 difCantGLP += rutaEscogida.getCamion().getTipoCamion().getCapacidadGlp() - rutaEscogida.getCantGLP();
                 cantGLPTotal += rutaEscogida.getCantGLP();
                 cantDieselTotal += rutaEscogida.getCantDiesel();
                 cantTiempoTotal += (rutaEscogida.getDistancia() * 1.0) / (Constantes.velCamion * 1.0);
                 //listaRutas.add(rutaEscogida);
+                
+                if (inicio == null || inicio.after(rutaEscogida.getSalida()))
+                    inicio = rutaEscogida.getSalida();
+                if (fin == null || fin.before(rutaEscogida.getLlegada()))
+                    fin = rutaEscogida.getLlegada();
             }
         }
         // q es cada parametro para calcular costo
-        costo = ((  difCantGLP + distanciaTotal + cantDieselTotal) / ( cantGLPTotal * 1000)); //FO
+        int duracionTotal = (int)(fin.getTime() - inicio.getTime()) / 60000;
+        int duracionHoras = duracionTotal / 60;
+        int duracioMinitos = duracionTotal - (duracionHoras * 60);
+        duracion = "" +  duracionHoras + "h " +  duracioMinitos + "m";
+        costo = (  difCantGLP * distanciaTotal * cantDieselTotal) / ( cantGLPTotal * difTiempoTotal) ; //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
         //cadena = listaRutas;
     }

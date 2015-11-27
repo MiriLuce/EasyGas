@@ -488,7 +488,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     // algoritmo.setPedidosConPrioridad((ArrayList) lstPedidosConPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos con prioridad
                     // algoritmo.setPedidosSinPrioridad((ArrayList) lstPedidosSinPrioridad); // solo se va a cambiar siempre su nueva lista de pedidos listos sin prioridad
                     System.out.println("He atendido " + cantListos);
-                    soluciones = algoritmo.empieza();
+                    soluciones = algoritmo.empieza(t.getHoraInicio());
                     solucionParcial.add(soluciones.get(0));
                     solucionParcial.add(soluciones.get(1));
                     solucionParcial.add(soluciones.get(2));
