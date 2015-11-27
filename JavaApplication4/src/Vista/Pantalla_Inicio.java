@@ -161,6 +161,9 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 textoUsuarioKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textoUsuarioKeyTyped(evt);
+            }
         });
 
         textoContrasenha.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -297,6 +300,17 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
             validaIngreso();
         }
     }//GEN-LAST:event_textoContrasenhaKeyPressed
+
+    private void textoUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoUsuarioKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (textoUsuario.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car < '0' || car > '9')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_textoUsuarioKeyTyped
 
     /**
      * @param args the command line arguments

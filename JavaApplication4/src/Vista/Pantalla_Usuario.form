@@ -229,17 +229,17 @@
                               <Component id="jLabel113" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel133" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtDNI" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Component id="jLabel133" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtNombreCompleto" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Component id="txtNombreCompleto" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel67" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="32" max="32767" attributes="0"/>
+                          <EmptySpace pref="28" max="32767" attributes="0"/>
                           <Component id="btnBuscarEmpleado" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -273,6 +273,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDNI">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDNIKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarEmpleado">
                   <Properties>
@@ -398,8 +401,14 @@
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="txtNombreUsuario">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNombreUsuarioKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtCorreo">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCorreoKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel68">
                   <Properties>
@@ -551,6 +560,9 @@
               </Layout>
               <SubComponents>
                 <Component class="javax.swing.JTextField" name="txtNombreBuscar">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNombreBuscarKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel128">
                   <Properties>
@@ -558,6 +570,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDNIBuscar">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDNIBuscarKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel129">
                   <Properties>
@@ -629,6 +644,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNombreUsuarioBuscar">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNombreUsuarioBuscarKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel131">
                   <Properties>

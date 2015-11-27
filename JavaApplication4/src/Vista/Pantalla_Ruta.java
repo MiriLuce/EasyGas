@@ -365,6 +365,12 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
         cmbTipoCamion.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos" }));
 
+        txtPlacaBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPlacaBuscarKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel61Layout = new javax.swing.GroupLayout(jPanel61);
         jPanel61.setLayout(jPanel61Layout);
         jPanel61Layout.setHorizontalGroup(
@@ -646,6 +652,17 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                 }
             }
     }//GEN-LAST:event_btnVisualizarActionPerformed
+
+    private void txtPlacaBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlacaBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtPlacaBuscar.getText().length() > 7) {
+            evt.consume();
+        }
+        if (!(car >= 'A' && car <= 'Z') && (car < '0' || car > '9') && car!='-') {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPlacaBuscarKeyTyped
 
     
          

@@ -191,6 +191,12 @@ public class Pantalla_TipoCamion extends javax.swing.JInternalFrame {
 
         txtTipoCamionCodigo.setEnabled(false);
 
+        txtTipoCamionNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTipoCamionNombreKeyTyped(evt);
+            }
+        });
+
         spnTipoCamionGLP.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100, 1));
 
         spnTipoCamionDiesel.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100, 1));
@@ -520,6 +526,17 @@ public class Pantalla_TipoCamion extends javax.swing.JInternalFrame {
             }
         }      
     }//GEN-LAST:event_btnTipoCamionGuardarActionPerformed
+
+    private void txtTipoCamionNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTipoCamionNombreKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtTipoCamionNombre.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car < '0' || car > '9')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTipoCamionNombreKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

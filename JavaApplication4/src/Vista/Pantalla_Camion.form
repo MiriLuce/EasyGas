@@ -283,6 +283,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtCamionPlaca">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCamionPlacaKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtCamionEstado">
                   <Properties>
@@ -646,6 +649,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtCamionBuscarPlaca">
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCamionBuscarPlacaKeyTyped"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmbCamionBuscarEstado">
                   <Properties>
