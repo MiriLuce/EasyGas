@@ -810,6 +810,7 @@ public class Ruta {
             
             boolean verificarDiesel = verificarDiesel(camion.getTipoCamion(), auxDistancia, auxDiselGlp);
             if (verificarDiesel){
+                cambiarDisponiblidad(inicioRuta, finRuta);
                 cantGLP = auxGlp;
                 distancia = auxDistancia;
                 cantDieselGlp = auxDiselGlp;
