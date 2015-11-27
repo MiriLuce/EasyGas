@@ -10,6 +10,7 @@ import Modelo.Hibernate.Empleado;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 /**
  *
@@ -103,16 +104,39 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
         jLabel96.setText("Nombre:");
 
         txtNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
 
         jLabel97.setText("Apellido Paterno:");
+
+        txtApellidoPat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoPatKeyTyped(evt);
+            }
+        });
 
         jLabel101.setText("Apellido Materno:");
 
         jLabel103.setText("DNI:");
 
+        txtDNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDNIKeyTyped(evt);
+            }
+        });
+
         txtCodigo.setEnabled(false);
 
         jLabel100.setText("Código:");
+
+        txtApellidoMat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoMatKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
         jPanel45.setLayout(jPanel45Layout);
@@ -309,7 +333,19 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
 
         jLabel106.setText("Nombre:");
 
+        txtNombreBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreBuscarKeyTyped(evt);
+            }
+        });
+
         jLabel110.setText("DNI:");
+
+        txtDNIBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDNIBuscarKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel48Layout = new javax.swing.GroupLayout(jPanel48);
         jPanel48.setLayout(jPanel48Layout);
@@ -495,7 +531,7 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
             .addGroup(panelEmpleadosLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(panelEmpleadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel47, javax.swing.GroupLayout.DEFAULT_SIZE, 927, Short.MAX_VALUE)
+                    .addComponent(jPanel47, javax.swing.GroupLayout.DEFAULT_SIZE, 931, Short.MAX_VALUE)
                     .addGroup(panelEmpleadosLayout.createSequentialGroup()
                         .addComponent(jPanel43, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 302, Short.MAX_VALUE)))
@@ -512,7 +548,7 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 957, Short.MAX_VALUE)
+            .addComponent(panelEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, 961, Short.MAX_VALUE)
         );
 
         pack();
@@ -679,6 +715,72 @@ public class Pantalla_Empleado extends javax.swing.JInternalFrame {
         cmbTurnoBuscar.setSelectedIndex(0);
         cmbPuestoBuscar.setSelectedIndex(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void txtDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtDNI.getText().length() > 8) {
+            evt.consume();
+        }
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDNIKeyTyped
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombre.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtApellidoPatKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPatKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtApellidoPat.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApellidoPatKeyTyped
+
+    private void txtApellidoMatKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoMatKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtApellidoMat.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApellidoMatKeyTyped
+
+    private void txtNombreBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreBuscar.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreBuscarKeyTyped
+
+    private void txtDNIBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtDNIBuscar.getText().length() > 8) {
+            evt.consume();
+        }
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDNIBuscarKeyTyped
      private String validar(String campo, String nombreCampo,int minCaracteres , int maxCaracteres ,String formato){
         // formato=d (numerico) formato=s solo cadenas
         

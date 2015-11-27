@@ -8,6 +8,7 @@ import java.util.*;
 import Controlador.*;
 import Modelo.Hibernate.*;
 import java.awt.Cursor;
+import java.awt.event.KeyEvent;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.swing.JComboBox;
@@ -128,6 +129,12 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
 
         jLabel133.setText("DNI:");
 
+        txtDNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDNIKeyTyped(evt);
+            }
+        });
+
         btnBuscarEmpleado.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnBuscarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Recursos/img_buscar.png"))); // NOI18N
         btnBuscarEmpleado.setText("Buscar Empleado");
@@ -166,15 +173,15 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
                 .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel113)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel133)
-                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNombreCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel133))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel28Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombreCompleto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel67))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(btnBuscarEmpleado)
                 .addContainerGap())
         );
@@ -219,6 +226,18 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
 
         jPanel29.setBackground(new java.awt.Color(240, 240, 225));
         jPanel29.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos de Usuario"));
+
+        txtNombreUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreUsuarioKeyTyped(evt);
+            }
+        });
+
+        txtCorreo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCorreoKeyTyped(evt);
+            }
+        });
 
         jLabel68.setText("Correo:");
 
@@ -320,7 +339,19 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
         jPanel59.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Personales"));
         jPanel59.setPreferredSize(new java.awt.Dimension(340, 120));
 
+        txtNombreBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreBuscarKeyTyped(evt);
+            }
+        });
+
         jLabel128.setText("Nombre:");
+
+        txtDNIBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDNIBuscarKeyTyped(evt);
+            }
+        });
 
         jLabel129.setText("DNI:");
 
@@ -360,6 +391,12 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
         jPanel61.setPreferredSize(new java.awt.Dimension(340, 120));
 
         jLabel130.setText("Puesto:");
+
+        txtNombreUsuarioBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreUsuarioBuscarKeyTyped(evt);
+            }
+        });
 
         jLabel131.setText("Nombre:");
 
@@ -686,6 +723,69 @@ public class Pantalla_Usuario extends javax.swing.JInternalFrame {
         txtNombreUsuarioBuscar.setText("");
         cmbxPuestos.setSelectedIndex(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void txtDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtDNI.getText().length() > 8) {
+            evt.consume();
+        }
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDNIKeyTyped
+
+    private void txtCorreoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCorreoKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtCorreo.getText().length() > 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCorreoKeyTyped
+
+    private void txtNombreUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreUsuarioKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreUsuario.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car < '0' || car > '9')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreUsuarioKeyTyped
+
+    private void txtNombreBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreBuscar.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreBuscarKeyTyped
+
+    private void txtDNIBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtDNIBuscar.getText().length() > 8) {
+            evt.consume();
+        }
+        if ((car < '0' || car > '9') && (car != (char) KeyEvent.VK_BACK_SPACE)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDNIBuscarKeyTyped
+
+    private void txtNombreUsuarioBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreUsuarioBuscarKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtNombreUsuarioBuscar.getText().length() > 20) {
+            evt.consume();
+        }
+        if (!(car >= 'a' && car <= 'z') && !(car >= 'A' && car <= 'Z') && (car < '0' || car > '9')) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreUsuarioBuscarKeyTyped
 
     private  boolean esValidoCorreo(String correo) {
         boolean result = true;

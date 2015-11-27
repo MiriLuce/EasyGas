@@ -205,6 +205,12 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
 
         txtCamionCodigo.setEnabled(false);
 
+        txtCamionPlaca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCamionPlacaKeyTyped(evt);
+            }
+        });
+
         txtCamionEstado.setEnabled(false);
 
         txtCamionGLP.setEnabled(false);
@@ -452,6 +458,12 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         jLabel80.setText("Placa:");
 
         cmbCamionBuscarTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos" }));
+
+        txtCamionBuscarPlaca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCamionBuscarPlacaKeyTyped(evt);
+            }
+        });
 
         cmbCamionBuscarEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Todos", "Disponible", "En curso", "En mantenimiento", "De regreso" }));
 
@@ -760,6 +772,28 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         txtCamionBuscarPlaca.setText("");
         cmbCamionBuscarEstado.setSelectedIndex(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void txtCamionPlacaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCamionPlacaKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtCamionPlaca.getText().length() > 7) {
+            evt.consume();
+        }
+        if (!(car >= 'A' && car <= 'Z') && (car < '0' || car > '9') && car!='-') {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCamionPlacaKeyTyped
+
+    private void txtCamionBuscarPlacaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCamionBuscarPlacaKeyTyped
+        // TODO add your handling code here:
+        char car = evt.getKeyChar();
+        if (txtCamionBuscarPlaca.getText().length() > 7) {
+            evt.consume();
+        }
+        if (!(car >= 'A' && car <= 'Z') && (car < '0' || car > '9') && car!='-') {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCamionBuscarPlacaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCamionBuscar;
