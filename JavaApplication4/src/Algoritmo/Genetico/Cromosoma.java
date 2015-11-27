@@ -161,6 +161,7 @@ public class Cromosoma {
         int cantPedidos = listaPedidos.size(), cantRutas = cadena.size();;  
         Pedido pedidoAleatorio;  
         Ruta rutaAleatoria;
+        
         while(cantPedidos > 0){
             indicePedidoAleatorio =  generaNumRandom(0, cantPedidos - 1);
             pedidoAleatorio = listaPedidos.get(indicePedidoAleatorio);

@@ -52,10 +52,10 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-            emparejaPoblacion();
+            //emparejaPoblacion();
             eliminaAberraciones();
-            mutaPoblacion();
-            eliminaAberraciones();
+            //mutaPoblacion();
+            //eliminaAberraciones();
             cant++;
         }
         this.ordenaPoblacion();
@@ -74,10 +74,10 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorioRecalcular(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-            emparejaPoblacion();
+            //emparejaPoblacion();
             eliminaAberraciones();
             mutaPoblacion();
-            eliminaAberraciones();
+            //eliminaAberraciones();
             cant++;
         }
         this.ordenaPoblacion();
@@ -99,7 +99,7 @@ public class AlgoritmoGenetico {
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
             //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
-            //cromosoma.imprimir();
+            cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
