@@ -9,8 +9,13 @@
 	<parameter name="startDate" class="java.lang.String"/>
 	<parameter name="NombreCliente" class="java.lang.String"/>
 	<parameter name="realPath" class="java.lang.String"/>
+        <parameter name="fechaDesde" class="java.lang.String"/>
+	<parameter name="fechaHasta" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP Volumen,HoraSolicitada FechaSolicitada,FechaEntrega Volumen FROM PEDIDO INNER JOIN CLIENTE ON CLIENTE.idCliente=PEDIDO.idCliente WHERE CLIENTE.NroDocumento = $P{numeroDocumento}]]>
+		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP Volumen,HoraSolicitada FechaSolicitada,FechaEntrega Volumen FROM PEDIDO 
+                    INNER JOIN CLIENTE ON CLIENTE.idCliente=PEDIDO.idCliente
+                    WHERE CLIENTE.NroDocumento = $P{numeroDocumento} AND ($P{fechaDesde}='' OR PEDIDO.Horasolicitada >= $P{fechaDesde})
+                    AND  ($P{fechaHasta}='' OR PEDIDO.Horasolicitada <= $P{fechaHasta}    )]]>
 	</queryString>
 	<field name="idPedido" class="java.lang.Integer"/>
 	<field name="Volumen" class="java.lang.Float"/>
@@ -37,10 +42,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NombreCliente}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement uuid="5d39d255-10e3-44c3-9c06-ba375cdd132f" x="481" y="11" width="67" height="77"/>
-				<imageExpression><![CDATA[$P{realPath}+"logo_proyecto.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<columnHeader>

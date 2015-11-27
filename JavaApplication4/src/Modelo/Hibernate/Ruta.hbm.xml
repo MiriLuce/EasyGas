@@ -15,10 +15,10 @@
             <column name="idCopiloto" />
         </many-to-one>
         <many-to-one name="empleadoByIdConductor" class="Modelo.Hibernate.Empleado" fetch="select">
-            <column name="idConductor" not-null="true" />
+            <column name="idConductor" />
         </many-to-one>
         <property name="fechaEntrega" type="date">
-            <column name="FechaEntrega" length="10" not-null="true" />
+            <column name="FechaEntrega" length="10"/>
         </property>
         <property name="horaSalida" type="timestamp">
             <column name="HoraSalida" length="19" not-null="true" />
@@ -38,12 +38,13 @@
         <property name="diffTiempo" type="int">
             <column name="diffTiempo" not-null="true" />
         </property>
-        <list name="aristas" table="ARISTA">
+        <list name="aristas" table="ARISTA" cascade="all">
             <key>
                 <column name="idRuta" not-null="true" />
             </key>
-             <index column="type"></index>  
-            <element column="arista" type="Modelo.Hibernate.Arista" />
+            <index column="cantCuadras"></index>   
+            <one-to-many class="Modelo.Hibernate.Arista" />  
+            
         </list>
         <set name="accidentes" table="ACCIDENTE" inverse="true" lazy="true" fetch="select">
             <key>

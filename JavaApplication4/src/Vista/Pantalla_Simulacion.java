@@ -56,9 +56,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         this.btnCalcular.setEnabled(false);
         this.duracionSpinner.setEnabled(false);
         this.tblResultados.setEnabled(false);
-
         listaRuta = new ArrayList<Ruta>();
         lstPedidos = new ArrayList<Pedido>();
+        
     }
 
     /**
@@ -379,7 +379,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
         Cromosoma solucion = null;
        
         if (fila != -1) {
-            PedidoControlador.GuardarPedidos(this.lstPedidosDelDia);
+            
 
             if (fila == 0) {
                 solucion = soluciones.get(0);
@@ -390,16 +390,13 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             if (fila == 2) {
                 solucion = soluciones.get(2);
             }
-
-            // obtener el camino de la solucion
-            listaRuta.clear();
             int cantRutas = solucion.getCadena().size();
             for (int i = 0; i < cantRutas; i++) {
-                Ruta ruta = solucion.getCadena().get(i).GuardarEnMapaReal(this.lstPedidosDelDia);
-                listaRuta.add(ruta);
+                PedidoControlador.GuardarPedidos(solucion.getCadena().get(i).getListaPedido());
+                
             }
-            
-            RutaControlador.GuardarRutas(listaRuta);
+            // obtener el camino de la solucion
+            listaRuta=(ArrayList)RutaControlador.GuardarRutas(solucion);
 
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para grabar los datos");
@@ -412,7 +409,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
         int fila = tblResultados.getSelectedRow();
 
-        if (fila != -1) {
+        if (fila != -1 && listaRuta!=null) {
             List<Ruta> ruta = listaRuta;// lo que acaba de guardar en la bd
             JasperPrint jMain = null;
             for (int i = 0; i < ruta.size(); i++) {
@@ -482,17 +479,9 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
 
             AlgoritmoGenetico algoritmo = new AlgoritmoGenetico((ArrayList) lstCamiones, (ArrayList) lstPedidos, 1, mapa);
             obtenerPedidosDelDia(); // solo voy a atender los pedidos del dia
-            while (true) {
-                // System.out.println(Util.RelojAlgoritmo.horaActual.getTime());
-                Turno t2 = obtenerTurnoActual();
-                int cantListos = 0;
-                if (t2 != null) {
-                    if (!t.equals(t2)) {
-                        System.out.println("Cambio de turno");
-                        t = t2;
-                    }
-                    cantListos = obtenerPedidosListos(t2); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
-                }
+            for(int i=0;i<Algoritmo.Constantes.Constantes.lTurnos.size();i++){
+                int cantListos = obtenerPedidosListos(Algoritmo.Constantes.Constantes.lTurnos.get(i)); // (lstPedidos actualiza tiene y no prioridad y lstConPrioridad y lstSinPrioridad tmabien los llena)
+                
                 if (cantListos != 0) {
                     //recalcula
                     Algoritmo.Genetico.AlgoritmoGenetico.pedidos = (ArrayList) lstPedidos;
@@ -504,15 +493,13 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     solucionParcial.add(soluciones.get(1));
                     solucionParcial.add(soluciones.get(2));
                     quitarListos();
-                    System.out.println("Quedan " + obtenerPedidosNoAtendidos(t));
+                    System.out.println("Quedan " + obtenerPedidosNoAtendidos(Algoritmo.Constantes.Constantes.lTurnos.get(i)));
 
                 }
-                
-                if (obtenerPedidosNoAtendidos(t)==0) {
-                    System.out.println("Todos los pedidos atendidos");
-                    break;
-                }
+            
             }
+                
+            
 
             GeneralControlador.ActualizaTablaResultadosAlgoritmo(solucionParcial, tblResultados); //se actualiza la tabla
 
@@ -540,7 +527,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             this.setCursor(Cursor.getDefaultCursor());
             JOptionPane.showMessageDialog(null, "Se cargaron los pedidos correctamente");
 
-            this.duracionSpinner.setEnabled(true);
+            this.duracionSpinner.setEnabled(false);
             this.btnCalcular.setEnabled(true);
             this.btnGrabar.setEnabled(true);
         }

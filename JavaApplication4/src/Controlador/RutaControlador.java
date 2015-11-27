@@ -5,6 +5,7 @@
  */
 package Controlador;
 
+import Algoritmo.Genetico.Cromosoma;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Empleado;
 import Modelo.Hibernate.Nodo;
@@ -198,7 +199,7 @@ public class RutaControlador {
         return aux;
     }
     
-    public static void GuardarRutas(ArrayList<Ruta> lista){
+    /*public static void GuardarRutas(ArrayList<Ruta> lista){
         if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();
         }
@@ -209,8 +210,10 @@ public class RutaControlador {
             tx = EasyGas.sesion.beginTransaction();
 
             for (int i = 0; i < lista.size(); i++) {
+                
                 EasyGas.sesion.saveOrUpdate(lista.get(i));
                 for(int j=0;j<lista.get(i).getAristas().size();j++){
+                    
                     int idNodoOrigen=buscarNodo(lista.get(i).getAristas().get(j).getNodoByIdOrigen().getCoordX(),lista.get(i).getAristas().get(j).getNodoByIdOrigen().getCoordY());
                     int idNodoDestino=buscarNodo(lista.get(i).getAristas().get(j).getNodoByIdDestino().getCoordX(),lista.get(i).getAristas().get(j).getNodoByIdDestino().getCoordY());
                     lista.get(i).getAristas().get(j).getNodoByIdOrigen().setIdNodo(idNodoOrigen);
@@ -233,6 +236,64 @@ public class RutaControlador {
                 EasyGas.sesion.close();
             }
         }
+    }
+    */
+    public static List<Ruta> GuardarRutas(Cromosoma solucion){
+        if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        List<Ruta>lstRutas= null;
+        Transaction tx = null;
+
+        try {
+            ArrayList<Algoritmo.Genetico.Ruta> listaCadena = solucion.getCadena();
+            tx = EasyGas.sesion.beginTransaction();
+
+            for (int i = 0; i < listaCadena.size(); i++) {
+                Ruta rutaCopia = listaCadena.get(i).guardarEnMapa();
+                for(int j=0;j<rutaCopia.getAristas().size();j++){
+                    
+                    int idNodoOrigen=buscarNodo(rutaCopia.getAristas().get(j).getNodoByIdOrigen().getCoordX(),rutaCopia.getAristas().get(j).getNodoByIdOrigen().getCoordY());
+                    int idNodoDestino=buscarNodo(rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordX(),rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordY());
+                    rutaCopia.getAristas().get(j).getNodoByIdOrigen().setIdNodo(idNodoOrigen);
+                    rutaCopia.getAristas().get(j).getNodoByIdDestino().setIdNodo(idNodoDestino);
+                  
+                }
+                EasyGas.sesion.save(rutaCopia);
+                lstRutas.add(rutaCopia);
+            }
+            
+            /*
+            for (int i = 0; i < listaCadena.size(); i++) {
+                Ruta ruta = listaCadena.get(i).guardarEnMapa();
+                EasyGas.sesion.saveOrUpdate(ruta);
+                Ruta rutaCopia = listaCadena.get(i).guardarEnMapa();
+                for(int j=0;j<ruta.getAristas().size();j++){
+                    
+                    int idNodoOrigen=buscarNodo(rutaCopia.getAristas().get(j).getNodoByIdOrigen().getCoordX(),rutaCopia.getAristas().get(j).getNodoByIdOrigen().getCoordY());
+                    int idNodoDestino=buscarNodo(rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordX(),rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordY());
+                    rutaCopia.getAristas().get(j).getNodoByIdOrigen().setIdNodo(idNodoOrigen);
+                    rutaCopia.getAristas().get(j).getNodoByIdDestino().setIdNodo(idNodoDestino);
+                    rutaCopia.getAristas().get(j).setRuta(ruta);
+                    EasyGas.sesion.saveOrUpdate(rutaCopia.getAristas().get(j));
+                }
+                
+            }
+            
+            */
+            tx.commit();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
+            if (tx != null) {
+                tx.rollback();
+            }
+        } finally {
+            if (EasyGas.sesion.isOpen()) {
+                EasyGas.sesion.close();
+            }
+        }
+        return lstRutas;
     }
     
     public static int buscarNodo(int x,int y ){

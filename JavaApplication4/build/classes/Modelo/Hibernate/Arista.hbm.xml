@@ -21,7 +21,7 @@
             <column name="Distancia" not-null="true" />
         </property>
         <property name="cantCuadras" type="int">
-            <column name="CantCuadras" not-null="true" />
+            <column name="CantCuadras"  />
         </property>
         <property name="horaInicio" type="timestamp">
             <column name="HoraInicio" length="19" />
@@ -30,10 +30,10 @@
             <column name="HoraFin" length="19" />
         </property>
         <property name="estado" type="string">
-            <column name="Estado" length="20" not-null="true" />
+            <column name="Estado" length="20" />
         </property>
         <many-to-one name="pedido" class="Modelo.Hibernate.Pedido" fetch="select">
-            <column name="idPedido"  not-null="true"/>
+            <column name="idPedido"  />
         </many-to-one>
     </class>
 </hibernate-mapping>
