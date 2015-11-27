@@ -429,7 +429,7 @@ public class Cromosoma {
         int duracionTotal = (int)(fin.getTime() - inicio.getTime()) / 60000;
         int duracionHoras = duracionTotal / 60;
         int duracioMinitos = duracionTotal - (duracionHoras * 60);
-        duracion = "" +  duracionHoras + "h " +  duracioMinitos + "m";
+        setDuracion("" +  duracionHoras + "h " +  duracioMinitos + "m");
         costo = (  difCantGLP * distanciaTotal * cantDieselTotal) / ( cantGLPTotal * difTiempoTotal) ; //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
         //cadena = listaRutas;
@@ -649,6 +649,20 @@ public class Cromosoma {
      */
     public void setSumatoriaTEntrega(double sumatoriaTEntrega) {
         this.sumatoriaTEntrega = sumatoriaTEntrega;
+    }
+
+    /**
+     * @return the duracion
+     */
+    public String getDuracion() {
+        return duracion;
+    }
+
+    /**
+     * @param duracion the duracion to set
+     */
+    public void setDuracion(String duracion) {
+        this.duracion = duracion;
     }
     
     

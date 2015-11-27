@@ -158,7 +158,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
+                java.lang.Integer.class, java.lang.Float.class, java.lang.String.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false

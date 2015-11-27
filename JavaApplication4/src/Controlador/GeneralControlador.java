@@ -102,7 +102,7 @@ public class GeneralControlador {
             Object[] fila = new Object[4];
             fila[0] = lista.get(i).getCadena().size(); //la cantidad de camiones es igual a la cantidad de rutas
             fila[1] = lista.get(i).getCantDieselTotal();
-            fila[2] = (lista.get(i).getCantTiempoTotal()/60); //en horas
+            fila[2] = lista.get(i).getDuracion(); //en horas
             fila[3] = lista.get(i).getCosto();
             modelo.addRow(fila);
         }
