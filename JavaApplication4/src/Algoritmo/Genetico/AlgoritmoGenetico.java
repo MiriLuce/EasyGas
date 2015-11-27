@@ -52,17 +52,17 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorio(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-            //emparejaPoblacion();
+            emparejaPoblacion();
             eliminaAberraciones();
-            //mutaPoblacion();
-            //eliminaAberraciones();
+            mutaPoblacion();
+            eliminaAberraciones();
             cant++;
         }
         this.ordenaPoblacion();
         ArrayList<Cromosoma> soluciones = new ArrayList<Cromosoma>();
         soluciones.add(poblacion.get(0));
         soluciones.add(poblacion.get(1));
-        soluciones.add(poblacion.get(3));
+        soluciones.add(poblacion.get(2));
         
         //poblacion.get(0).imprimir();
         return soluciones;
@@ -74,10 +74,10 @@ public class AlgoritmoGenetico {
         while(cant < 50){
             generaCromosomasAleatorioRecalcular(Constantes.cantPoblacion - poblacion.size());
             seleccionaElite();
-            //emparejaPoblacion();
+            emparejaPoblacion();
             eliminaAberraciones();
             mutaPoblacion();
-            //eliminaAberraciones();
+            eliminaAberraciones();
             cant++;
         }
         this.ordenaPoblacion();
@@ -98,8 +98,8 @@ public class AlgoritmoGenetico {
             // cerrar cromosoma con 
             cromosoma.generar(pedidos, camiones);
             cromosoma.condensarCromosoma();
-            //System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
-            cromosoma.imprimir();
+            System.out.println("Cantidad Actual: " + cantActual + " -----------------------------");
+            //cromosoma.imprimir();
             if(!cromosoma.isAberracion()){
                 poblacion.add(cromosoma);
                 cantActual++;
@@ -190,8 +190,8 @@ public class AlgoritmoGenetico {
             
             ArrayList<Cromosoma> hijos = intercambiaRutas(poblacion.get(indAux1), poblacion.get(indAux2));
             
-            if (!hijos.get(0).isAberracion()) poblacion.add(hijos.get(0)); 
-            if (!hijos.get(1).isAberracion()) poblacion.add(hijos.get(1));
+            if (!hijos.get(0).isAberracion()) {poblacion.add(hijos.get(0)); hijos.get(0).imprimir();}
+            if (!hijos.get(1).isAberracion()) {poblacion.add(hijos.get(1)); hijos.get(1).imprimir();}
         }
     }
     
@@ -244,7 +244,9 @@ public class AlgoritmoGenetico {
             int dado = generaNumRandom(0, cantPoblacion - 1);
 
             if (dado <= prob) { 
-                poblacion.get(i).mutar();
+                //poblacion.get(i).mutar();
+                poblacion.get(i).cambiarCamion();
+                 poblacion.get(i).imprimir();
                 if (poblacion.get(i).isAberracion()){
                     poblacion.remove(i);
                     cantPoblacion--;

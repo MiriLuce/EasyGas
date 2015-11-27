@@ -10,8 +10,10 @@ import Modelo.Hibernate.Camion;
 import Modelo.Hibernate.Pedido;
 import Algoritmo.Constantes.Constantes;
 import static Algoritmo.Genetico.AlgoritmoGenetico.camiones;
+import Modelo.Hibernate.Disponibilidad;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -407,17 +409,17 @@ public class Cromosoma {
             rutaEscogida = cadena.get(i);
             verificar = rutaEscogida.cerrarRuta();
             if (verificar){  
-                difTiempoTotal += rutaEscogida.getDifTiempo();
+                //difTiempoTotal += rutaEscogida.getDifTiempo();
                 distanciaTotal += rutaEscogida.getDistancia();
                 difCantGLP += rutaEscogida.getCamion().getTipoCamion().getCapacidadGlp() - rutaEscogida.getCantGLP();
                 cantGLPTotal += rutaEscogida.getCantGLP();
                 cantDieselTotal += rutaEscogida.getCantDiesel();
-                cantTiempoTotal += rutaEscogida.getDistancia() / Constantes.velCamion;
+                cantTiempoTotal += (rutaEscogida.getDistancia() * 1.0) / (Constantes.velCamion * 1.0);
                 //listaRutas.add(rutaEscogida);
             }
         }
         // q es cada parametro para calcular costo
-        costo = ((  difCantGLP * distanciaTotal ) / ( cantGLPTotal * 1000)); //FO
+        costo = ((  difCantGLP + distanciaTotal + cantDieselTotal) / ( cantGLPTotal * 1000)); //FO
         //if (difCantGLP < 0) System.out.println("Negativo");
         //cadena = listaRutas;
     }
@@ -463,6 +465,61 @@ public class Cromosoma {
             //this.asignarPedidos(e2);
         }
         */
+    }
+    
+    private int buscarDisponiblidad(Ruta ruta){
+        int cantDispon = ruta.getCamion().getDisponibilidads().size();
+        Date inicio = ruta.getSalida(), fin = ruta.getLlegada();
+        Disponibilidad dispon = null;
+        
+        for(int i= 0; i< cantDispon; i++){
+            dispon = (Disponibilidad) ruta.getCamion().getDisponibilidads().get(i);
+            if(dispon.getHoraInicio().equals(inicio) && dispon.getHoraFin().equals(fin))
+                return i;
+        }
+        return -1;
+    }
+    
+    
+    public void cambiarCamion(){
+        ArrayList<Ruta> listaRutas = new ArrayList<Ruta>();
+        int cantRutas = cadena.size(), contador = 0;
+        
+        // Obtengo las rutas con poca carga de glp con respecto a la capacidad del camion
+        for(int i = 0; i < cantRutas; i++){
+            Ruta ruta = cadena.get(i);
+            int capacidadGlp = ruta.getCamion().getTipoCamion().getCapacidadGlp();
+            if ( (capacidadGlp * 1.0 - ruta.getCantGLP()) > capacidadGlp * 0.2 ){
+                listaRutas.add(ruta);
+                contador++;
+            }
+        }
+        
+        // Trato de cambiar el camion asignado para reducir el disel
+        // En este caso no cambia cantDiselGlp solo cantDiesel
+        for (int i = 0; i < contador; i++){
+            Ruta ruta = listaRutas.get(i);
+            Camion camionEscogido = Ruta.buscarCamionDisponibilidad(camiones, ruta.getSalida(), ruta.getLlegada(),
+                    ruta.getCantGLP(), ruta.getCantDieselGlp(), ruta.getDistancia());
+            
+            if (camionEscogido != null && camionEscogido.getTipoCamion().getCapacidadGlp() 
+                    < ruta.getCamion().getTipoCamion().getCapacidadGlp()) {
+                
+                Disponibilidad disp = new Disponibilidad();
+                disp.setCamion(camionEscogido);
+                disp.setHoraInicio(ruta.getSalida());
+                disp.setHoraFin(ruta.getLlegada());
+                camionEscogido.getDisponibilidads().add(disp);
+                
+                int indiceDisponibilidad = buscarDisponiblidad(ruta);
+                ruta.getCamion().getDisponibilidads().remove(indiceDisponibilidad);
+                ruta.setCamion(camionEscogido);
+                
+                double diesel = camionEscogido.getTipoCamion().getTara() * ruta.getDistancia();
+                diesel = Algoritmo.Constantes.Constantes.factorDiesel * (diesel + ruta.getCantDieselGlp());
+                ruta.setCantDiesel(diesel);
+            }            
+        }
     }
     
     
