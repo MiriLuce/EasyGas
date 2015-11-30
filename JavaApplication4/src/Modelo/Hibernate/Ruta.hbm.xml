@@ -38,7 +38,7 @@
         <property name="diffTiempo" type="int">
             <column name="diffTiempo" not-null="true" />
         </property>
-        <list name="aristas" table="ARISTA" cascade="all">
+        <list name="aristas" table="ARISTA" cascade="save-update">
             <key>
                 <column name="idRuta" not-null="true" />
             </key>

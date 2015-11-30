@@ -242,7 +242,7 @@ public class RutaControlador {
         if (!EasyGas.sesion.isOpen()) {
             EasyGas.sesion = EasyGas.sesFact.openSession();
         }
-        List<Ruta>lstRutas= null;
+        List<Ruta>lstRutas= new ArrayList<>();
         Transaction tx = null;
 
         try {
@@ -257,7 +257,7 @@ public class RutaControlador {
                     int idNodoDestino=buscarNodo(rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordX(),rutaCopia.getAristas().get(j).getNodoByIdDestino().getCoordY());
                     rutaCopia.getAristas().get(j).getNodoByIdOrigen().setIdNodo(idNodoOrigen);
                     rutaCopia.getAristas().get(j).getNodoByIdDestino().setIdNodo(idNodoDestino);
-                  
+                    rutaCopia.getAristas().get(j).setRuta(rutaCopia);
                 }
                 EasyGas.sesion.save(rutaCopia);
                 lstRutas.add(rutaCopia);
@@ -285,6 +285,7 @@ public class RutaControlador {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Hubo un error en la conexión");
+            e.printStackTrace();
             if (tx != null) {
                 tx.rollback();
             }
