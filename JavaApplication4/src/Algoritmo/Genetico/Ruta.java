@@ -220,8 +220,8 @@ public class Ruta {
             horaActual=obtenerTiempo(distancia,horaActual,1);
             a.setHoraFin(horaActual);
             if(pedido!=null){
-                if(nodoB.getCoordX()==pedido.getPosX() && nodoB.getCoordX()==pedido.getPosY() ) 
-                    a.setPedido(new Pedido(pedido));
+                if(nodoB.getCoordX()==pedido.getPosX() && nodoB.getCoordY()==pedido.getPosY() ) 
+                    a.setPedido(pedido);
             }
             camino.add(a);
         }

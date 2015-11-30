@@ -433,7 +433,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                     params.put("reportTitle", "Itinerario de la Ruta N°" + ruta.get(i).getIdRuta().toString());
                     params.put("author", nombre);
                     params.put("startDate", fecha);
-                    params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat());
+                    String nombreConductor= ruta.get(i).getEmpleadoByIdConductor()==null?"":ruta.get(i).getEmpleadoByIdConductor().getNombres() + " " + ruta.get(i).getEmpleadoByIdConductor().getApellidoPat();
+                    params.put("reportSubTitle", "Camión: " + ruta.get(i).getCamion().getPlaca() + "- Conductor: " + nombreConductor);
                     JasperReport jasperReport
                             = JasperCompileManager.compileReport(reportSource);
 
@@ -463,7 +464,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
                 }
 
             }
-            JasperViewer.viewReport(jMain);
+            JasperViewer.viewReport(jMain,false);
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar una solución para exportar los datos");
         }

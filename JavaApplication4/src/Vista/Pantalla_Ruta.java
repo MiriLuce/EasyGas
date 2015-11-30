@@ -537,8 +537,8 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
         this.txtHoraSalida.setText(new SimpleDateFormat("HH:mm:ss").format(ruta.getHoraSalida()));
         this.txtHoraLlegada.setText(new SimpleDateFormat("HH:mm:ss").format(ruta.getHoraLlegada()));
         this.txtPlaca.setText(ruta.getCamion().getPlaca());
-        this.txtConductor.setText(ruta.getEmpleadoByIdConductor().getNombres() + " " +ruta.getEmpleadoByIdConductor().getApellidoPat() + " " + ruta.getEmpleadoByIdConductor().getApellidoMat());
-        this.txtDNI.setText(ruta.getEmpleadoByIdConductor().getDni());
+        this.txtConductor.setText(ruta.getEmpleadoByIdConductor()==null?"":ruta.getEmpleadoByIdConductor().getNombres() + " " +ruta.getEmpleadoByIdConductor().getApellidoPat() + " " + ruta.getEmpleadoByIdConductor().getApellidoMat());
+        this.txtDNI.setText(ruta.getEmpleadoByIdConductor()==null?"":ruta.getEmpleadoByIdConductor().getDni());
         this.btnVisualizar.setEnabled(true);
         
         
@@ -639,7 +639,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
                         jasperReport, params,conn);
                 
                 jasperPrint.setName("Ruta " + this.txtCodigo.getText());
-                JasperViewer.viewReport(jasperPrint);
+                JasperViewer.viewReport(jasperPrint,false);
             }
 
             catch (Exception ex)

@@ -146,8 +146,6 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
 
         jLabel93.setText("N° Documento:");
 
-        txtNumeroDocumento.setText("45454545");
-
         jLabel94.setText("Fecha Desde:");
 
         jLabel95.setText("Fecha Hasta:");
@@ -271,7 +269,7 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
                     JasperFillManager.fillReport(
                         jasperReport, params,conn);
  
-                JasperViewer.viewReport(jasperPrint);
+                JasperViewer.viewReport(jasperPrint,false);
             }
 
             catch (Exception ex)

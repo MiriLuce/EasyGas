@@ -245,7 +245,7 @@ public class PedidoControlador {
 
             for (int i = 0; i < lista.size(); i++) {
                 int idPedido=(int) EasyGas.sesion.save(lista.get(i));
-                EasyGas.sesion.saveOrUpdate(idPedido);
+                lista.get(i).setIdPedido(idPedido);
             }
 
             tx.commit();
