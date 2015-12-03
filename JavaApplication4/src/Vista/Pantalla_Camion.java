@@ -44,6 +44,7 @@ public class Pantalla_Camion extends javax.swing.JInternalFrame {
         initComponents();
         verificar = false;
         RefrescarCmbCamion(); 
+        RefrescarTablaCamion();
         //LimpiarDatos();
     }
 
