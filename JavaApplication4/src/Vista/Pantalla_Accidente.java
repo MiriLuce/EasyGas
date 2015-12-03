@@ -50,12 +50,9 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
     //Combo Camiones
     
     private void llenaCmbCamion(){
-        List<Camion> lista = camControlador.ListarCamion();
-        for(Camion cam : lista){
-            if((cam.getEstado().compareTo("En curso")==0) || (cam.getEstado().compareTo("De regreso")==0)){
-                cmbPlaca.addItem(cam.getPlaca());
-            }
-            
+        List<Camion> lista = accControlador.ListarCamionesEnRuta();
+        for(Camion cam : lista){            
+            cmbPlaca.addItem(cam.getPlaca());            
         }
     }
     
@@ -249,7 +246,7 @@ public class Pantalla_Accidente extends javax.swing.JInternalFrame {
 
         jLabel55.setText("Estado:");
 
-        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "En reparacion", "Atendido" }));
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Accidentado", "Reparado" }));
         cmbEstado.setEnabled(false);
 
         javax.swing.GroupLayout jPanel22Layout = new javax.swing.GroupLayout(jPanel22);

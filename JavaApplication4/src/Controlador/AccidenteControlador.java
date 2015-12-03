@@ -9,6 +9,7 @@ import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Accidente;
 import Modelo.Hibernate.Disponibilidad;
 import Modelo.Hibernate.Ruta;
+import Modelo.Hibernate.Camion;
 import Util.HibernateUtil;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -292,4 +293,36 @@ public class AccidenteControlador {
         }
         return mensaje;
     }
+   
+   public List<Camion> ListarCamionesEnRuta(){
+       List<Camion> listaCamion = null;
+       String consulta = "SELECT CAMION.* FROM CAMION INNER JOIN RUTA ON RUTA.idCamion = CAMION.idCamion";
+       if (!EasyGas.sesion.isOpen()) {
+            EasyGas.sesion = EasyGas.sesFact.openSession();
+        }
+        
+        Transaction tx = null;
+        
+        try {
+           tx = EasyGas.sesion.beginTransaction(); 
+            
+            SQLQuery query = EasyGas.sesion.createSQLQuery(consulta);
+            query.addEntity(Camion.class);            
+            listaCamion = query.list();
+            for(Camion cam : listaCamion){
+                Hibernate.initialize(cam.getTipoCamion());
+            }
+            tx.commit();
+       } catch (Exception e) {
+           JOptionPane.showMessageDialog(null, "Error en la conexion");
+            if (tx != null) {
+                tx.rollback();
+            }
+       } finally{
+            if (EasyGas.sesion.isOpen()){
+                EasyGas.sesion.close();
+            }
+        }
+       return listaCamion;
+   }
 }
