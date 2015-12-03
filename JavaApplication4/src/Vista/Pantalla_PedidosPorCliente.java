@@ -237,7 +237,7 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
             return;
         }
        // String reportSource = new File("").getAbsolutePath()+ "/src/Vista/PedidosPorCliente.jrxml";
-        String reportSource = ".\\src\\Vista\\PedidosPorCliente.jrxml";
+        String reportSource = "./src/Vista/PedidosPorCliente.jrxml";
      
        
         Map<String, Object> params = new HashMap<String, Object>();
