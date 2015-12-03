@@ -10,6 +10,7 @@ import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Cliente;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -237,7 +238,7 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
             return;
         }
        // String reportSource = new File("").getAbsolutePath()+ "/src/Vista/PedidosPorCliente.jrxml";
-        String reportSource = "./src/Vista/PedidosPorCliente.jrxml";
+        InputStream reportSource = getClass().getResourceAsStream("PedidosPorCliente.jrxml");//"src/Vista/PedidosPorCliente.jrxml";
      
        
         Map<String, Object> params = new HashMap<String, Object>();

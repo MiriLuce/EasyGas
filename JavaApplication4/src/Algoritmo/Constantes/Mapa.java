@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
@@ -44,8 +45,8 @@ public class Mapa {
                 
             }
         }
-        
-        FileInputStream fistream = new FileInputStream("C:/temp/callesBloqueadas.txt");
+        //FileInputStream fistream=new FileInputStream("C:/temp/callesBloqueadas.txt");
+        InputStream fistream = getClass().getResourceAsStream("/Recursos/callesBloqueadas.txt");
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;

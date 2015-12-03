@@ -104,8 +104,8 @@ public class CiudadXYZ {
                 tejasXYZ[i][j] = 1;
             }
         }
-
-        FileInputStream fistream = new FileInputStream("C:/temp/callesBloqueadas.txt");
+        //FileInputStream fistream=new FileInputStream("C:/temp/callesBloqueadas.txt");
+        InputStream fistream = getClass().getResourceAsStream("/Recursos/callesBloqueadas.txt");//new FileInputStream("C:/temp/callesBloqueadas.txt");
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;

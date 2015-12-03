@@ -17,6 +17,7 @@ import Util.RelojAlgoritmo;
 import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -414,7 +415,7 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             JasperPrint jMain = null;
             for (int i = 0; i < ruta.size(); i++) {
                // String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
-                String reportSource = "./src/Vista/Itinerario.jrxml";
+                InputStream reportSource = getClass().getResourceAsStream("Itinerario.jrxml");//"./src/Vista/Itinerario.jrxml";
                 Map<String, Object> params = new HashMap<String, Object>();
                 try {
                     if (!EasyGas.sesion.isOpen()) {

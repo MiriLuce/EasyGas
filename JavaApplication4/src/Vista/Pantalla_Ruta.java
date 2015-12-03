@@ -13,6 +13,7 @@ import Modelo.Hibernate.Ruta;
 import Modelo.Hibernate.TipoCamion;
 import java.awt.Cursor;
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -609,7 +610,7 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
     private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
         // TODO add your handling code here:
        // String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
-        String reportSource = "./src/Vista/Itinerario.jrxml";
+        InputStream reportSource = getClass().getResourceAsStream("Itinerario.jrxml");
         
         Map<String, Object> params = new HashMap<String, Object>();
        
