@@ -9,7 +9,7 @@
 	<parameter name="startDate" class="java.lang.String"/>
 	<parameter name="NombreCliente" class="java.lang.String"/>
 	<parameter name="realPath" class="java.lang.String"/>
-        <parameter name="fechaDesde" class="java.lang.String"/>
+	<parameter name="fechaDesde" class="java.lang.String"/>
 	<parameter name="fechaHasta" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT PEDIDO.idPedido ,PEDIDO.CantGLP Volumen,HoraSolicitada FechaSolicitada,FechaEntrega Volumen FROM PEDIDO 
@@ -38,7 +38,7 @@
 			<textField>
 				<reportElement uuid="0d60babd-8035-4f57-b90c-510c3c6f6c83" x="36" y="39" width="446" height="26"/>
 				<textElement textAlignment="Center">
-					<font size="14" isBold="true"/>
+					<font size="14" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{NombreCliente}]]></textFieldExpression>
 			</textField>

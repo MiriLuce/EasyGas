@@ -608,8 +608,8 @@ public class Pantalla_Ruta extends javax.swing.JInternalFrame {
 
     private void btnVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVisualizarActionPerformed
         // TODO add your handling code here:
-        String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
-     
+       // String reportSource = new File("").getAbsolutePath()+ "/src/Vista/Itinerario.jrxml";
+        String reportSource = "./src/Vista/Itinerario.jrxml";
         
         Map<String, Object> params = new HashMap<String, Object>();
        

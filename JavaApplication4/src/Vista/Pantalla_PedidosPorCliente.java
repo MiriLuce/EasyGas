@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.swing.JFileChooser;
@@ -235,7 +236,8 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null,"El campo DNI esta Vacio");
             return;
         }
-        String reportSource = new File("").getAbsolutePath()+ "/src/Vista/PedidosPorCliente.jrxml";
+       // String reportSource = new File("").getAbsolutePath()+ "/src/Vista/PedidosPorCliente.jrxml";
+        String reportSource = ".\\src\\Vista\\PedidosPorCliente.jrxml";
      
        
         Map<String, Object> params = new HashMap<String, Object>();
@@ -251,16 +253,19 @@ public class Pantalla_PedidosPorCliente extends javax.swing.JInternalFrame {
                     conn = cp.getConnection();
                 SimpleDateFormat formato = 
                     new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es","ES"));
+                List<Cliente> clientes= clienteControlador.BuscarCliente(null, null, this.txtNumeroDocumento.getText(), "");
+                Cliente c =clientes.get(0);
                 String fecha = formato.format(new Date());
-                //System.out.println(fecha);
-                // cambio el parametro por fechas y se acabo,  yupii
-                
-                params.put("NombreCliente","Pardos" );
-                params.put("FieldName","Pardos" );
+                params.put("NombreCliente","Nombre: " + c.getNombres() + " - DNI:  " + this.txtNumeroDocumento.getText() );
+                params.put("FieldName",c.getNombres() );
                 params.put("realPath","../recursos/");
                 params.put("numeroDocumento",this.txtNumeroDocumento.getText());
+                SimpleDateFormat myFormat = new SimpleDateFormat("yyyy/MM/dd");
+                String fechaDesde=dtFechaDesde.getDate()==null?"":myFormat.format(dtFechaDesde.getDate());
+                String fechaHasta=dtFechaHasta.getDate()==null?"":myFormat.format(dtFechaHasta.getDate());
                 String nombre =EasyGas.usuarioActual==null? "Administrador":EasyGas.usuarioActual.getEmpleado().getNombres() +  " " + EasyGas.usuarioActual.getEmpleado().getApellidoPat();
-                params.put("reportTitle", "Pedidos por Cliente"); params.put("author", nombre ); params.put("startDate", fecha);
+                params.put("reportTitle", "Pedidos por Cliente"); params.put("author", nombre ); params.put("fechaHasta", fechaHasta);
+                params.put("fechaDesde", fechaDesde);params.put("startDate", fecha);
                 
                 JasperReport jasperReport =
                     JasperCompileManager.compileReport(reportSource);

@@ -413,7 +413,8 @@ public class Pantalla_Simulacion extends javax.swing.JInternalFrame {
             List<Ruta> ruta = listaRuta;// lo que acaba de guardar en la bd
             JasperPrint jMain = null;
             for (int i = 0; i < ruta.size(); i++) {
-                String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
+               // String reportSource = new File("").getAbsolutePath() + "/src/Vista/Itinerario.jrxml";
+                String reportSource = "./src/Vista/Itinerario.jrxml";
                 Map<String, Object> params = new HashMap<String, Object>();
                 try {
                     if (!EasyGas.sesion.isOpen()) {
