@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.font.TextAttribute;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -46,12 +47,12 @@ public class Principal extends javax.swing.JFrame {
     private Pantalla_PedidosPorCliente ventanaPedidosPorCliente=null;
     private Pantalla_ClienteCarga ventanaClienteCarga = null;
 
-    public Principal() {
+    public Principal() throws IOException {
         
         initComponents();
-        java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Image img= kit.createImage(url);
+        //java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
+        //Toolkit kit = Toolkit.getDefaultToolkit();
+        BufferedImage img = ImageIO.read(getClass().getResource("/Recursos/logo_toolkit.png"));
         this.setIconImage(img);
         this.setVisible(true);
         nombreUsuario.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -391,6 +392,8 @@ public class Principal extends javax.swing.JFrame {
         try {
             Pantalla_Inicio pInicio = new Pantalla_Inicio();
         } catch (ParseException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.dispose();

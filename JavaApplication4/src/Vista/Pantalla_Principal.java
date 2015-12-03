@@ -10,6 +10,7 @@ import Modelo.Hibernate.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.CardLayout;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -3641,6 +3642,8 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         try {
             Pantalla_Inicio pInicio = new Pantalla_Inicio();
         } catch (ParseException ex) {
+            Logger.getLogger(Pantalla_Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Pantalla_Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.dispose();

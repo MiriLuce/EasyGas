@@ -54,7 +54,7 @@ public class CamionMapa {
         mapa = m;
         velocidad = vel; //(Km/h)
         //tuvoAccidente = false;
-        imagen = Imagen.CargaImagen("/mapa_camion_16.png");
+        imagen = Imagen.CargaImagen("/Recursos/mapa_camion_16.png");
         ruta = nRuta;
         posX = ruta.getAristas().get(0).getNodoByIdOrigen().getCoordX() * Teja.ANCHOTEJA;
         posY = ruta.getAristas().get(0).getNodoByIdOrigen().getCoordY() * Teja.ANCHOTEJA;

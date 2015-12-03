@@ -6,6 +6,7 @@
 package Vista;
 
 import Controlador.*;
+import Mapa.Utilidades.Imagen;
 import Modelo.Constantes.EasyGas;
 import Modelo.Hibernate.Turno;
 import Modelo.Hibernate.Usuario;
@@ -14,11 +15,14 @@ import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
@@ -38,12 +42,12 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
      */
     UsuarioControlador usuarioControlador = new UsuarioControlador();
 
-    public Pantalla_Inicio() throws ParseException {
+    public Pantalla_Inicio() throws ParseException, IOException {
         
         initComponents();
-        java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Image img= kit.createImage(url);
+        //java.net.URL url= ClassLoader.getSystemResource("recursos/logo_toolkit.png");
+        //Toolkit kit = Toolkit.getDefaultToolkit();
+        BufferedImage img = ImageIO.read(getClass().getResource("/Recursos/logo_toolkit.png"));
         this.setIconImage(img);
         this.setVisible(true);
          /****************************Lista de turnos******************************/
@@ -76,7 +80,7 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
     }
 
     //funcion para validar los datos de ingreso
-    public void validaIngreso() {
+    public void validaIngreso() throws IOException {
         String nombreDeUsuario = textoUsuario.getText();
         String contrasenhaUsuario = textoContrasenha.getText();
 
@@ -94,7 +98,7 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
                     return;
                 } else {
                     //this.setVisible(false); para que se muestre el cambio del cursos a WAIT la pantalla inicial debe estar visible
-                    final ImageIcon icon = new ImageIcon("src/Recursos/img_correcto.png");
+                    final ImageIcon icon = new ImageIcon(ImageIO.read(getClass().getResource("/Recursos/img_correcto.png")));
                     JOptionPane.showMessageDialog(null, "Bienvenido \nNivel de acceso: Administrador", "", JOptionPane.INFORMATION_MESSAGE, icon);
                     this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     EasyGas.sesion = EasyGas.sesFact.openSession();
@@ -282,7 +286,11 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonIngresarActionPerformed
-        validaIngreso();
+        try {
+            validaIngreso();
+        } catch (IOException ex) {
+            Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonIngresarActionPerformed
 
     private void linkOlvideContMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_linkOlvideContMouseClicked
@@ -291,13 +299,21 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
 
     private void textoUsuarioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoUsuarioKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            validaIngreso();
+            try {
+                validaIngreso();
+            } catch (IOException ex) {
+                Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_textoUsuarioKeyPressed
 
     private void textoContrasenhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoContrasenhaKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            validaIngreso();
+            try {
+                validaIngreso();
+            } catch (IOException ex) {
+                Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_textoContrasenhaKeyPressed
 
@@ -346,6 +362,8 @@ public class Pantalla_Inicio extends javax.swing.JFrame {
                 try {
                     new Pantalla_Inicio().setVisible(true);
                 } catch (ParseException ex) {
+                    Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(Pantalla_Inicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

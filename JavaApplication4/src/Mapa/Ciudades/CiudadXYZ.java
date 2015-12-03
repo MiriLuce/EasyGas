@@ -105,7 +105,7 @@ public class CiudadXYZ {
             }
         }
 
-        FileInputStream fistream = new FileInputStream("callesBloqueadas.txt");
+        FileInputStream fistream = new FileInputStream("C:/temp/callesBloqueadas.txt");
         DataInputStream in = new DataInputStream(fistream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String line;

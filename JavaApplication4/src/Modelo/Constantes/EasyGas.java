@@ -61,17 +61,17 @@ public class EasyGas {
     public static Ruta rutaPrueba;
     
     public static void Inicializa(){
-        camionNormal = Imagen.CargaImagen("/mapa_camion_16.png");
+        camionNormal = Imagen.CargaImagen("/Recursos/mapa_camion_16.png");
 //        camionAccidente = Imagen.CargaImagen("/mapa_camion_accidente.png");
-        mapaCentral = Imagen.CargaImagen("/mapa_central.png");
-        mapaClienteNat = Imagen.CargaImagen("/mapa_cliente_nat.png");
-        mapaClienteJur = Imagen.CargaImagen("/mapa_cliente_jur.png");
-        obstaculo = Imagen.CargaImagen("/mapa_obstaculo.png");
-        pista = Imagen.CargaImagen("/mapa_pista.png");
-        rutaAzul = Imagen.CargaImagen("/mapa_ruta_azul.png");
-        rutaRojo = Imagen.CargaImagen("/mapa_ruta_rojo.png");
-        rutaAmarillo = Imagen.CargaImagen("/mapa_ruta_amarillo.png");
-        rutaVerde = Imagen.CargaImagen("/mapa_ruta_verde.png");
-        imagenPausa = Imagen.CargaImagen("/mapa_pausa_200.png");
+        mapaCentral = Imagen.CargaImagen("/Recursos/mapa_central.png");
+        mapaClienteNat = Imagen.CargaImagen("/Recursos/mapa_cliente_nat.png");
+        mapaClienteJur = Imagen.CargaImagen("/Recursos/mapa_cliente_jur.png");
+        obstaculo = Imagen.CargaImagen("/Recursos/mapa_obstaculo.png");
+        pista = Imagen.CargaImagen("/Recursos/mapa_pista.png");
+        rutaAzul = Imagen.CargaImagen("/Recursos/mapa_ruta_azul.png");
+        rutaRojo = Imagen.CargaImagen("/Recursos/mapa_ruta_rojo.png");
+        rutaAmarillo = Imagen.CargaImagen("/Recursos/mapa_ruta_amarillo.png");
+        rutaVerde = Imagen.CargaImagen("/Recursos/mapa_ruta_verde.png");
+        imagenPausa = Imagen.CargaImagen("/Recursos/mapa_pausa_200.png");
     }
 }

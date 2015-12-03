@@ -244,7 +244,7 @@ public class PedidoControlador {
             tx = EasyGas.sesion.beginTransaction();
 
             for (int i = 0; i < lista.size(); i++) {
-                int idPedido=(int) EasyGas.sesion.save(lista.get(i));
+                int idPedido = (int) EasyGas.sesion.save(lista.get(i));
                 lista.get(i).setIdPedido(idPedido);
             }
 
@@ -378,6 +378,8 @@ public class PedidoControlador {
 
     public static ArrayList<Pedido> CargaPedidosSimulacion(String rutaArchivo) throws FileNotFoundException, IOException, ParseException {
 
+        System.out.println(rutaArchivo);
+
         ArrayList<Pedido> lista = new ArrayList<Pedido>();
 
         FileInputStream fistream = new FileInputStream(rutaArchivo);
@@ -393,6 +395,10 @@ public class PedidoControlador {
             Date fechaRegistro = FormaFechaRegistro(pedido[0], pedido[1]);
 
             int p = Integer.parseInt(pedido[4].substring(1));
+
+            if (p == 99) { //p99
+                p = 48;
+            }
 
             Calendar cal = Calendar.getInstance();
             cal.setTime(fechaRegistro);
